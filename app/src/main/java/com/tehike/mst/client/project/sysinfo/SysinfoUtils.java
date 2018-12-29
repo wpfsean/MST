@@ -52,19 +52,20 @@ public class SysinfoUtils {
      * @return
      */
     public static String getServerIp() {
-        String serverIp = (String) SharedPreferencesUtils.getObject(App.getApplication(), "serverIp", "");
-        if (TextUtils.isEmpty(serverIp)) {
-            serverIp = AppConfig.USERNAME;
-            if (!TextUtils.isEmpty(serverIp)) {
-                SysInfoBean mSysInfoBean = SysinfoUtils.getSysinfo();
-                if (mSysInfoBean != null) {
-                    serverIp = mSysInfoBean.getWebresourceServer();
+        String serverIp = "";
+            SysInfoBean mSysInfoBean = SysinfoUtils.getSysinfo();
+            if (mSysInfoBean != null) {
+                if (!TextUtils.isEmpty(mSysInfoBean.getWebresourceServer())) {
+                    return mSysInfoBean.getWebresourceServer();
+                }
+            } else {
+                serverIp = (String) SharedPreferencesUtils.getObject(App.getApplication(), "serverIp", "");
+                if (TextUtils.isEmpty(serverIp)) {
+                    serverIp = AppConfig.USERNAME;
                     return serverIp;
                 }
             }
-            return serverIp;
-        }
-        return serverIp;
+        return "";
     }
 
 
@@ -95,6 +96,5 @@ public class SysinfoUtils {
         }
         return userPwd;
     }
-
 
 }

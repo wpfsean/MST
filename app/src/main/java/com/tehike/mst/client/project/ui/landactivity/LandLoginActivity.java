@@ -1,15 +1,10 @@
-package com.tehike.mst.client.project.ui.portactivity;
+package com.tehike.mst.client.project.ui.landactivity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,11 +31,12 @@ import com.tehike.mst.client.project.R;
 import com.tehike.mst.client.project.base.App;
 import com.tehike.mst.client.project.base.BaseActivity;
 import com.tehike.mst.client.project.global.AppConfig;
-import com.tehike.mst.client.project.services.BatteryAndWifiService;
 import com.tehike.mst.client.project.services.LocationService;
 import com.tehike.mst.client.project.services.ServiceUtils;
 import com.tehike.mst.client.project.sysinfo.SysInfoBean;
 import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
+import com.tehike.mst.client.project.ui.portactivity.PortLoginActivity;
+import com.tehike.mst.client.project.ui.portactivity.PortMainActivity;
 import com.tehike.mst.client.project.utils.ActivityUtils;
 import com.tehike.mst.client.project.utils.BatteryUtils;
 import com.tehike.mst.client.project.utils.CryptoUtil;
@@ -71,51 +67,15 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 描述：
+ * 描述：横屏登录页面（通过获取VideoResources协议的长度判断是否登录成功）
  * ===============================
  *
  * @author wpfse wpfsean@126.com
  * @version V1.0
- * @Create at:2018/12/28 8:31
+ * @Create at:2018/10/18 10:38
  */
 
-public class PortLoginActivity extends BaseActivity {
-
-    /**
-     * 电量信息图标
-     */
-    @BindView(R.id.icon_electritity_show)
-    ImageView batteryIcon;
-
-    /**
-     * 信号强度图标
-     */
-    @BindView(R.id.icon_network)
-    ImageView rssiIcon;
-
-    /**
-     * 连接状态图标
-     */
-    @BindView(R.id.icon_connection_show)
-    ImageView connetIcon;
-
-    /**
-     * 消息图标
-     */
-    @BindView(R.id.icon_message_show)
-    ImageView messIcon;
-
-    /**
-     * 显示当前时间分秒
-     */
-    @BindView(R.id.sipinfor_title_time_layout)
-    TextView currentTimeLayout;
-
-    /**
-     * 显示当前的年月日
-     */
-    @BindView(R.id.sipinfor_title_date_layout)
-    TextView currentYearLayout;
+public class LandLoginActivity extends BaseActivity {
 
     /**
      * 无网络时提示
@@ -123,51 +83,35 @@ public class PortLoginActivity extends BaseActivity {
     @BindView(R.id.no_network_layout)
     RelativeLayout noNetWorkShow;
 
-    /**
-     * 进度动画
-     */
+    //进度动画
     @BindView(R.id.image_loading)
     ImageView loadingImageView;
 
-    /**
-     * 登录错误信息提示
-     */
+    //登录错误信息提示
     @BindView(R.id.loin_error_infor_layout)
     TextView promptErrorInforTextView;
 
-    /**
-     * 用户名
-     */
+    //用户名
     @BindView(R.id.edit_username_layout)
     EditText editUserName;
 
-    /**
-     * 密码
-     */
+    //密码
     @BindView(R.id.edit_userpass_layout)
     EditText editUserPwd;
 
-    /**
-     * 记住密码Checkbox
-     */
+    //记住密码Checkbox
     @BindView(R.id.remember_pass_layout)
     Checkable checkRememberPwd;
 
-    /**
-     * 自动登录CheckBox
-     */
+    //自动登录CheckBox
     @BindView(R.id.auto_login_layout)
     Checkable checkAutoLogin;
 
-    /**
-     * 服务器
-     */
+    //服务器
     @BindView(R.id.edit_serviceip_layout)
     EditText editServerIp;
 
-    /**
-     * 修改服务器的checkbox
-     */
+    //修改服务器的checkbox
     @BindView(R.id.remembe_serverip_layout)
     CheckBox checkUpdateServerIp;
 
@@ -175,21 +119,6 @@ public class PortLoginActivity extends BaseActivity {
      * 加载时的动画
      */
     Animation mLoadingAnim;
-
-    /**
-     * 本机iP
-     */
-    String nativeIP = "";
-
-    /**
-     * 时分秒显示的格式
-     */
-    SimpleDateFormat hoursFormat = null;
-
-    /**
-     * 显示时间的线程是否正在运行
-     */
-    boolean threadIsRun = true;
 
     /**
      * 用户是否禁止权限
@@ -217,16 +146,14 @@ public class PortLoginActivity extends BaseActivity {
 
     @Override
     protected int intiLayout() {
-        return R.layout.activity_port_login_layout;
+        return R.layout.activity_land_login;
     }
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
 
-        //显示时间
-        initializeTime();
 
-        //申请所需要的权限 
+        //申请所需要的权限
         checkAllPermissions();
     }
 
@@ -240,7 +167,7 @@ public class PortLoginActivity extends BaseActivity {
 
             //遍历申请
             for (String permission : allPermissionList) {
-                if (ContextCompat.checkSelfPermission(PortLoginActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(LandLoginActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
                     noAgreePermissions.add(permission);
                 }
             }
@@ -248,7 +175,7 @@ public class PortLoginActivity extends BaseActivity {
             if (!noAgreePermissions.isEmpty()) {
                 //将List转为数组
                 String[] permissions = noAgreePermissions.toArray(new String[noAgreePermissions.size()]);
-                ActivityCompat.requestPermissions(PortLoginActivity.this, permissions, 1);
+                ActivityCompat.requestPermissions(LandLoginActivity.this, permissions, 1);
             } else {
                 //初始化参数
                 initParamaters();
@@ -277,12 +204,12 @@ public class PortLoginActivity extends BaseActivity {
         }
 
         //判断是否自动登录
-        boolean isAutoLogin = (boolean) SharedPreferencesUtils.getObject(PortLoginActivity.this, "autologin", false);
+        boolean isAutoLogin = (boolean) SharedPreferencesUtils.getObject(LandLoginActivity.this, "autologin", false);
         if (isAutoLogin) {
             loginSuccessToCms();
         }
 
-        boolean isrePwd = (boolean) SharedPreferencesUtils.getObject(PortLoginActivity.this, "isremember", false);
+        boolean isrePwd = (boolean) SharedPreferencesUtils.getObject(LandLoginActivity.this, "isremember", false);
         if (isrePwd) {
             checkRememberPwd.setChecked(true);
             //填充用户名框
@@ -316,38 +243,11 @@ public class PortLoginActivity extends BaseActivity {
     }
 
     /**
-     * 显示当前的时间
-     */
-    private void initializeTime() {
-
-        //时分秒格式
-        hoursFormat = new SimpleDateFormat("HH:mm:ss");
-
-        //时计线程
-        TimingThread timeThread = new TimingThread();
-        new Thread(timeThread).start();
-
-        //显示当前的年月日
-        Date date = new Date();
-        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy年MM月dd日");
-        String currntYearDate = yearFormat.format(date);
-        currentYearLayout.setText(currntYearDate);
-
-        //显示当前的电量
-        int level = BatteryUtils.getSystemBattery(App.getApplication());
-        Message currentBatteryMess = new Message();
-        currentBatteryMess.arg1 = level;
-        currentBatteryMess.what = 2;
-        handler.sendMessage(currentBatteryMess);
-    }
-
-
-    /**
      * 申请系统权限（允许弹窗，修改系统亮度）
      */
     private void checkSystemPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(PortLoginActivity.this)) {
+            if (!Settings.canDrawOverlays(LandLoginActivity.this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -373,56 +273,6 @@ public class PortLoginActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 每隔1秒刷新一下时间的线程
-     */
-    class TimingThread extends Thread {
-        @Override
-        public void run() {
-            super.run();
-            do {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                handler.sendEmptyMessage(1);
-            } while (threadIsRun);
-        }
-    }
-
-    /**
-     * 显示当前的时间
-     */
-    private void disPlayCurrentTime() {
-        Date currentDate = new Date();
-        if (hoursFormat != null) {
-            String hoursStr = hoursFormat.format(currentDate);
-            if (isVisible) {
-                currentTimeLayout.setText(hoursStr);
-            }
-        }
-    }
-
-    /**
-     * 显示当前的电量 信息
-     */
-    private void diaPlayCurrentBattery(int level) {
-        if (isVisible) {
-            if (level >= 75 && level <= 100) {
-                batteryIcon.setBackgroundResource(R.mipmap.icon_electricity_a);
-            }
-            if (level >= 50 && level < 75) {
-                batteryIcon.setBackgroundResource(R.mipmap.icon_electricity_b);
-            }
-            if (level >= 25 && level < 50) {
-                batteryIcon.setBackgroundResource(R.mipmap.icon_electricity_c);
-            }
-            if (level >= 0 && level < 25) {
-                batteryIcon.setBackgroundResource(R.mipmap.icon_electricity_disable);
-            }
-        }
-    }
 
     //是否点击过了登录按键
     boolean isLoginingFlag = false;
@@ -512,7 +362,6 @@ public class PortLoginActivity extends BaseActivity {
             synchronized (this) {
                 try {
                     String requestLoginUrl = AppConfig.WEB_HOST + serverIp + AppConfig._SYSINFO;
-                    Logutil.d("requestLoginUrl-->>" + requestLoginUrl);
                     HttpURLConnection con = (HttpURLConnection) new URL(requestLoginUrl).openConnection();
                     con.setRequestMethod("GET");
                     con.setConnectTimeout(3000);
@@ -612,16 +461,16 @@ public class PortLoginActivity extends BaseActivity {
         //判断当前是否记住密码，如果记住密码就把配置信息提前插入数据库
         if (isRememberPwd) {
             //保存记住密码的状态
-            SharedPreferencesUtils.putObject(PortLoginActivity.this, "isremember", isRememberPwd);
+            SharedPreferencesUtils.putObject(LandLoginActivity.this, "isremember", isRememberPwd);
         }
         //保存自动登录的状态
         if (isAutoLogin) {
-            SharedPreferencesUtils.putObject(PortLoginActivity.this, "autologin", isRememberPwd);
+            SharedPreferencesUtils.putObject(LandLoginActivity.this, "autologin", isRememberPwd);
         }
 
-        SharedPreferencesUtils.putObject(PortLoginActivity.this, "serverIp", server_IP);
-        SharedPreferencesUtils.putObject(PortLoginActivity.this, "userPwd", pass);
-        SharedPreferencesUtils.putObject(PortLoginActivity.this, "userName", name);
+        SharedPreferencesUtils.putObject(LandLoginActivity.this, "serverIp", server_IP);
+        SharedPreferencesUtils.putObject(LandLoginActivity.this, "userPwd", pass);
+        SharedPreferencesUtils.putObject(LandLoginActivity.this, "userName", name);
         //赋值给常量
         AppConfig.USERNAME = name;
         AppConfig.PWD = pass;
@@ -641,10 +490,10 @@ public class PortLoginActivity extends BaseActivity {
     public void loginSuccessToCms() {
         handler.sendEmptyMessage(4);
         //跳转到主页面并finish本页面
-        Intent intent = new Intent(PortLoginActivity.this, PortMainActivity.class);
-        PortLoginActivity.this.startActivity(intent);
-        ActivityUtils.removeActivity(PortLoginActivity.this);
-        PortLoginActivity.this.finish();
+        Intent intent = new Intent(LandLoginActivity.this, LandMainActivity.class);
+        LandLoginActivity.this.startActivity(intent);
+        ActivityUtils.removeActivity(LandLoginActivity.this);
+        LandLoginActivity.this.finish();
     }
 
     /**
@@ -658,7 +507,7 @@ public class PortLoginActivity extends BaseActivity {
                 for (int i = 0; i < grantResults.length; i++) {
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                         //判断是否勾选禁止后不再询问
-                        boolean showRequestPermission = ActivityCompat.shouldShowRequestPermissionRationale(PortLoginActivity.this, permissions[i]);
+                        boolean showRequestPermission = ActivityCompat.shouldShowRequestPermissionRationale(LandLoginActivity.this, permissions[i]);
                         if (showRequestPermission) {
                             //重新申请权限
                             checkAllPermissions();
@@ -712,11 +561,6 @@ public class PortLoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
 
-        threadIsRun = false;
-
-        if (hoursFormat != null)
-            hoursFormat = null;
-
         if (mLoadingAnim != null)
             mLoadingAnim = null;
 
@@ -733,15 +577,6 @@ public class PortLoginActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 1:
-                    //显示时间
-                    disPlayCurrentTime();
-                    break;
-                case 2:
-                    //显示电量
-                    int level = msg.arg1;
-                    diaPlayCurrentBattery(level);
-                    break;
                 case 3:
                     //提示网络不可用
                     promptErrorInforTextView.setVisibility(View.VISIBLE);
@@ -801,3 +636,4 @@ public class PortLoginActivity extends BaseActivity {
         }
     };
 }
+

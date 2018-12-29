@@ -41,8 +41,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.portactivity.PortLoginActivity"
-            android:screenOrientation="portrait">
+            android:name=".ui.landactivity.LandLoginActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,8 +50,31 @@
             </intent-filter>
         </activity>
 
+        <!--================横屏Activity======================-->
+        <activity
+            android:name=".ui.landactivity.LandMainActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name=".ui.landactivity.LandSipGroupActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name=".ui.landactivity.LandSipInforActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name=".ui.landactivity.LandMutilScreenActivity"
+            android:screenOrientation="landscape" />
+
+
+        <!--================竖屏Activity======================-->
         <activity
             android:name=".ui.portactivity.PortMainActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.portactivity.PortLoginActivity"
             android:screenOrientation="portrait" />
 
         <activity

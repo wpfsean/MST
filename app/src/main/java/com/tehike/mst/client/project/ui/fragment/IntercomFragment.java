@@ -139,7 +139,6 @@ public class IntercomFragment extends BaseFragment implements SwipeRefreshLayout
      * 根据webapi接口获取sip分组数据
      */
     private void initializeSipGroupData() {
-
         //先清空集合内的数据
         if (sipGroupListData != null && sipGroupListData.size() > 0) {
             sipGroupListData.clear();
@@ -156,6 +155,7 @@ public class IntercomFragment extends BaseFragment implements SwipeRefreshLayout
             @Override
             public void httpData(String result) {
                 if (!TextUtils.isEmpty(result)) {
+                    Logutil.d("Sip组数据"+result);
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         if (!jsonObject.isNull("errorCode")) {

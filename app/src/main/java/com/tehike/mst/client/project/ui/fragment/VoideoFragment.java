@@ -26,6 +26,7 @@ import com.tehike.mst.client.project.entity.VideoBean;
 import com.tehike.mst.client.project.global.AppConfig;
 import com.tehike.mst.client.project.onvif.ControlPtzUtils;
 import com.tehike.mst.client.project.ui.portactivity.PortMainActivity;
+import com.tehike.mst.client.project.ui.portactivity.PortVideoResourcesActivity;
 import com.tehike.mst.client.project.ui.widget.OnMultiTouchListener;
 import com.tehike.mst.client.project.utils.CryptoUtil;
 import com.tehike.mst.client.project.utils.FileUtil;
@@ -35,6 +36,7 @@ import com.tehike.mst.client.project.utils.PageModel;
 import com.tehike.mst.client.project.utils.SharedPreferencesUtils;
 import com.tehike.mst.client.project.utils.SnapShotUtils;
 import com.tehike.mst.client.project.utils.ToastUtils;
+import com.tehike.mst.client.project.utils.WriteLogToFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -384,6 +386,19 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
             registerRefreshVideoDataBroadcast();
         }
 
+        if (devicesList == null || devicesList.size() == 0) {
+            WriteLogToFile.info("无视频源数据");
+            Logutil.e("无视频源数据");
+            if (getActivity() != null && currentPageIsVisible) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showProgressFail("无视频源数据!");
+                    }
+                });
+            }
+            return;
+        }
 
         //初始化单屏的播放
         currentDevicePosition = 0;
@@ -949,6 +964,18 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
     public void screenShotPic(View view) {
         Logutil.i(currentDevicePosition + "当前下标");
 
+        if (devicesList == null || devicesList.size() == 0) {
+            if (getActivity() != null && currentPageIsVisible) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showProgressFail("无视频源数据!");
+                    }
+                });
+            }
+            return;
+        }
+
         //当前播放器播放的对象
         VideoBean mDevice = devicesList.get(currentDevicePosition);
 
@@ -990,13 +1017,14 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (currentPageIsVisible)
-                            preview_layout.setVisibility(View.GONE);
-                    }
-                });
+                if (getActivity() != null)
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (currentPageIsVisible)
+                                preview_layout.setVisibility(View.GONE);
+                        }
+                    });
             }
         };
         Timer timer = new Timer();
@@ -1098,11 +1126,10 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
      * 跳转页面预览
      */
     private void showLoadMoreVideoDialog() {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), PortVideoResourcesActivity.class);
+        getActivity().startActivity(intent);
 
-//        Intent intent = new Intent();
-//        intent.setClass(getActivity(), PortVideoResourcesActivity.class);
-//        getActivity().startActivity(intent);
-//
     }
 
     /**
@@ -1120,6 +1147,10 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
         isCurrentSingleScreen = true;
         //第一个窗口选中
         if (firstViewSelect) {
+
+            if (currentList == null || currentList.size() == 0) {
+                return;
+            }
             String rtsp = "";
             if (!TextUtils.isEmpty(currentList.get(0).getRtsp())) {
                 rtsp = currentList.get(0).getRtsp();
@@ -1129,6 +1160,9 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
 
         //第二个窗口选中
         if (secondViewSelect) {
+            if (currentList == null || currentList.size() == 0) {
+                return;
+            }
             String rtsp = "";
             if (!TextUtils.isEmpty(currentList.get(1).getRtsp())) {
                 rtsp = currentList.get(1).getRtsp();
@@ -1138,15 +1172,19 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
 
         //第三个窗口选中
         if (thirdViewSelect) {
+            if (currentList == null || currentList.size() == 0) {
+                return;
+            }
             String rtsp = "";
             if (!TextUtils.isEmpty(currentList.get(2).getRtsp())) {
                 rtsp = currentList.get(2).getRtsp();
             }
             initSinglePlayer(rtsp);
         }
-
-
         if (fourthViewSelect) {
+            if (currentList == null || currentList.size() == 0) {
+                return;
+            }
             String rtsp = "";
             if (!TextUtils.isEmpty(currentList.get(3).getRtsp())) {
                 rtsp = currentList.get(3).getRtsp();
@@ -1195,13 +1233,14 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
         initPlayer();
 
         //显示顶部的标题
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (currentPageIsVisible)
-                    display_video_information_text_layout.setText("四分屏监控画面");
-            }
-        });
+        if (getActivity() != null && currentPageIsVisible)
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (currentPageIsVisible)
+                        display_video_information_text_layout.setText("四分屏监控画面");
+                }
+            });
     }
 
     /**
@@ -1225,7 +1264,7 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
                     if (!firstPlayerIsStop) {
                         firstPalyer.stop();
                         firstPlayerIsStop = true;
-                        if (getActivity() != null)
+                        if (getActivity() != null && currentPageIsVisible)
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1235,7 +1274,7 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
                     } else {
                         firstPlayerIsStop = false;
                         firstPalyer.start();
-                        if (getActivity() != null)
+                        if (getActivity() != null && currentPageIsVisible)
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1250,7 +1289,7 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
                     if (!firstPlayerIsStop) {
                         secondPlayer.stop();
                         firstPlayerIsStop = true;
-                        if (getActivity() != null)
+                        if (getActivity() != null && currentPageIsVisible)
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1260,7 +1299,7 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
                     } else {
                         firstPlayerIsStop = false;
                         secondPlayer.start();
-                        if (getActivity() != null)
+                        if (getActivity() != null && currentPageIsVisible)
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1275,7 +1314,7 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
                     if (!firstPlayerIsStop) {
                         thirdPlayer.stop();
                         firstPlayerIsStop = true;
-                        if (getActivity() != null)
+                        if (getActivity() != null && currentPageIsVisible)
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1285,7 +1324,7 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
                     } else {
                         firstPlayerIsStop = false;
                         thirdPlayer.start();
-                        if (getActivity() != null)
+                        if (getActivity() != null && currentPageIsVisible)
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1300,7 +1339,7 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
                     if (!firstPlayerIsStop) {
                         fourthPlayer.stop();
                         firstPlayerIsStop = true;
-                        if (getActivity() != null)
+                        if (getActivity() != null && currentPageIsVisible)
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1310,7 +1349,7 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
                     } else {
                         firstPlayerIsStop = false;
                         fourthPlayer.start();
-                        if (getActivity() != null)
+                        if (getActivity() != null && currentPageIsVisible)
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1321,19 +1360,20 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
 
                 }
             } else {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtils.showShort("未选中窗口！！！");
-                    }
-                });
+                if (getActivity() != null && currentPageIsVisible)
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.showShort("未选中窗口！！！");
+                        }
+                    });
             }
         } else if (isCurrentSingleScreen) {
             if (singlePlayer != null) {
                 if (!firstPlayerIsStop) {
                     singlePlayer.stop();
                     firstPlayerIsStop = true;
-                    if (getActivity() != null)
+                    if (getActivity() != null && currentPageIsVisible)
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -1343,7 +1383,7 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
                 } else {
                     firstPlayerIsStop = false;
                     singlePlayer.start();
-                    if (getActivity() != null)
+                    if (getActivity() != null && currentPageIsVisible)
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -1361,6 +1401,19 @@ public class VoideoFragment extends BaseFragment implements NodePlayerDelegate, 
      */
     @OnClick(R.id.send_alarmtoServer_button)
     public void sendAlarmToServer(View view) {
+
+        if (devicesList == null || devicesList.size() == 0) {
+            if (getActivity() != null && currentPageIsVisible) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showProgressFail("无视频源数据!");
+                    }
+                });
+            }
+            return;
+        }
+
         //获取选中的视频源对象
         VideoBean mVideoBean = devicesList.get(currentDevicePosition);
         //判断是否为空

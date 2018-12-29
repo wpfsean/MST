@@ -166,9 +166,7 @@ public class PortMainActivity extends BaseActivity {
         AppConfig.APP_DIRECTION = 1;
 
         initializeParamater();
-
-        //初始化sysInfo数据
-        initializeSysinfoData();
+        startAllService();
 
         //显示当前的时间
         initializeTime();
@@ -575,68 +573,8 @@ public class PortMainActivity extends BaseActivity {
         return super.dispatchTouchEvent(event);
     }
 
-    /**
-     * 获取本机的所有重要数据
-     */
-    private void initializeSysinfoData() {
-        //判断网络是否正常
-        if (!NetworkUtils.isConnected()) {
-            handler.sendEmptyMessage(2);
-            return;
-        }
-        //获取中心服务器地址
-        String serverIp = (String) SharedPreferencesUtils.getObject(PortMainActivity.this, "serverIp", "");
-        if (TextUtils.isEmpty(serverIp)) {
-            serverIp = AppConfig.SERVERIP;
-        }
-        String url = AppConfig.WEB_HOST + serverIp + AppConfig._SYSINFO;
-        //获取sysinfo数据
-        HttpBasicRequest httpBasicRequest = new HttpBasicRequest(url, new HttpBasicRequest.GetHttpData() {
-            @Override
-            public void httpData(String result) {
-                //无数据
-                if (TextUtils.isEmpty(result) || result.contains("Execption")) {
-                    handler.sendEmptyMessage(1);
-                    WriteLogToFile.info("获取Sysinfo数据失败或异常");
-                    return;
-                }
-                //让handler去处理数据
-                Message sysInfoMess = new Message();
-                sysInfoMess.what = 3;
-                sysInfoMess.obj = result;
-                handler.sendMessage(sysInfoMess);
-            }
-        });
-        new Thread(httpBasicRequest).start();
-    }
 
-    /**
-     * 处理Sysinfo数据
-     */
-    private void handlerSysinfoData(String result) {
-        try {
-            JSONObject jsonObject = new JSONObject(result);
-            if (jsonObject != null) {
-                SysInfoBean sysInfoBean = new SysInfoBean(jsonObject.getInt("alertPort"),
-                        jsonObject.getString("alertServer"), jsonObject.getString("deviceGuid"),
-                        jsonObject.getString("deviceName"), jsonObject.getInt("fingerprintPort"),
-                        jsonObject.getString("fingerprintServer"), jsonObject.getInt("heartbeatPort"),
-                        jsonObject.getString("heartbeatServer"), jsonObject.getString("sipPassword"),
-                        jsonObject.getString("sipServer"), jsonObject.getString("sipUsername"),
-                        jsonObject.getInt("webresourcePort"), jsonObject.getString("webresourceServer"), jsonObject.getInt("neighborWatchPort"));
 
-                //把Sysinfo数据写入文件
-                FileUtil.writeFile(CryptoUtil.encodeBASE64(GsonUtils.GsonString(sysInfoBean)), AppConfig.SYSINFO);
-                Logutil.i("sysinfo保存成功");
-                nativeSipNumber = sysInfoBean.getSipUsername();
-                startAllService();
-                registerSipToServer(sysInfoBean);
-            }
-        } catch (Exception e) {
-            WriteLogToFile.info("解析Sysinfo数据异常");
-            Logutil.e("解析Sysinfo数据异常--->>>" + e.getMessage());
-        }
-    }
 
 
     private void registerSipToServer(SysInfoBean sysInfoBean) {
@@ -706,7 +644,7 @@ public class PortMainActivity extends BaseActivity {
         if (!ServiceUtils.isServiceRunning(RequestWebApiDataService.class))
             ServiceUtils.startService(RequestWebApiDataService.class);
 
-        //启动服务获取CMS上的SIp数据并解析
+        //定时发送心跳
         if (!ServiceUtils.isServiceRunning(TimingSendHbService.class))
             ServiceUtils.startService(TimingSendHbService.class);
     }
@@ -901,9 +839,6 @@ public class PortMainActivity extends BaseActivity {
                         showProgressFail(getString(R.string.view_network_error));
                     break;
                 case 3:
-                    //处理Sysinfo数据
-                    String result = (String) msg.obj;
-                    handlerSysinfoData(result);
                     break;
                 case 4://显示当前的时间
                     if (isVisible)
