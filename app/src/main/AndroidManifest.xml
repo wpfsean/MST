@@ -67,6 +67,26 @@
             android:name=".ui.landactivity.LandMutilScreenActivity"
             android:screenOrientation="landscape" />
 
+        <activity
+            android:name=".ui.landactivity.LandSettingActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name=".ui.landactivity.LandChatActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name=".ui.landactivity.LandChatListActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name=".ui.landactivity.LandLuminanceActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name=".ui.landactivity.LandSingleCallActivity"
+            android:screenOrientation="landscape" />
+
 
         <!--================竖屏Activity======================-->
         <activity
@@ -121,6 +141,10 @@
         <service android:name=".services.RequestWebApiDataService" />
         <!--发送心跳的服务-->
         <service android:name=".services.TimingSendHbService" />
+        <!--接收报警的服务-->
+        <service android:name=".services.ReceiverEmergencyAlarmService"/>
+        <!--Sip保活服务-->
+        <service android:name=".services.TimingCheckSipStatus"/>
 
     </application>
 

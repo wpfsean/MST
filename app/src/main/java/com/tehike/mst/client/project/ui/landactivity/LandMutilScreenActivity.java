@@ -1389,7 +1389,6 @@ public class LandMutilScreenActivity extends BaseActivity implements NodePlayerD
         }
         handler.removeCallbacksAndMessages(null);
         threadIsRun = false;
-
         LandMutilScreenActivity.this.finish();
     }
 

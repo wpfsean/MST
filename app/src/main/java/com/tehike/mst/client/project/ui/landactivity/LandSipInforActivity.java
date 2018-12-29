@@ -31,7 +31,6 @@ import com.tehike.mst.client.project.base.App;
 import com.tehike.mst.client.project.base.BaseActivity;
 import com.tehike.mst.client.project.entity.SipBean;
 import com.tehike.mst.client.project.entity.SipClient;
-import com.tehike.mst.client.project.entity.SipGroupItemInfoBean;
 import com.tehike.mst.client.project.entity.VideoBean;
 import com.tehike.mst.client.project.global.AppConfig;
 import com.tehike.mst.client.project.linphone.Linphone;
@@ -148,7 +147,7 @@ public class LandSipInforActivity extends BaseActivity implements SwipeRefreshLa
     /**
      * 获取组内所有的sip数据
      */
-    List<SipGroupItemInfoBean> sipGroupItemDataList = new ArrayList<>();
+    List<SipBean> sipGroupItemDataList = new ArrayList<>();
 
     /**
      * 用于保存sipStatus接口返回的Sip状态
@@ -446,13 +445,13 @@ public class LandSipInforActivity extends BaseActivity implements SwipeRefreshLa
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonItem = jsonArray.getJSONObject(i);
                             //解析
-                            SipGroupItemInfoBean groupItemInfoBean = new SipGroupItemInfoBean();
+                            SipBean groupItemInfoBean = new SipBean();
                             groupItemInfoBean.setDeviceType(jsonItem.getString("deviceType"));
                             groupItemInfoBean.setId(jsonItem.getString("id"));
                             groupItemInfoBean.setIpAddress(jsonItem.getString("ipAddress"));
                             groupItemInfoBean.setName(jsonItem.getString("name"));
                             groupItemInfoBean.setNumber(jsonItem.getString("number"));
-                            groupItemInfoBean.setSentryId(jsonItem.getInt("sentryId"));
+                            groupItemInfoBean.setSentryId(jsonItem.getInt("sentryId")+"");
                             groupItemInfoBean.setState(-1);
                             //判断是否有面部视频
                             if (!jsonItem.isNull("videosource")) {
@@ -469,7 +468,7 @@ public class LandSipInforActivity extends BaseActivity implements SwipeRefreshLa
                                             jsonItemVideo.getString("password"),
                                             jsonItemVideo.getInt("port"),
                                             jsonItemVideo.getString("username"), "", "", "", "", "", "");
-                                    groupItemInfoBean.setBean(videoBean);
+                                    groupItemInfoBean.setVideoBean(videoBean);
                                 }
                             }
                             sipGroupItemDataList.add(groupItemInfoBean);
@@ -524,7 +523,7 @@ public class LandSipInforActivity extends BaseActivity implements SwipeRefreshLa
      */
     private void goChatPage() {
         if (sipGroupItemSelected != -1) {
-            SipGroupItemInfoBean mSipClient = sipGroupItemDataList.get(sipGroupItemSelected);
+            SipBean mSipClient = sipGroupItemDataList.get(sipGroupItemSelected);
             //判断当前选中的对象是否空
             if (mSipClient != null) {
                 String currentName = mSipClient.getNumber();
@@ -544,12 +543,12 @@ public class LandSipInforActivity extends BaseActivity implements SwipeRefreshLa
             }
             //跳转页面并传递数据
             if (mSipClient != null) {
-//                Intent intent = new Intent();
-//                intent.setClass(LandSipInforActivity.this, LandChatActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("sipclient", mSipClient);
-//                intent.putExtras(bundle);
-//                LandSipInforActivity.this.startActivity(intent);
+                Intent intent = new Intent();
+                intent.setClass(LandSipInforActivity.this, LandChatActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("sipclient", mSipClient);
+                intent.putExtras(bundle);
+                LandSipInforActivity.this.startActivity(intent);
             }
         }
     }
@@ -638,7 +637,7 @@ public class LandSipInforActivity extends BaseActivity implements SwipeRefreshLa
     private void makeCall(int i) {
         if (sipGroupItemSelected != -1) {
             //获取选中的对象
-            SipGroupItemInfoBean mSipClient = sipGroupItemDataList.get(sipGroupItemSelected);
+            SipBean mSipClient = sipGroupItemDataList.get(sipGroupItemSelected);
             //判断对象是为空
             if (mSipClient != null) {
                 //判断自身sip状态信息
@@ -659,10 +658,10 @@ public class LandSipInforActivity extends BaseActivity implements SwipeRefreshLa
                 //开启（声音）外放
                 Linphone.toggleSpeaker(true);
                 //传递数据并跳转
-//                intent.putExtra("callerNumber", mSipClient.getNumber());
-//                intent.putExtra("isMakingCall", true);
-//                intent.setClass(LandSipInforActivity.this, LandSingleCallActivity.class);
-//                startActivity(intent);
+                intent.putExtra("callerNumber", mSipClient.getNumber());
+                intent.putExtra("isMakingCall", true);
+                intent.setClass(LandSipInforActivity.this, LandSingleCallActivity.class);
+                startActivity(intent);
             }
         }
     }
@@ -1058,7 +1057,7 @@ public class LandSipInforActivity extends BaseActivity implements SwipeRefreshLa
              */
             if (sipGroupItemDataList != null) {
                 //获取当前的单个对象
-                SipGroupItemInfoBean mSipClient = sipGroupItemDataList.get(position);
+                SipBean mSipClient = sipGroupItemDataList.get(position);
                 if (mSipClient != null) {
                     String currentName = mSipClient.getNumber();
                     //判断sip服役是否开启

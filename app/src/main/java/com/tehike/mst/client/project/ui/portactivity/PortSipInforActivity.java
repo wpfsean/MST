@@ -38,7 +38,6 @@ import com.tehike.mst.client.project.R;
 import com.tehike.mst.client.project.base.BaseActivity;
 import com.tehike.mst.client.project.entity.SipBean;
 import com.tehike.mst.client.project.entity.SipClient;
-import com.tehike.mst.client.project.entity.SipGroupItemInfoBean;
 import com.tehike.mst.client.project.entity.VideoBean;
 import com.tehike.mst.client.project.global.AppConfig;
 import com.tehike.mst.client.project.linphone.Linphone;
@@ -226,7 +225,7 @@ public class PortSipInforActivity extends BaseActivity implements SwipeRefreshLa
     /**
      * 获取组内所有的sip数据
      */
-    List<SipGroupItemInfoBean> sipGroupItemDataList = new ArrayList<>();
+    List<SipBean> sipGroupItemDataList = new ArrayList<>();
 
     /**
      * 用于保存sipStatus接口返回的Sip状态
@@ -610,7 +609,7 @@ public class PortSipInforActivity extends BaseActivity implements SwipeRefreshLa
      */
     private void goChatPage() {
         if (sipGroupItemSelected != -1) {
-            SipGroupItemInfoBean mSipClient = sipGroupItemDataList.get(sipGroupItemSelected);
+            SipBean mSipClient = sipGroupItemDataList.get(sipGroupItemSelected);
             //判断当前选中的对象是否空
             if (mSipClient != null) {
                 String currentName = mSipClient.getName();
@@ -628,12 +627,12 @@ public class PortSipInforActivity extends BaseActivity implements SwipeRefreshLa
             }
             //跳转页面并传递数据
             if (mSipClient != null) {
-//                Intent intent = new Intent();
-//                intent.setClass(PortSipInforActivity.this, PortChatActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("sipclient", mSipClient);
-//                intent.putExtras(bundle);
-//                PortSipInforActivity.this.startActivity(intent);
+                Intent intent = new Intent();
+                intent.setClass(PortSipInforActivity.this, PortChatActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("sipclient", mSipClient);
+                intent.putExtras(bundle);
+                PortSipInforActivity.this.startActivity(intent);
             }
         }
     }
@@ -818,13 +817,13 @@ public class PortSipInforActivity extends BaseActivity implements SwipeRefreshLa
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonItem = jsonArray.getJSONObject(i);
                             //解析
-                            SipGroupItemInfoBean groupItemInfoBean = new SipGroupItemInfoBean();
+                            SipBean groupItemInfoBean = new SipBean();
                             groupItemInfoBean.setDeviceType(jsonItem.getString("deviceType"));
                             groupItemInfoBean.setId(jsonItem.getString("id"));
                             groupItemInfoBean.setIpAddress(jsonItem.getString("ipAddress"));
                             groupItemInfoBean.setName(jsonItem.getString("name"));
                             groupItemInfoBean.setNumber(jsonItem.getString("number"));
-                            groupItemInfoBean.setSentryId(jsonItem.getInt("sentryId"));
+                            groupItemInfoBean.setSentryId(jsonItem.getInt("sentryId")+"");
                             groupItemInfoBean.setState(-1);
                             //判断是否有面部视频
                             if (!jsonItem.isNull("videosource")) {
@@ -841,7 +840,7 @@ public class PortSipInforActivity extends BaseActivity implements SwipeRefreshLa
                                             jsonItemVideo.getString("password"),
                                             jsonItemVideo.getInt("port"),
                                             jsonItemVideo.getString("username"), "", "", "", "", "", "");
-                                    groupItemInfoBean.setBean(videoBean);
+                                    groupItemInfoBean.setVideoBean(videoBean);
                                 }
                             }
                             sipGroupItemDataList.add(groupItemInfoBean);
@@ -1668,7 +1667,7 @@ public class PortSipInforActivity extends BaseActivity implements SwipeRefreshLa
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            SipGroupItemInfoBean mSipClient = sipGroupItemDataList.get(position);
+            SipBean mSipClient = sipGroupItemDataList.get(position);
             if (mSipClient != null) {
                 //显示设备名
                 String deviceName = mSipClient.getName();

@@ -1,10 +1,8 @@
 package com.tehike.mst.client.project.ui.landactivity;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tehike.mst.client.project.R;
-import com.tehike.mst.client.project.base.App;
 import com.tehike.mst.client.project.base.BaseActivity;
 import com.tehike.mst.client.project.global.AppConfig;
 import com.tehike.mst.client.project.services.LocationService;
@@ -36,9 +33,7 @@ import com.tehike.mst.client.project.services.ServiceUtils;
 import com.tehike.mst.client.project.sysinfo.SysInfoBean;
 import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
 import com.tehike.mst.client.project.ui.portactivity.PortLoginActivity;
-import com.tehike.mst.client.project.ui.portactivity.PortMainActivity;
 import com.tehike.mst.client.project.utils.ActivityUtils;
-import com.tehike.mst.client.project.utils.BatteryUtils;
 import com.tehike.mst.client.project.utils.CryptoUtil;
 import com.tehike.mst.client.project.utils.FileUtil;
 import com.tehike.mst.client.project.utils.GsonUtils;
@@ -50,70 +45,79 @@ import com.tehike.mst.client.project.utils.WriteLogToFile;
 
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.Socket;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 描述：横屏登录页面（通过获取VideoResources协议的长度判断是否登录成功）
+ * 描述：横屏登录界面
+ * 思路：验证webapi的sysinfo接口
  * ===============================
  *
  * @author wpfse wpfsean@126.com
  * @version V1.0
- * @Create at:2018/10/18 10:38
+ * @Create at:2018/12/29 14:25
  */
-
 public class LandLoginActivity extends BaseActivity {
 
     /**
      * 无网络时提示
      */
     @BindView(R.id.no_network_layout)
-    RelativeLayout noNetWorkShow;
+    RelativeLayout disPlayNoNetWorkLayout;
 
-    //进度动画
+    /**
+     * 登录动画
+     */
     @BindView(R.id.image_loading)
-    ImageView loadingImageView;
+    ImageView loadingImageViewLayout;
 
-    //登录错误信息提示
+    /**
+     * 登录错误信息提示
+     */
     @BindView(R.id.loin_error_infor_layout)
-    TextView promptErrorInforTextView;
+    TextView disPlayLoginErrorViewLayout;
 
-    //用户名
+    /**
+     * 用户名
+     */
     @BindView(R.id.edit_username_layout)
-    EditText editUserName;
+    EditText editUserNameLayout;
 
-    //密码
+    /**
+     * 密码
+     */
     @BindView(R.id.edit_userpass_layout)
-    EditText editUserPwd;
+    EditText editUserPwdLayout;
 
-    //记住密码Checkbox
+    /**
+     * 记住密码Checkbox
+     */
     @BindView(R.id.remember_pass_layout)
-    Checkable checkRememberPwd;
+    Checkable checkRememberPwdLayout;
 
-    //自动登录CheckBox
+    /**
+     * 自动登录CheckBox
+     */
     @BindView(R.id.auto_login_layout)
-    Checkable checkAutoLogin;
+    Checkable checkAutoLoginLayout;
 
-    //服务器
+    /**
+     * 服务器
+     */
     @BindView(R.id.edit_serviceip_layout)
-    EditText editServerIp;
+    EditText editServerIpLayout;
 
-    //修改服务器的checkbox
+    /**
+     * 修改服务器的checkbox
+     */
     @BindView(R.id.remembe_serverip_layout)
-    CheckBox checkUpdateServerIp;
+    CheckBox checkUpdateServerIpLayout;
 
     /**
      * 加载时的动画
@@ -124,6 +128,11 @@ public class LandLoginActivity extends BaseActivity {
      * 用户是否禁止权限
      */
     boolean mShowRequestPermission = true;
+
+    /**
+     * 存放未同同意的权限
+     */
+    List<String> noAgreePermissions = new ArrayList<>();
 
     /**
      * 需要申请的权限
@@ -139,10 +148,34 @@ public class LandLoginActivity extends BaseActivity {
     };
 
     /**
-     * 存放未同同意的权限
+     * 是否点击过了登录按键
      */
-    List<String> noAgreePermissions = new ArrayList<>();
+    boolean isClickLoginBtnFlag = false;
 
+    /**
+     * 获取输入框内的用户名
+     */
+    String enteredUserName = "";
+
+    /**
+     * 获取输入框内的密码
+     */
+    String enteredUserPwd = "";
+
+    /**
+     * 获取输入框内的服务器地址
+     */
+    String enteredServerIp = "";
+
+    /**
+     * 是否记住密码标识
+     */
+    boolean isRememberPwdFlag;
+
+    /**
+     * 是否自动登录标识
+     */
+    boolean isAutoLoginFlag;
 
     @Override
     protected int intiLayout() {
@@ -152,19 +185,34 @@ public class LandLoginActivity extends BaseActivity {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
 
-
         //申请所需要的权限
         checkAllPermissions();
+
+        setDirection();
+    }
+
+    /**
+     * 设置方向
+     */
+    private void setDirection() {
+        findViewById(R.id.land_set_direction_btn_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppConfig.APP_DIRECTION = 1;
+                ActivityUtils.removeAllActivity();
+                finish();
+                openActivity(PortLoginActivity.class);
+            }
+        });
     }
 
     /**
      * 申请权限
      */
     private void checkAllPermissions() {
-        //判断是否需要申请权限
+        //6.0权限动态申请
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             noAgreePermissions.clear();
-
             //遍历申请
             for (String permission : allPermissionList) {
                 if (ContextCompat.checkSelfPermission(LandLoginActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
@@ -177,20 +225,19 @@ public class LandLoginActivity extends BaseActivity {
                 String[] permissions = noAgreePermissions.toArray(new String[noAgreePermissions.size()]);
                 ActivityCompat.requestPermissions(LandLoginActivity.this, permissions, 1);
             } else {
-                //初始化参数
-                initParamaters();
+                //初始化数据
+                initializeData();
             }
         } else {
-            //初始化参数
-            initParamaters();
+            //初始化数据
+            initializeData();
         }
     }
 
     /**
      * 初始化数据
      */
-    private void initParamaters() {
-
+    private void initializeData() {
         //动画
         mLoadingAnim = AnimationUtils.loadAnimation(this, R.anim.loading);
 
@@ -206,36 +253,36 @@ public class LandLoginActivity extends BaseActivity {
         //判断是否自动登录
         boolean isAutoLogin = (boolean) SharedPreferencesUtils.getObject(LandLoginActivity.this, "autologin", false);
         if (isAutoLogin) {
-            loginSuccessToCms();
+            direcLoginSuccess();
         }
 
         boolean isrePwd = (boolean) SharedPreferencesUtils.getObject(LandLoginActivity.this, "isremember", false);
         if (isrePwd) {
-            checkRememberPwd.setChecked(true);
+            checkRememberPwdLayout.setChecked(true);
             //填充用户名框
             String db_name = SysinfoUtils.getUserName();
             if (!TextUtils.isEmpty(db_name)) {
-                editUserName.setText(db_name);
+                editUserNameLayout.setText(db_name);
             }
             //填充密码框
             String db_pwd = SysinfoUtils.getUserPwd();
             if (!TextUtils.isEmpty(db_pwd)) {
-                editUserPwd.setText(db_pwd);
+                editUserPwdLayout.setText(db_pwd);
             }
             //填充服务器地址框
             String db_server = SysinfoUtils.getServerIp();
             if (!TextUtils.isEmpty(db_server)) {
-                editServerIp.setText(db_server);
-                editServerIp.setEnabled(false);
+                editServerIpLayout.setText(db_server);
+                editServerIpLayout.setEnabled(false);
             }
             //修改服务器地址
-            checkUpdateServerIp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            checkUpdateServerIpLayout.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        editServerIp.setEnabled(true);
+                        editServerIpLayout.setEnabled(true);
                     } else {
-                        editServerIp.setEnabled(false);
+                        editServerIpLayout.setEnabled(false);
                     }
                 }
             });
@@ -273,61 +320,37 @@ public class LandLoginActivity extends BaseActivity {
         }
     }
 
-
-    //是否点击过了登录按键
-    boolean isLoginingFlag = false;
-    //获取输入框内的用户名
-    String name = "";
-    //获取输入框内的密码
-    String pass = "";
-    //获取输入框内的服务器地址
-    String server_IP = "";
-    //是否记住密码
-    boolean isRememberPwd;
-    //是否自动 登录
-    boolean isAutoLogin;
-    //tcp请求cms数据
-    Socket loginCmsTcp = null;
-
     /**
      * 登录
      */
     @OnClick(R.id.userlogin_button_layout)
     public void loginCMS(View view) {
-        promptErrorInforTextView.setText("");
+        disPlayLoginErrorViewLayout.setText("");
         //防止点击过快
         //获取当前输入框内的内容
-        name = editUserName.getText().toString().trim();
-        pass = editUserPwd.getText().toString().trim();
-        server_IP = editServerIp.getText().toString().trim();
+        enteredUserName = editUserNameLayout.getText().toString().trim();
+        enteredUserPwd = editUserPwdLayout.getText().toString().trim();
+        enteredServerIp = editServerIpLayout.getText().toString().trim();
         //判断信息是否齐全
-        if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(server_IP)) {
+        if (!TextUtils.isEmpty(enteredUserName) && !TextUtils.isEmpty(enteredUserPwd) && !TextUtils.isEmpty(enteredServerIp)) {
             //判断是否有网
             if (NetworkUtils.isConnected()) {
                 //加载动画显示
-                loadingImageView.setVisibility(View.VISIBLE);
-                loadingImageView.startAnimation(mLoadingAnim);
+                loadingImageViewLayout.setVisibility(View.VISIBLE);
+                loadingImageViewLayout.startAnimation(mLoadingAnim);
                 //正则表达
-                if (!NetworkUtils.isboolIp(server_IP)) {
+                if (!NetworkUtils.isboolIp(enteredServerIp)) {
                     handler.sendEmptyMessage(6);
                     return;
                 }
                 //判断是否正在登录
-                if (!isLoginingFlag) {
-                    TcpLoginCmsThread thread = new TcpLoginCmsThread(name, pass, server_IP);
+                if (!isClickLoginBtnFlag) {
+                    TcpLoginCmsThread thread = new TcpLoginCmsThread(enteredUserName, enteredUserPwd, enteredServerIp);
                     new Thread(thread).start();
-                    isLoginingFlag = true;
+                    isClickLoginBtnFlag = true;
                 } else {
                     //取消登录，并关闭socket
-                    isLoginingFlag = false;
-                    if (loginCmsTcp != null) {
-                        try {
-                            loginCmsTcp.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        loginCmsTcp = null;
-                    }
+                    isClickLoginBtnFlag = false;
                     //提示取消登录
                     handler.sendEmptyMessage(9);
                 }
@@ -393,35 +416,7 @@ public class LandLoginActivity extends BaseActivity {
     }
 
     /**
-     * 按home键时保存当前的输入状态
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("name", editUserName.getText().toString().trim());
-        outState.putString("pass", editUserPwd.getText().toString().trim());
-        outState.putString("serverip", editServerIp.getText().toString().trim());
-    }
-
-    /**
-     * 恢复刚才的输入状态
-     */
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        editUserName.setText(savedInstanceState.getString("name"));
-        editUserPwd.setText(savedInstanceState.getString("pass"));
-        editServerIp.setText(savedInstanceState.getString("serverip"));
-    }
-
-    @Override
-    public void onNetChange(int state, String name) {
-
-    }
-
-    /**
      * 处理登录 接口的sysinfo数据
-     *
      */
     private void handlerSysinfoData(String result) {
         try {
@@ -455,31 +450,31 @@ public class LandLoginActivity extends BaseActivity {
      */
     private void LoginSuccessMethond() {
         //获取记住密码的状态
-        isRememberPwd = checkRememberPwd.isChecked();
+        isRememberPwdFlag = checkRememberPwdLayout.isChecked();
         //获取自动登录的状态
-        isAutoLogin = checkAutoLogin.isChecked();
+        isAutoLoginFlag = checkAutoLoginLayout.isChecked();
         //判断当前是否记住密码，如果记住密码就把配置信息提前插入数据库
-        if (isRememberPwd) {
+        if (isRememberPwdFlag) {
             //保存记住密码的状态
-            SharedPreferencesUtils.putObject(LandLoginActivity.this, "isremember", isRememberPwd);
+            SharedPreferencesUtils.putObject(LandLoginActivity.this, "isremember", isRememberPwdFlag);
         }
         //保存自动登录的状态
-        if (isAutoLogin) {
-            SharedPreferencesUtils.putObject(LandLoginActivity.this, "autologin", isRememberPwd);
+        if (isAutoLoginFlag) {
+            SharedPreferencesUtils.putObject(LandLoginActivity.this, "autologin", isRememberPwdFlag);
         }
 
-        SharedPreferencesUtils.putObject(LandLoginActivity.this, "serverIp", server_IP);
-        SharedPreferencesUtils.putObject(LandLoginActivity.this, "userPwd", pass);
-        SharedPreferencesUtils.putObject(LandLoginActivity.this, "userName", name);
+        SharedPreferencesUtils.putObject(LandLoginActivity.this, "serverIp", enteredServerIp);
+        SharedPreferencesUtils.putObject(LandLoginActivity.this, "userPwd", enteredUserPwd);
+        SharedPreferencesUtils.putObject(LandLoginActivity.this, "userName", enteredUserName);
         //赋值给常量
-        AppConfig.USERNAME = name;
-        AppConfig.PWD = pass;
-        AppConfig.SERVERIP = server_IP;
+        AppConfig.USERNAME = enteredUserName;
+        AppConfig.PWD = enteredUserPwd;
+        AppConfig.SERVERIP = enteredServerIp;
         //延迟半秒后登录成功（取消动画的加载状态）
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                loginSuccessToCms();
+                direcLoginSuccess();
             }
         }, 500);
     }
@@ -487,7 +482,7 @@ public class LandLoginActivity extends BaseActivity {
     /**
      * 成功登录cms（cms验证通过）
      */
-    public void loginSuccessToCms() {
+    public void direcLoginSuccess() {
         handler.sendEmptyMessage(4);
         //跳转到主页面并finish本页面
         Intent intent = new Intent(LandLoginActivity.this, LandMainActivity.class);
@@ -522,7 +517,7 @@ public class LandLoginActivity extends BaseActivity {
                     }
                 }
                 //初始化参数
-                initParamaters();
+                initializeData();
                 break;
             default:
                 break;
@@ -558,8 +553,39 @@ public class LandLoginActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 按home键时保存当前的输入状态
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("enteredUserName", editUserNameLayout.getText().toString().trim());
+        outState.putString("enteredUserPwd", editUserPwdLayout.getText().toString().trim());
+        outState.putString("serverip", editServerIpLayout.getText().toString().trim());
+    }
+
+    /**
+     * 恢复刚才的输入状态
+     */
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        editUserNameLayout.setText(savedInstanceState.getString("enteredUserName"));
+        editUserPwdLayout.setText(savedInstanceState.getString("enteredUserPwd"));
+        editServerIpLayout.setText(savedInstanceState.getString("serverip"));
+    }
+
+    @Override
+    public void onNetChange(int state, String name) {
+        if (state == -1 || state == 5) {
+            handler.sendEmptyMessage(1);
+        }
+    }
+
     @Override
     protected void onDestroy() {
+
+        loadingImageViewLayout.clearAnimation();
 
         if (mLoadingAnim != null)
             mLoadingAnim = null;
@@ -577,58 +603,65 @@ public class LandLoginActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+                case 1:
+                    //网络异常
+                    if (isVisible) {
+                        showProgressFail("网络异常,请检查网络！");
+                    }
+                    break;
                 case 3:
                     //提示网络不可用
-                    promptErrorInforTextView.setVisibility(View.VISIBLE);
-                    promptErrorInforTextView.setText("网络不可用!");
+                    disPlayLoginErrorViewLayout.setVisibility(View.VISIBLE);
+                    disPlayLoginErrorViewLayout.setText("网络异常");
                     break;
                 case 4:
                     //登录成功
-                    loadingImageView.setVisibility(View.GONE);
-                    loadingImageView.clearAnimation();
-                    promptErrorInforTextView.setVisibility(View.VISIBLE);
-                    promptErrorInforTextView.setText("");
+                    loadingImageViewLayout.setVisibility(View.GONE);
+                    loadingImageViewLayout.clearAnimation();
+                    disPlayLoginErrorViewLayout.setVisibility(View.VISIBLE);
+                    disPlayLoginErrorViewLayout.setText("");
                     break;
                 case 5:
                     //登录信息缺失
-                    loadingImageView.setVisibility(View.GONE);
-                    loadingImageView.clearAnimation();
-                    promptErrorInforTextView.setVisibility(View.VISIBLE);
-                    promptErrorInforTextView.setText("信息缺失");
+                    loadingImageViewLayout.setVisibility(View.GONE);
+                    loadingImageViewLayout.clearAnimation();
+                    disPlayLoginErrorViewLayout.setVisibility(View.VISIBLE);
+                    disPlayLoginErrorViewLayout.setText("信息缺失");
                     break;
                 case 6:
                     //ip不合法
-                    promptErrorInforTextView.setVisibility(View.VISIBLE);
-                    promptErrorInforTextView.setText("服务器ip不合法!");
-                    loadingImageView.setVisibility(View.GONE);
-                    loadingImageView.clearAnimation();
+                    disPlayLoginErrorViewLayout.setVisibility(View.VISIBLE);
+                    disPlayLoginErrorViewLayout.setText("服务器ip不合法!");
+                    loadingImageViewLayout.setVisibility(View.GONE);
+                    loadingImageViewLayout.clearAnimation();
                     break;
                 case 7:
                     //ip不合法
-                    promptErrorInforTextView.setVisibility(View.VISIBLE);
-                    promptErrorInforTextView.setText("登录未获取本机Ip!");
-                    loadingImageView.setVisibility(View.GONE);
-                    loadingImageView.clearAnimation();
+                    disPlayLoginErrorViewLayout.setVisibility(View.VISIBLE);
+                    disPlayLoginErrorViewLayout.setText("登录未获取本机Ip!");
+                    loadingImageViewLayout.setVisibility(View.GONE);
+                    loadingImageViewLayout.clearAnimation();
                     break;
                 case 8:
                     //登录失败
-                    promptErrorInforTextView.setVisibility(View.VISIBLE);
-                    promptErrorInforTextView.setText("登录失败");
-                    loadingImageView.setVisibility(View.GONE);
-                    loadingImageView.clearAnimation();
+                    disPlayLoginErrorViewLayout.setVisibility(View.VISIBLE);
+                    disPlayLoginErrorViewLayout.setText("登录失败");
+                    loadingImageViewLayout.setVisibility(View.GONE);
+                    loadingImageViewLayout.clearAnimation();
                     break;
                 case 9:
                     //取消登录
-                    promptErrorInforTextView.setVisibility(View.VISIBLE);
-                    promptErrorInforTextView.setText("取消登录");
-                    loadingImageView.setVisibility(View.GONE);
-                    loadingImageView.clearAnimation();
+                    disPlayLoginErrorViewLayout.setVisibility(View.VISIBLE);
+                    disPlayLoginErrorViewLayout.setText("取消登录");
+                    loadingImageViewLayout.setVisibility(View.GONE);
+                    loadingImageViewLayout.clearAnimation();
                     break;
                 case 10:
                     //登录成功
                     LoginSuccessMethond();
                     break;
                 case 11:
+                    //处理sysinfo数据
                     String result = (String) msg.obj;
                     handlerSysinfoData(result);
                     break;

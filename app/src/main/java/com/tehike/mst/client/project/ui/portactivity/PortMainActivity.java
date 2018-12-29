@@ -34,8 +34,10 @@ import com.tehike.mst.client.project.linphone.PhoneCallback;
 import com.tehike.mst.client.project.linphone.RegistrationCallback;
 import com.tehike.mst.client.project.linphone.SipManager;
 import com.tehike.mst.client.project.linphone.SipService;
+import com.tehike.mst.client.project.services.ReceiverEmergencyAlarmService;
 import com.tehike.mst.client.project.services.RequestWebApiDataService;
 import com.tehike.mst.client.project.services.ServiceUtils;
+import com.tehike.mst.client.project.services.TimingCheckSipStatus;
 import com.tehike.mst.client.project.services.TimingSendHbService;
 import com.tehike.mst.client.project.sysinfo.SysInfoBean;
 import com.tehike.mst.client.project.global.AppConfig;
@@ -179,6 +181,8 @@ public class PortMainActivity extends BaseActivity {
             //异常后，注册广播监听videoSource数据是否初始化成功
             registerRefreshVideoDataBroadcast();
         }
+
+        registerSipWithSipServer();
     }
 
     /**
@@ -263,7 +267,7 @@ public class PortMainActivity extends BaseActivity {
      */
     private void JumpSpecifiPage(int current) {
         Intent intent = new Intent();
-           intent.setClass(PortMainActivity.this, PortMainFragmentActivity.class);
+        intent.setClass(PortMainActivity.this, PortMainFragmentActivity.class);
         intent.putExtra("current", current);
         PortMainActivity.this.startActivity(intent);
     }
@@ -334,7 +338,7 @@ public class PortMainActivity extends BaseActivity {
                     if (popu.isShowing()) {
                         popu.dismiss();
                     }
-                      intent.setClass(PortMainActivity.this, PortSettingActivity.class);
+                    intent.setClass(PortMainActivity.this, PortSettingActivity.class);
                     PortMainActivity.this.startActivity(intent);
                 } else {
                     //不正确就提示
@@ -573,14 +577,6 @@ public class PortMainActivity extends BaseActivity {
         return super.dispatchTouchEvent(event);
     }
 
-
-
-
-
-    private void registerSipToServer(SysInfoBean sysInfoBean) {
-    }
-
-
     /**
      * 显示当前的时间
      */
@@ -647,6 +643,15 @@ public class PortMainActivity extends BaseActivity {
         //定时发送心跳
         if (!ServiceUtils.isServiceRunning(TimingSendHbService.class))
             ServiceUtils.startService(TimingSendHbService.class);
+
+        //启动接收报警的服务
+        if (!ServiceUtils.isServiceRunning(ReceiverEmergencyAlarmService.class))
+            ServiceUtils.startService(ReceiverEmergencyAlarmService.class);
+
+        //启动Sip保活的服务
+        if (!ServiceUtils.isServiceRunning(TimingCheckSipStatus.class))
+            ServiceUtils.startService(TimingCheckSipStatus.class);
+
     }
 
     @Override
@@ -727,9 +732,45 @@ public class PortMainActivity extends BaseActivity {
 
 
     /**
+     * 注册Sip信息
+     */
+    private void registerSipWithSipServer() {
+        //获取sysinfo接口数据
+        SysInfoBean mSysInfoBean = SysinfoUtils.getSysinfo();
+        //判断sysinfo对象是否为空
+        if (mSysInfoBean == null) {
+            Logutil.e("注册Sip时信息缺失！");
+            WriteLogToFile.info("注册Sip时信息缺失！");
+            return;
+        }
+        //获取sip的所有数据
+        final String sipNumber = mSysInfoBean.getSipUsername();
+        final String sipPwd = mSysInfoBean.getSipPassword();
+        final String sipServer = mSysInfoBean.getSipServer();
+        //判断sip数据是否为空
+        if (TextUtils.isEmpty(sipNumber) || TextUtils.isEmpty(sipPwd) || TextUtils.isEmpty(sipServer)) {
+            Logutil.e("注册Sip时信息缺失！");
+            WriteLogToFile.info("注册Sip时信息缺失！");
+            return;
+        }
+        if (!SipService.isReady()) {
+            Linphone.startService(this);
+
+            if (!AppConfig.SIP_STATUS) {
+                Linphone.setAccount(sipNumber, sipPwd, sipServer);
+                Linphone.login();
+            }
+        }
+    }
+
+
+    /**
      * Linphone状态回调
      */
     private void linphoneCallback() {
+
+        if (!SipService.isReady())
+            Linphone.startService(this);
 
         //linphone状态回调
         Linphone.addCallback(new RegistrationCallback() {
@@ -818,7 +859,7 @@ public class PortMainActivity extends BaseActivity {
         //停止时间线程
         threadIsRun = false;
 
-        if (broadcast != null){
+        if (broadcast != null) {
             this.unregisterReceiver(broadcast);
         }
 

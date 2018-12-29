@@ -1,11 +1,9 @@
 package com.tehike.mst.client.project.ui.landactivity;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tehike.mst.client.project.R;
 import com.tehike.mst.client.project.base.App;
@@ -36,18 +35,18 @@ import com.tehike.mst.client.project.linphone.PhoneCallback;
 import com.tehike.mst.client.project.linphone.RegistrationCallback;
 import com.tehike.mst.client.project.linphone.SipManager;
 import com.tehike.mst.client.project.linphone.SipService;
+import com.tehike.mst.client.project.services.ReceiverEmergencyAlarmService;
 import com.tehike.mst.client.project.services.RequestWebApiDataService;
 import com.tehike.mst.client.project.services.ServiceUtils;
+import com.tehike.mst.client.project.services.TimingCheckSipStatus;
 import com.tehike.mst.client.project.services.TimingSendHbService;
 import com.tehike.mst.client.project.sysinfo.SysInfoBean;
 import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
-import com.tehike.mst.client.project.ui.portactivity.PortMainActivity;
 import com.tehike.mst.client.project.utils.CryptoUtil;
 import com.tehike.mst.client.project.utils.FileUtil;
 import com.tehike.mst.client.project.utils.GsonUtils;
 import com.tehike.mst.client.project.utils.Logutil;
 import com.tehike.mst.client.project.utils.NetworkUtils;
-import com.tehike.mst.client.project.utils.SharedPreferencesUtils;
 import com.tehike.mst.client.project.utils.ToastUtils;
 import com.tehike.mst.client.project.utils.WriteLogToFile;
 
@@ -68,54 +67,63 @@ import butterknife.OnClick;
  * @version V1.0
  * @Create at:2018/10/18 15:54
  */
-
-
 public class LandMainActivity extends BaseActivity {
 
     /**
      * 显示当前时间分秒
      */
     @BindView(R.id.home_show_current_time_layout)
-    TextView currentTimeLayout;
+    TextView disPlayCurrentTimeLayout;
 
     /**
      * 显示当前的年月日
      */
     @BindView(R.id.show_display_year_layout)
-    TextView currentYearLayout;
+    TextView disPlayCurrentYearLayout;
 
     /**
-     * Sip是否在线状态
+     * 显示sip状态的布局
      */
     @BindView(R.id.home_sip_online_layout)
-    ImageView sipStatusIcon;
+    ImageView disPlaysipIconLayout;
 
     /**
      * 电池电量状态图标
      */
     @BindView(R.id.home_battery_infor_layout)
-    ImageView batteryStatusIcon;
+    ImageView disPlayBatteryIconLayout;
 
     /**
      * 信息状态图标
      */
     @BindView(R.id.home_signal_infor_layout)
-    ImageView signalStatusIcon;
+    ImageView disPlaysipMessIconLayout;
 
+    /**
+     * 显示加载动画
+     */
     @BindView(R.id.open_box_loading_icon_layout)
-    ImageView loadingIcon;
+    ImageView disPlayLoadingIconLayout;
 
     /**
      * 线程是否正在运行
      */
-    boolean threadIsRun = true;
+    boolean timeThreadIsRun = true;
 
     /**
-     * 本机的ip
+     * 显示报警的弹窗
      */
-    String ip = "";
+    PopupWindow disPlayAlarmPopuWindow = null;
 
-    RefreshVideoDataBroadcast broadcast;
+    /**
+     * 本机Ip
+     */
+    String nativeIpAddrees = "";
+
+    /**
+     * 用于接收video资源缓存成功后的广播
+     */
+    RefreshSipDataBroadcast mRefreshVideoDataBroadcast;
 
     /**
      * 本地缓存的所有的视频数制（视频字典）
@@ -130,12 +138,13 @@ public class LandMainActivity extends BaseActivity {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
 
+        AppConfig.APP_DIRECTION = 2;
+
         //初始化所有服务
         initializeAllService();
 
         //显示当前日期
         initializeCurrentDate();
-
 
         //先判断本地的视频源数据是否存在(报异常)
         try {
@@ -143,28 +152,31 @@ public class LandMainActivity extends BaseActivity {
             allSipSourcesList = GsonUtils.GsonToList(CryptoUtil.decodeBASE64(videoSourceStr), SipBean.class);
         } catch (Exception e) {
             //异常后，注册广播监听videoSource数据是否初始化成功
-            registerRefreshVideoDataBroadcast();
+            registerRefreshSipDataBroadcast();
         }
 
+        //向sip服务器注册信息
+        registerSipWithSipServer();
     }
 
     /**
-     * 广播（用于接收视频字典缓存成功后，适配本页面数据）
+     * 广播（用于接收Sip數據字典缓存成功后，适配本页面数据）
      */
-    private void registerRefreshVideoDataBroadcast() {
-        broadcast = new RefreshVideoDataBroadcast();
+    private void registerRefreshSipDataBroadcast() {
+        mRefreshVideoDataBroadcast = new RefreshSipDataBroadcast();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(AppConfig.RESOLVE_VIDEO_DONE_ACTION);
-        this.registerReceiver(broadcast, intentFilter);
+        this.registerReceiver(mRefreshVideoDataBroadcast, intentFilter);
     }
 
     /**
      * SipSources字典广播
      */
-    class RefreshVideoDataBroadcast extends BroadcastReceiver {
+    class RefreshSipDataBroadcast extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
+                Logutil.d("Sip數據緩存成功");
                 //取出本地缓存的所有的Video数据
                 allSipSourcesList = GsonUtils.GsonToList(CryptoUtil.decodeBASE64(FileUtil.readFile(AppConfig.SOURCES_SIP).toString()), SipBean.class);
             } catch (Exception e) {
@@ -185,11 +197,17 @@ public class LandMainActivity extends BaseActivity {
         SimpleDateFormat dateD = new SimpleDateFormat("yyyy年MM月dd日");
         long time = System.currentTimeMillis();
         Date date = new Date(time);
-        currentYearLayout.setText(dateD.format(date).toString());
+        disPlayCurrentYearLayout.setText(dateD.format(date).toString());
 
     }
 
+    /**
+     * 开启必要的服务
+     */
     private void initializeAllService() {
+        //获取本机ip
+        if (NetworkUtils.isConnected())
+            nativeIpAddrees = NetworkUtils.getIPAddress(true);
 
         //启动获取Webapi的数据
         if (!ServiceUtils.isServiceRunning(RequestWebApiDataService.class))
@@ -199,22 +217,45 @@ public class LandMainActivity extends BaseActivity {
         if (!ServiceUtils.isServiceRunning(TimingSendHbService.class))
             ServiceUtils.startService(TimingSendHbService.class);
 
+        //启动接收报警的服务
+        if (!ServiceUtils.isServiceRunning(ReceiverEmergencyAlarmService.class))
+            ServiceUtils.startService(ReceiverEmergencyAlarmService.class);
 
-        //获取本机ip
-        if (NetworkUtils.isConnected())
-            ip = NetworkUtils.getIPAddress(true);
+        //启动Sip保活的服务
+        if (!ServiceUtils.isServiceRunning(TimingCheckSipStatus.class))
+            ServiceUtils.startService(TimingCheckSipStatus.class);
+
     }
 
     /**
-     * 网络状态变化回调
-     *
-     * @param state 5和-1是无网络
-     * @param name
+     * 注册Sip信息
      */
-    @Override
-    public void onNetChange(int state, String name) {
-        if (state == -1 || state == 5) {
-            handler.sendEmptyMessage(5);
+    private void registerSipWithSipServer() {
+        //获取sysinfo接口数据
+        SysInfoBean mSysInfoBean = SysinfoUtils.getSysinfo();
+        //判断sysinfo对象是否为空
+        if (mSysInfoBean == null) {
+            Logutil.e("注册Sip时信息缺失！");
+            WriteLogToFile.info("注册Sip时信息缺失！");
+            return;
+        }
+        //获取sip的所有数据
+        final String sipNumber = mSysInfoBean.getSipUsername();
+        final String sipPwd = mSysInfoBean.getSipPassword();
+        final String sipServer = mSysInfoBean.getSipServer();
+        //判断sip数据是否为空
+        if (TextUtils.isEmpty(sipNumber) || TextUtils.isEmpty(sipPwd) || TextUtils.isEmpty(sipServer)) {
+            Logutil.e("注册Sip时信息缺失！");
+            WriteLogToFile.info("注册Sip时信息缺失！");
+            return;
+        }
+        if (!SipService.isReady()) {
+            Linphone.startService(this);
+
+            if (!AppConfig.SIP_STATUS) {
+                Linphone.setAccount(sipNumber, sipPwd, sipServer);
+                Linphone.login();
+            }
         }
     }
 
@@ -228,7 +269,7 @@ public class LandMainActivity extends BaseActivity {
             //进行设置中心按键
             case R.id.seting_icon_layout:
                 if (intent != null) {
-                    VerifyPwdDialog(intent);
+                    disPlayVerifyPwdDialog(intent);
                 }
                 break;
             //视频对讲
@@ -263,11 +304,11 @@ public class LandMainActivity extends BaseActivity {
                 break;
             //应急报警
             case R.id.alarm_btn:
-                DisplayAlarmSelectionDialog();
+                DisplayAlarmSelectDialog();
                 break;
             //申请供弹
             case R.id.apply_for_play_btn:
-                OpenBullueBox();
+                OpenBlueBox();
                 break;
             case R.id.the_standby_play_btn1:
                 showProgressSuccess("正在开发!");
@@ -278,13 +319,10 @@ public class LandMainActivity extends BaseActivity {
         }
     }
 
-
     /**
      * 弹出验证密码框
-     *
-     * @param intent
      */
-    private void VerifyPwdDialog(final Intent intent) {
+    private void disPlayVerifyPwdDialog(final Intent intent) {
 
         //显示的view
         View view = LayoutInflater.from(this).inflate(R.layout.prompt_verification_pwd_layout, null);
@@ -333,8 +371,8 @@ public class LandMainActivity extends BaseActivity {
                     if (popu.isShowing()) {
                         popu.dismiss();
                     }
-//                    intent.setClass(LandMainActivity.this, LandSettingActivity.class);
-//                    LandMainActivity.this.startActivity(intent);
+                    intent.setClass(LandMainActivity.this, LandSettingActivity.class);
+                    LandMainActivity.this.startActivity(intent);
                 } else {
                     //不正确就提示
                     handler.sendEmptyMessage(22);
@@ -344,13 +382,13 @@ public class LandMainActivity extends BaseActivity {
     }
 
     /**
-     * 申请开户子弹箱
+     * 申请开启蓝牙弹箱
      */
-    private void OpenBullueBox() {
+    private void OpenBlueBox() {
         //加载动画
         Animation mLoadingAnim = AnimationUtils.loadAnimation(this, R.anim.loading);
-        loadingIcon.setVisibility(View.VISIBLE);
-        loadingIcon.setAnimation(mLoadingAnim);
+        disPlayLoadingIconLayout.setVisibility(View.VISIBLE);
+        disPlayLoadingIconLayout.setAnimation(mLoadingAnim);
         //子线程去请求开启
         AmmoRequestCallBack ammoRequestCallBack = new AmmoRequestCallBack(new AmmoRequestCallBack.GetDataListern() {
             @Override
@@ -371,44 +409,36 @@ public class LandMainActivity extends BaseActivity {
     }
 
     /**
-     * Popuwindow弹窗事件
-     */
-    PopupWindow popu = null;
-
-    /**
      * 弹出报警选择窗口
      */
-    private void DisplayAlarmSelectionDialog() {
+    private void DisplayAlarmSelectDialog() {
 
         //要加载的布局view
         View view = LayoutInflater.from(this).inflate(R.layout.activity_land_home_alert_dialog_layout, null);
         //popu显示
-        popu = new PopupWindow(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        popu.setContentView(view);
+        disPlayAlarmPopuWindow = new PopupWindow(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        disPlayAlarmPopuWindow.setContentView(view);
         //popu要显示的位置
         View rootview = LayoutInflater.from(LandMainActivity.this).inflate(R.layout.activity_land_main, null);
-        popu.showAtLocation(rootview, Gravity.TOP | Gravity.CENTER, 0, 40);
-        popu.setBackgroundDrawable(new BitmapDrawable());
-        popu.setFocusable(true);
-        popu.setTouchable(false);
-        popu.setOutsideTouchable(false);
+        disPlayAlarmPopuWindow.showAtLocation(rootview, Gravity.TOP | Gravity.CENTER, 0, 40);
+        disPlayAlarmPopuWindow.setBackgroundDrawable(new BitmapDrawable());
+        disPlayAlarmPopuWindow.setFocusable(true);
+        disPlayAlarmPopuWindow.setTouchable(false);
+        disPlayAlarmPopuWindow.setOutsideTouchable(false);
         //设置透明度
         WindowManager.LayoutParams lp = getWindow().getAttributes();
         lp.alpha = 0.4f;
         getWindow().setAttributes(lp);
         //popu内的点击事件
-        popuClickEvent(view, popu);
+        popuClickEvent(view, disPlayAlarmPopuWindow);
     }
 
     /**
      * popuwindow显示时，阻止activity事件分发机制
-     *
-     * @param event
-     * @return
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (popu != null && popu.isShowing()) {
+        if (disPlayAlarmPopuWindow != null && disPlayAlarmPopuWindow.isShowing()) {
             return false;
         }
         return super.dispatchTouchEvent(event);
@@ -416,9 +446,6 @@ public class LandMainActivity extends BaseActivity {
 
     /**
      * 弹窗内按键的点击事件
-     *
-     * @param view
-     * @param popu
      */
     private void popuClickEvent(View view, final PopupWindow popu) {
         //脱逃
@@ -505,12 +532,10 @@ public class LandMainActivity extends BaseActivity {
 
     /**
      * 向后台服务器发送报警消息
-     *
-     * @param type
      */
     private void sendEmergencyAlarm(String type) {
 
-        popu.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        disPlayAlarmPopuWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             //在dismiss中恢复透明度
             public void onDismiss() {
                 WindowManager.LayoutParams lp = getWindow().getAttributes();
@@ -545,6 +570,7 @@ public class LandMainActivity extends BaseActivity {
         //若本机没有面部视频信息（模拟一个假的面部视频（不可用））
         if (videoBean == null) {
             Logutil.e("本机无视频源");
+            return;
         }
         //启动子线程去发送报警信息
         SendEmergencyAlarmToServerThrad sendEmergencyAlarmToServer = new SendEmergencyAlarmToServerThrad(videoBean, type, new SendEmergencyAlarmToServerThrad.Callback() {
@@ -569,18 +595,6 @@ public class LandMainActivity extends BaseActivity {
      */
     private void emergencyCallDutyRoom() {
 
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        //修改状态提示图标
-        upDateStatusPromptIcon();
-
-        //添加sip状态回调
-        linphoneStatusCallback();
     }
 
     /**
@@ -588,10 +602,15 @@ public class LandMainActivity extends BaseActivity {
      */
     private void linphoneStatusCallback() {
 
+        if (!SipService.isReady() || !SipManager.isInstanceiated()) {
+            Linphone.startService(App.getApplication());
+        }
+
         //linphone注册状态及电话状态的监听
         Linphone.addCallback(new RegistrationCallback() {
             @Override
             public void registrationProgress() {
+
                 Logutil.i("注册中");
             }
 
@@ -639,22 +658,84 @@ public class LandMainActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 提示开箱结果
+     */
+    private void disPlayOpenBoxResult(Message msg) {
+        //得到开箱结果
+        String result = (String) msg.obj;
+        //消失动画
+        disPlayLoadingIconLayout.clearAnimation();
+        disPlayLoadingIconLayout.setVisibility(View.GONE);
+        //提示开箱结果并写入log日志
+        if (result.contains("Execption")) {
+            showProgressFail("开箱失败！");
+        } else {
+            showProgressSuccess("开箱成功!");
+        }
+        WriteLogToFile.info("开箱结果:" + result);
+    }
+
+    /**
+     * 提示报警结果
+     */
+    private void disPlayAlarmResult(Message msg) {
+        String result = (String) msg.obj;
+        if (!TextUtils.isEmpty(result)) {
+            //提示报警结果并写入日志
+            if (result.contains("error")) {
+                showProgressFail("报警失败！");
+            } else {
+                showProgressSuccess("报警成功！");
+            }
+            WriteLogToFile.info("报警结果：" + result);
+        }
+    }
+
+    /**
+     * 返回键屏蔽
+     */
+    @Override
+    public void onBackPressed() {
+//       super.onBackPressed();
+    }
+
+    /**
+     * 网络状态变化回调
+     */
+    @Override
+    public void onNetChange(int state, String name) {
+        if (state == -1 || state == 5) {
+            handler.sendEmptyMessage(5);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //修改状态提示图标
+        upDateStatusPromptIcon();
+
+        //添加sip状态回调
+        linphoneStatusCallback();
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
         //poPu消失
-        if (popu != null) {
-            popu.dismiss();
+        if (disPlayAlarmPopuWindow != null) {
+            disPlayAlarmPopuWindow.dismiss();
         }
 
-        if (broadcast != null) {
-            this.unregisterReceiver(broadcast);
+        if (mRefreshVideoDataBroadcast != null) {
+            this.unregisterReceiver(mRefreshVideoDataBroadcast);
         }
 
         //刷新时间的线程停止
-        threadIsRun = false;
+        timeThreadIsRun = false;
         //handler移除监听
         if (handler != null)
             handler.removeCallbacksAndMessages(null);
@@ -674,8 +755,9 @@ public class LandMainActivity extends BaseActivity {
                     Logutil.i("Thread error:" + e.getMessage());
                 }
                 handler.sendEmptyMessage(1);
-            } while (threadIsRun);
+            } while (timeThreadIsRun);
         }
+
     }
 
     /**
@@ -687,7 +769,7 @@ public class LandMainActivity extends BaseActivity {
         String currentTime = timeD.format(date).toString();
         if (!TextUtils.isEmpty(currentTime)) {
             if (isVisible)
-                currentTimeLayout.setText(currentTime);
+                disPlayCurrentTimeLayout.setText(currentTime);
         }
     }
 
@@ -698,37 +780,36 @@ public class LandMainActivity extends BaseActivity {
 
         //Sip状态
         if (AppConfig.SIP_STATUS) {
-            sipStatusIcon.setBackgroundResource(R.mipmap.icon_connection_normal);
+            disPlaysipIconLayout.setBackgroundResource(R.mipmap.icon_connection_normal);
         } else {
-            sipStatusIcon.setBackgroundResource(R.mipmap.icon_connection_disable);
+            disPlaysipIconLayout.setBackgroundResource(R.mipmap.icon_connection_disable);
         }
         //电池电量信息
         int level = AppConfig.DEVICE_BATTERY;
         if (level >= 75 && level <= 100) {
-            batteryStatusIcon.setBackgroundResource(R.mipmap.icon_electricity_a);
+            disPlayBatteryIconLayout.setBackgroundResource(R.mipmap.icon_electricity_a);
         }
         if (level >= 50 && level < 75) {
-            batteryStatusIcon.setBackgroundResource(R.mipmap.icon_electricity_b);
+            disPlayBatteryIconLayout.setBackgroundResource(R.mipmap.icon_electricity_b);
         }
         if (level >= 25 && level < 50) {
-            batteryStatusIcon.setBackgroundResource(R.mipmap.icon_electricity_c);
+            disPlayBatteryIconLayout.setBackgroundResource(R.mipmap.icon_electricity_c);
         }
         if (level >= 0 && level < 25) {
-            batteryStatusIcon.setBackgroundResource(R.mipmap.icon_electricity_disable);
+            disPlayBatteryIconLayout.setBackgroundResource(R.mipmap.icon_electricity_disable);
         }
         //信号 状态
         int rssi = AppConfig.DEVICE_WIFI;
         if (rssi > -50 && rssi < 0) {
-            signalStatusIcon.setBackgroundResource(R.mipmap.icon_network);
+            disPlaysipMessIconLayout.setBackgroundResource(R.mipmap.icon_network);
         } else if (rssi > -70 && rssi <= -50) {
-            signalStatusIcon.setBackgroundResource(R.mipmap.icon_network_a);
+            disPlaysipMessIconLayout.setBackgroundResource(R.mipmap.icon_network_a);
         } else if (rssi < -70) {
-            signalStatusIcon.setBackgroundResource(R.mipmap.icon_network_b);
+            disPlaysipMessIconLayout.setBackgroundResource(R.mipmap.icon_network_b);
         } else if (rssi == -200) {
-            signalStatusIcon.setBackgroundResource(R.mipmap.icon_network_disable);
+            disPlaysipMessIconLayout.setBackgroundResource(R.mipmap.icon_network_disable);
         }
     }
-
 
     /**
      * Handler处理子线程发送的消息
@@ -744,10 +825,10 @@ public class LandMainActivity extends BaseActivity {
                     break;
                 case 2://sip连接正常状态提示
                     if (isVisible)
-                        sipStatusIcon.setBackgroundResource(R.mipmap.icon_connection_normal);
+                        disPlaysipIconLayout.setBackgroundResource(R.mipmap.icon_connection_normal);
                     break;
                 case 3://sip断开状态提示
-                    sipStatusIcon.setBackgroundResource(R.mipmap.icon_connection_disable);
+                    disPlaysipIconLayout.setBackgroundResource(R.mipmap.icon_connection_disable);
                     break;
                 case 4://linphone服务未开启
                     showProgressFail("电话功能未启动！");
@@ -755,7 +836,8 @@ public class LandMainActivity extends BaseActivity {
                     Linphone.startService(App.getApplication());
                     break;
                 case 5://网络异常提示
-                    showProgressFail("请检查网络！");
+                    if (isVisible)
+                        showProgressFail("请检查网络！");
                     break;
                 case 6://未获取值班室信息
                     showProgressFail("未获取到值班室信息！");
@@ -768,12 +850,12 @@ public class LandMainActivity extends BaseActivity {
                     break;
                 case 9://提示报警结果
                     if (isVisible) {
-                        promptAlarmResult(msg);
+                        disPlayAlarmResult(msg);
                     }
                     break;
                 case 18://提示开箱结果
                     if (isVisible) {
-                        promptOpenBoxResult(msg);
+                        disPlayOpenBoxResult(msg);
                     }
                     break;
                 case 20://提示密码错误
@@ -789,52 +871,5 @@ public class LandMainActivity extends BaseActivity {
             }
         }
     };
-
-    /**
-     * 提示开箱结果
-     *
-     * @param msg
-     */
-    private void promptOpenBoxResult(Message msg) {
-        //得到开箱结果
-        String result = (String) msg.obj;
-        //消失动画
-        loadingIcon.clearAnimation();
-        loadingIcon.setVisibility(View.GONE);
-        //提示开箱结果并写入log日志
-        if (result.contains("Execption")) {
-            showProgressFail("开箱失败！");
-        } else {
-            showProgressSuccess("开箱成功!");
-        }
-        WriteLogToFile.info("开箱结果:" + result);
-    }
-
-    /**
-     * 提示报警结果
-     *
-     * @param msg
-     */
-    private void promptAlarmResult(Message msg) {
-        String result = (String) msg.obj;
-        if (!TextUtils.isEmpty(result)) {
-            //提示报警结果并写入日志
-            if (result.contains("error")) {
-                showProgressFail("报警失败！");
-            } else {
-                showProgressSuccess("报警成功！");
-            }
-            WriteLogToFile.info("报警结果：" + result);
-        }
-    }
-
-
-    /**
-     * 返回键屏蔽
-     */
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
-    }
 }
 

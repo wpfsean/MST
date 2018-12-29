@@ -20,6 +20,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import com.tehike.mst.client.project.R;
 import com.tehike.mst.client.project.global.AppConfig;
+import com.tehike.mst.client.project.ui.landactivity.LandSingleCallActivity;
+import com.tehike.mst.client.project.ui.portactivity.PortSingleCallActivity;
 import com.tehike.mst.client.project.utils.Logutil;
 
 import org.linphone.core.LinphoneAddress;
@@ -159,19 +161,19 @@ public class SipService extends Service implements LinphoneCoreListener {
                 Linphone.acceptCall();
                 Linphone.toggleSpeaker(true);
                 linphoneCore.acceptCall(linphoneCall);
-//                Intent intent = null;
-//                int direction = AppConfig.APP_DIRECTION;
-//                Logutils.i(AppConfig.APP_DIRECTION + "方向");
-//                if (direction == 1) {
-//                    intent = new Intent(SipService.this, PortSingleCallActivity.class);
-//                } else if (direction == 2) {
-//                    intent = new Intent(SipService.this, LandSingleCallActivity.class);
-//                }
-//                intent.putExtra("callerNumber", linphoneCall.getRemoteAddress().getDisplayName());
-//                intent.putExtra("isCallConnected", true);
-//                intent.putExtra("isVideoCall", isSupportVideo);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
+                Intent intent = null;
+                int direction = AppConfig.APP_DIRECTION;
+                Logutil.i(AppConfig.APP_DIRECTION + "方向");
+                if (direction == 1) {
+                    intent = new Intent(SipService.this, PortSingleCallActivity.class);
+                } else if (direction == 2) {
+                    intent = new Intent(SipService.this, LandSingleCallActivity.class);
+                }
+                intent.putExtra("callerNumber", linphoneCall.getRemoteAddress().getUserName());
+                intent.putExtra("isCallConnected", true);
+                intent.putExtra("isVideoCall", true);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             } catch (LinphoneCoreException e) {
                 e.printStackTrace();
             }

@@ -1,4 +1,4 @@
-package com.tehike.mst.client.project.ui.fragment;
+package com.tehike.mst.client.project.ui.landactivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,18 +8,18 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.View;
+
 
 import com.tehike.mst.client.project.R;
 import com.tehike.mst.client.project.adapters.ChatListAdapter;
-import com.tehike.mst.client.project.base.BaseFragment;
+import com.tehike.mst.client.project.base.BaseActivity;
 import com.tehike.mst.client.project.entity.SipBean;
 import com.tehike.mst.client.project.entity.VideoBean;
 import com.tehike.mst.client.project.global.AppConfig;
 import com.tehike.mst.client.project.linphone.MessageCallback;
+import com.tehike.mst.client.project.linphone.SipManager;
 import com.tehike.mst.client.project.linphone.SipService;
 import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
-import com.tehike.mst.client.project.ui.portactivity.PortChatActivity;
 import com.tehike.mst.client.project.ui.widget.SpaceItemDecoration;
 import com.tehike.mst.client.project.ui.widget.WrapContentLinearLayoutManager;
 import com.tehike.mst.client.project.utils.HttpBasicRequest;
@@ -36,92 +36,72 @@ import java.util.List;
 
 import butterknife.BindView;
 
-
 /**
- * @author Wpf
- * @version v1.0
- * @date：2016-5-4 下午5:14:58
+ *Created by wpf
+ *
+ * 横屏sip列表数据展示
  */
-public class ChatListFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+
+
+public class LandChatListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     /**
-     * 显示联系人列表的recyclearview
+     * 联系人列表
      */
-    @BindView(R.id.chat_contact_list_layout)
-    RecyclerView chatList;
+    @BindView(R.id.land_chat_list_recyclerview_layout)
+    RecyclerView chatListView;
 
     /**
-     * 显示下拉刷新的SwipeRefreshLayout
+     * 下拉刷新
      */
-    @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout sw;
+    @BindView(R.id.swipeRefreshLayout_land_layout)
+    SwipeRefreshLayout chatSwipeView;
+
+    /**
+     * 展示数据的集合
+     */
+    List<SipBean> dataResources = new ArrayList<>();
 
     /**
      * 数据适配器
      */
-    ChatListAdapter ada = null;
+    ChatListAdapter chatListAdapter = null;
 
     /**
-     * list展示数据
+     * 当前页面是否可见
      */
-    List<SipBean> mList = new ArrayList<>();
+    boolean isFront = false;
 
-    /**
-     * 是否正在运行
-     */
-    boolean threadIsRun = true;
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_port_fragment_chat;
+    public void onNetChange(int state, String name) {
+
+    }
+
+    @Override
+    protected int intiLayout() {
+        return R.layout.activity_land_chat_list;
     }
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
 
+        //设置recycleview方向
+        chatListView.setLayoutManager(new WrapContentLinearLayoutManager(this, WrapContentLinearLayoutManager.VERTICAL, false));
+        chatListView.addItemDecoration(new SpaceItemDecoration(0, 10));
+        chatListView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
+        //初始化下拉刷新组件
+        initRefreshView();
+
+        //加载cms数据
+        initData();
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        //设置下拉 颜色
-        sw.setColorSchemeResources(
-                android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        //设置下拉 刷新
-        sw.setOnRefreshListener(this);
-
-        //设置recyclerview的布局及item间隔
-        chatList.setLayoutManager(new WrapContentLinearLayoutManager(getActivity(), WrapContentLinearLayoutManager.VERTICAL, false));
-        chatList.addItemDecoration(new SpaceItemDecoration(0, 30));
-        chatList.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-
-        //联系人列表
-        presentationsList();
-    }
-
-    @Override
-    public void onClick(View v) {
-
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        if (isVisibleToUser) {
-
-
-            } else
-                Logutil.e("error");
-
-            super.setUserVisibleHint(isVisibleToUser);
-    }
-
-    private void presentationsList() {
-
+    /**
+     * CMS上数据数据
+     */
+    private void initData() {
         //group分组的id
         String groupID = "0";
 
@@ -146,12 +126,10 @@ public class ChatListFragment extends BaseFragment implements View.OnClickListen
                         return;
                     }
 
-                    if (mList != null && mList.size() > 0) {
-                        mList.clear();
+                    if (dataResources != null && dataResources.size() > 0) {
+                        dataResources.clear();
                     }
-
                     Logutil.d("组数据" + result);
-
                     //解析sip资源
                     try {
                         JSONObject jsonObject = new JSONObject(result);
@@ -171,7 +149,7 @@ public class ChatListFragment extends BaseFragment implements View.OnClickListen
                                 groupItemInfoBean.setDeviceType(jsonItem.getString("deviceType"));
                                 groupItemInfoBean.setId(jsonItem.getString("id"));
                                 groupItemInfoBean.setIpAddress(jsonItem.getString("ipAddress"));
-                                groupItemInfoBean.setName(jsonItem.getString("name"));
+                                groupItemInfoBean.setName(jsonItem.getString("enteredUserName"));
                                 groupItemInfoBean.setNumber(jsonItem.getString("number"));
                                 groupItemInfoBean.setSentryId(jsonItem.getInt("sentryId")+"");
                                 //判断是否有面部视频
@@ -185,72 +163,137 @@ public class ChatListFragment extends BaseFragment implements View.OnClickListen
                                                 jsonItemVideo.getString("devicetype"),
                                                 jsonItemVideo.getString("id"),
                                                 jsonItemVideo.getString("ipaddress"),
-                                                jsonItemVideo.getString("name"),
+                                                jsonItemVideo.getString("enteredUserName"),
                                                 jsonItemVideo.getString("password"),
                                                 jsonItemVideo.getInt("port"),
                                                 jsonItemVideo.getString("username"), "", "", "", "", "", "");
                                         groupItemInfoBean.setVideoBean(videoBean);
                                     }
                                 }
-                                mList.add(groupItemInfoBean);
+                                dataResources.add(groupItemInfoBean);
                             }
                         }
-                        handler.sendEmptyMessage(6);
+                        handler.sendEmptyMessage(2);
                     } catch (JSONException e) {
                         Logutil.e("Sip组内数据解析异常::" + e.getMessage());
                     }
                 }
             });
             new Thread(httpThread).start();
-
-
         } else {
-            showNoNetworkView();
+            handler.sendEmptyMessage(1);
         }
     }
 
-    @Override
-    public void onNetworkViewRefresh() {
-        super.onNetworkViewRefresh();
-        showProgressDialogWithText("正在努力加载中...");
-        presentationsList();
+    /**
+     * 初始化下拉刷新组件
+     */
+    private void initRefreshView() {
+        //设置颜色
+        chatSwipeView.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        //设置下拉刷新监听
+        chatSwipeView.setOnRefreshListener(this);
+
     }
 
-    /**
-     * 下拉刷新
-     */
     @Override
     public void onRefresh() {
+        super.onRefresh();
+
+        //定时两秒后刷新数据并消失
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                presentationsList();
-                if (sw != null)
-                    sw.setRefreshing(false);
+                initData();
+                if (chatSwipeView != null)
+                    chatSwipeView.setRefreshing(false);
             }
         }, 2 * 1000);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    protected void onPause() {
+        super.onPause();
+        isFront = false;
+    }
 
-        //回调,消息时时的刷新
-        SipService.addMessageCallback(new MessageCallback() {
-            @Override
-            public void receiverMessage(LinphoneChatMessage linphoneChatMessage) {
-                String from = linphoneChatMessage.getFrom().getUserName();
-                int p = -1;
-                for (int i = 0; i < mList.size(); i++) {
-                    if (mList.get(i).getNumber().equals(from)) {
-                        p = i;
-                        break;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isFront = true;
+
+        if (SipService.isReady() || SipManager.isInstanceiated()) {
+            //回调,消息时时的刷新
+            SipService.addMessageCallback(new MessageCallback() {
+                @Override
+                public void receiverMessage(LinphoneChatMessage linphoneChatMessage) {
+                    String from = linphoneChatMessage.getFrom().getUserName();
+                    int p = -1;
+                    for (int i = 0; i < dataResources.size(); i++) {
+                        if (dataResources.get(i).getNumber().equals(from)) {
+                            p = i;
+                            break;
+                        }
                     }
+                    if (chatListAdapter != null)
+                        chatListAdapter.notifyItemChanged(p);
                 }
-                if (ada != null)
-                    ada.notifyItemChanged(p);
+            });
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        //重新刷新本页面
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initData();
+
             }
-        });
+        }, 1 * 1000);
+
+    }
+
+    /**
+     * 展示列表数据
+     */
+    private void disPlayeListData() {
+        dismissProgressDialog();
+        if (isFront) {
+            chatListAdapter = new ChatListAdapter(LandChatListActivity.this, dataResources);
+            if (chatListView != null) {
+                chatListView.setAdapter(chatListAdapter);
+                chatListAdapter.setOnItemClickListener(new ChatListAdapter.OnItemClickListener() {
+                    @Override
+                    public void onClick(SipBean sipClient) {
+                        if (sipClient != null) {
+                            Intent intent = new Intent();
+                            intent.setClass(LandChatListActivity.this, LandChatActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("sipclient", sipClient);
+                            intent.putExtras(bundle);
+                            LandChatListActivity.this.startActivity(intent);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (handler != null)
+            handler.removeCallbacksAndMessages(null);
     }
 
     private Handler handler = new Handler() {
@@ -258,29 +301,12 @@ public class ChatListFragment extends BaseFragment implements View.OnClickListen
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                    dismissProgressDialog();
-                    ada = new ChatListAdapter(getActivity(), mList);
-                    if (chatList != null) {
-                        chatList.setAdapter(ada);
-                        ada.setOnItemClickListener(new ChatListAdapter.OnItemClickListener() {
-                            @Override
-                            public void onClick(SipBean sipClient) {
-                                if (sipClient != null) {
-                                    Intent intent = new Intent();
-                                    intent.setClass(getActivity(), PortChatActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("sipclient", sipClient);
-                                    intent.putExtras(bundle);
-                                    getActivity().startActivity(intent);
-                                } else {
-                                }
-                            }
-                        });
-                    }
-
+                    if (isFront)
+                        showProgressFail("No data!!!");
                     break;
                 case 2:
-                    showEmptyView();
+                    if (isFront)
+                        disPlayeListData();
                     break;
             }
         }

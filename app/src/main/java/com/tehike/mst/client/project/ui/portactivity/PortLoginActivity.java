@@ -41,6 +41,7 @@ import com.tehike.mst.client.project.services.LocationService;
 import com.tehike.mst.client.project.services.ServiceUtils;
 import com.tehike.mst.client.project.sysinfo.SysInfoBean;
 import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
+import com.tehike.mst.client.project.ui.landactivity.LandLoginActivity;
 import com.tehike.mst.client.project.utils.ActivityUtils;
 import com.tehike.mst.client.project.utils.BatteryUtils;
 import com.tehike.mst.client.project.utils.CryptoUtil;
@@ -228,6 +229,23 @@ public class PortLoginActivity extends BaseActivity {
 
         //申请所需要的权限 
         checkAllPermissions();
+
+        setScreenOrientation();
+    }
+
+    /**
+     * 设置方向
+     */
+    private void setScreenOrientation() {
+        findViewById(R.id.port_set_direction_btn_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppConfig.APP_DIRECTION = 2;
+                ActivityUtils.removeAllActivity();
+                PortLoginActivity.this.finish();
+                openActivity(LandLoginActivity.class);
+            }
+        });
     }
 
     /**

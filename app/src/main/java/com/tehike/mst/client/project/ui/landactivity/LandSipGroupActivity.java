@@ -20,15 +20,12 @@ import com.tehike.mst.client.project.entity.SipGroupInfoBean;
 import com.tehike.mst.client.project.global.AppConfig;
 import com.tehike.mst.client.project.linphone.SipManager;
 import com.tehike.mst.client.project.linphone.SipService;
-import com.tehike.mst.client.project.services.BatteryAndWifiService;
 import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
 import com.tehike.mst.client.project.ui.fragment.SipGroupAdapter;
 import com.tehike.mst.client.project.utils.BatteryUtils;
-import com.tehike.mst.client.project.utils.GsonUtils;
 import com.tehike.mst.client.project.utils.HttpBasicRequest;
 import com.tehike.mst.client.project.utils.Logutil;
 import com.tehike.mst.client.project.utils.NetworkUtils;
-import com.tehike.mst.client.project.utils.SharedPreferencesUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -57,49 +54,49 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
      * 展示列表的recyclerview
      */
     @BindView(R.id.sip_group_recyclearview)
-    public RecyclerView promptSipGroupItemView;
+    public RecyclerView disPlaySipGroupItemViewLayout;
 
     /**
      * 下拉 刷新控件
      */
     @BindView(R.id.sipgroup_refresh_layout_land)
-    SwipeRefreshLayout sipGroupRefreshView;
+    SwipeRefreshLayout disPlaysipGroupRefreshViewLayout;
 
     /**
      * 信号强度
      */
     @BindView(R.id.icon_network)
-    ImageView rssiIcon;
+    ImageView disPlayRssiIconLayout;
 
     /**
      * 显示当前时间分秒
      */
     @BindView(R.id.sipinfor_title_time_layout)
-    TextView currentTimeLayout;
+    TextView disPlayCurrentTimeLayout;
 
     /**
      * 显示当前的年月日
      */
     @BindView(R.id.sipinfor_title_date_layout)
-    TextView currentYearLayout;
+    TextView disPlayCurrentYearLayout;
 
     /**
      * 消息图标
      */
     @BindView(R.id.icon_message_show)
-    ImageView messageIcon;
+    ImageView disPlaySipMessIconLayout;
 
     /**
      * 当前电量显示
      */
     @BindView(R.id.prompt_electrity_values_land_layout)
-    TextView displayCurrentBattery;
+    TextView displayCurrentBatteryLayout;
 
     /**
      * 连接状态
      */
     @BindView(R.id.icon_connection_show)
-    ImageView connetIcon;
+    ImageView disPlayConnetIconLayout;
 
     /**
      * 存放SipGroup信息的集合
@@ -127,7 +124,7 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
         initializeTime();
 
         //获取sip分组数据
-        getSipGroupDataFromCms();
+        initSipGroupData();
     }
 
     /**
@@ -142,11 +139,11 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
         SimpleDateFormat dateD = new SimpleDateFormat("yyyy年MM月dd日");
         long time = System.currentTimeMillis();
         Date date = new Date(time);
-        currentYearLayout.setText(dateD.format(date).toString());
+        disPlayCurrentYearLayout.setText(dateD.format(date).toString());
 
         //显示当前的电量
         int electricityValues = BatteryUtils.getSystemBattery(App.getApplication());
-        displayCurrentBattery.setText(electricityValues + "");
+        displayCurrentBatteryLayout.setText(electricityValues + "");
     }
 
     /**
@@ -176,7 +173,7 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
         SimpleDateFormat timeD = new SimpleDateFormat("HH:mm:ss");
         String currentTime = timeD.format(date).toString();
         if (!TextUtils.isEmpty(currentTime)) {
-            currentTimeLayout.setText(currentTime);
+            disPlayCurrentTimeLayout.setText(currentTime);
         }
 
     }
@@ -186,19 +183,19 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
      */
     private void initializeRefreshView() {
         //设置下拉 颜色
-        sipGroupRefreshView.setColorSchemeResources(
+        disPlaysipGroupRefreshViewLayout.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
         //设置下拉 刷新
-        sipGroupRefreshView.setOnRefreshListener(this);
+        disPlaysipGroupRefreshViewLayout.setOnRefreshListener(this);
     }
 
     /**
      * CMS获取Sip分组信息
      */
-    private void getSipGroupDataFromCms() {
+    private void initSipGroupData() {
         //盛放sip数据的集合
         sipGroupResources = new ArrayList<>();
         //清除集合数据
@@ -262,9 +259,9 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
         GridLayoutManager gridLayoutManager = new GridLayoutManager(LandSipGroupActivity.this, 3);
         gridLayoutManager.setReverseLayout(false);
         gridLayoutManager.setOrientation(GridLayout.VERTICAL);
-        promptSipGroupItemView.setLayoutManager(gridLayoutManager);
+        disPlaySipGroupItemViewLayout.setLayoutManager(gridLayoutManager);
         SipGroupAdapter adapter = new SipGroupAdapter(LandSipGroupActivity.this, sipGroupResources);
-        promptSipGroupItemView.setAdapter(adapter);
+        disPlaySipGroupItemViewLayout.setAdapter(adapter);
 
         adapter.setItemClickListener(new SipGroupAdapter.MyItemClickListener() {
             @Override
@@ -290,8 +287,8 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (sipGroupRefreshView != null)
-                    sipGroupRefreshView.setRefreshing(false);
+                if (disPlaysipGroupRefreshViewLayout != null)
+                    disPlaysipGroupRefreshViewLayout.setRefreshing(false);
                 getResources();
 
             }
@@ -303,15 +300,15 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
      */
     private void refreshData() {
         //显示正在刷新
-        sipGroupRefreshView.setRefreshing(true);
+        disPlaysipGroupRefreshViewLayout.setRefreshing(true);
         //延迟两秒后停止刷新 并获取新的数据
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (sipGroupRefreshView != null)
+                if (disPlaysipGroupRefreshViewLayout != null)
                     //提示刷新结果
                     handler.sendEmptyMessage(19);
-                sipGroupRefreshView.setRefreshing(false);
+                disPlaysipGroupRefreshViewLayout.setRefreshing(false);
                 getResources();
 
             }
@@ -333,13 +330,13 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
         //信息状态
         int rssi = AppConfig.DEVICE_WIFI;
         if (rssi > -50 && rssi < 0) {
-            updateUi(rssiIcon, R.mipmap.icon_network);
+            updateUi(disPlayRssiIconLayout, R.mipmap.icon_network);
         } else if (rssi > -70 && rssi <= -50) {
-            updateUi(rssiIcon, R.mipmap.icon_network_a);
+            updateUi(disPlayRssiIconLayout, R.mipmap.icon_network_a);
         } else if (rssi < -70) {
-            updateUi(rssiIcon, R.mipmap.icon_network_b);
+            updateUi(disPlayRssiIconLayout, R.mipmap.icon_network_b);
         } else if (rssi == -200) {
-            updateUi(rssiIcon, R.mipmap.icon_network_disable);
+            updateUi(disPlayRssiIconLayout, R.mipmap.icon_network_disable);
         }
 
         if (SipService.isReady() || SipManager.isInstanceiated()) {
@@ -365,9 +362,6 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
         }
     }
 
-
-
-
     /**
      * 更新UI
      */
@@ -382,9 +376,6 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
 
     /**
      * 网络状态回调
-     *
-     * @param state
-     * @param name
      */
     @Override
     public void onNetChange(int state, String name) {
@@ -411,8 +402,6 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
 
     /**
      * 右侧功能按键的点击事件
-     *
-     * @param view
      */
     @OnClick({R.id.remote_warning_layou, R.id.remote_gunshoot_layou, R.id.remote_speaking_layou,
             R.id.instant_message_layout, R.id.voice_intercom_icon_layout, R.id.video_intercom_layout, R.id.sip_group_refresh_layout, R.id.sip_group_finish_icon})
@@ -461,11 +450,11 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
             switch (msg.what) {
                 case 3://提示sip连接状态正常
                     if (isVisible)
-                        connetIcon.setBackgroundResource(R.mipmap.icon_connection_normal);
+                        disPlayConnetIconLayout.setBackgroundResource(R.mipmap.icon_connection_normal);
                     break;
                 case 4://提示sip连接状态断开
                     if (isVisible)
-                        connetIcon.setBackgroundResource(R.mipmap.icon_connection_disable);
+                        disPlayConnetIconLayout.setBackgroundResource(R.mipmap.icon_connection_disable);
                     break;
                 case 5://初始化sip组适配器
                     initSipGroupAdapter();
@@ -483,10 +472,10 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
                         displayCurrentTime();
                     break;
                 case 15://新消息提示消除
-                    updateUi(messageIcon, R.mipmap.message);
+                    updateUi(disPlaySipMessIconLayout, R.mipmap.message);
                     break;
                 case 16://提示新消息
-                    updateUi(messageIcon, R.mipmap.newmessage);
+                    updateUi(disPlaySipMessIconLayout, R.mipmap.newmessage);
                     break;
                 case 17://提示网络异常
                     if (isVisible)
@@ -499,7 +488,7 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
                 case 23://显示当前回调的电量数据
                     int level = msg.arg1;
                     if (isVisible)
-                        displayCurrentBattery.setText("" + level);
+                        displayCurrentBatteryLayout.setText("" + level);
                     break;
 
             }

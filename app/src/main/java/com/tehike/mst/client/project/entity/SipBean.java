@@ -13,6 +13,8 @@ import java.io.Serializable;
  * @Create at:2018/11/12 15:56
  */
 
+
+
 public class SipBean implements Serializable {
     //设备类型
     private String deviceType;
@@ -26,20 +28,37 @@ public class SipBean implements Serializable {
     private String number;
     //区分值班室 的id标识
     private String sentryId;
+    //sip状态标识
+    private int state;
     //sip中的面部视频
     private VideoBean videoBean;
 
     public SipBean() {
     }
 
-    public SipBean(String deviceType, String id, String ipAddress, String name, String number, String sentryId, VideoBean videoBean) {
+    public SipBean(String deviceType, String id, String ipAddress, String name, String number, String sentryId, int state, VideoBean videoBean) {
         this.deviceType = deviceType;
         this.id = id;
         this.ipAddress = ipAddress;
         this.name = name;
         this.number = number;
         this.sentryId = sentryId;
+        this.state = state;
         this.videoBean = videoBean;
+    }
+
+    @Override
+    public String toString() {
+        return "SipBean{" +
+                "deviceType='" + deviceType + '\'' +
+                ", id='" + id + '\'' +
+                ", ipAddress='" + ipAddress + '\'' +
+                ", name='" + name + '\'' +
+                ", number='" + number + '\'' +
+                ", sentryId='" + sentryId + '\'' +
+                ", state=" + state +
+                ", videoBean=" + videoBean +
+                '}';
     }
 
     public String getDeviceType() {
@@ -90,26 +109,20 @@ public class SipBean implements Serializable {
         this.sentryId = sentryId;
     }
 
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
     public VideoBean getVideoBean() {
         return videoBean;
     }
 
     public void setVideoBean(VideoBean videoBean) {
         this.videoBean = videoBean;
-    }
-
-
-    @Override
-    public String toString() {
-        return "SipBean{" +
-                "deviceType='" + deviceType + '\'' +
-                ", id='" + id + '\'' +
-                ", ipAddress='" + ipAddress + '\'' +
-                ", name='" + name + '\'' +
-                ", number='" + number + '\'' +
-                ", sentryId='" + sentryId + '\'' +
-                ", videoBean=" + videoBean +
-                '}';
     }
 }
 
