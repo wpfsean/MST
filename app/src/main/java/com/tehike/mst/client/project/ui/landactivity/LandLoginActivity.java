@@ -424,7 +424,7 @@ public class LandLoginActivity extends BaseActivity {
             if (jsonObject != null) {
                 SysInfoBean sysInfoBean = new SysInfoBean(jsonObject.getInt("alertPort"),
                         jsonObject.getString("alertServer"), jsonObject.getString("deviceGuid"),
-                        jsonObject.getString("deviceName"), jsonObject.getInt("fingerprintPort"),
+                        jsonObject.getString("remoteChatName"), jsonObject.getInt("fingerprintPort"),
                         jsonObject.getString("fingerprintServer"), jsonObject.getInt("heartbeatPort"),
                         jsonObject.getString("heartbeatServer"), jsonObject.getString("sipPassword"),
                         jsonObject.getString("sipServer"), jsonObject.getString("sipUsername"),

@@ -25,12 +25,17 @@ import com.tehike.mst.client.project.linphone.SipManager;
 import com.tehike.mst.client.project.linphone.SipService;
 import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
 import com.tehike.mst.client.project.utils.ActivityUtils;
+import com.tehike.mst.client.project.utils.CryptoUtil;
+import com.tehike.mst.client.project.utils.FileUtil;
+import com.tehike.mst.client.project.utils.GsonUtils;
 import com.tehike.mst.client.project.utils.Logutil;
 import com.tehike.mst.client.project.utils.TimeUtils;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,77 +54,71 @@ import butterknife.OnClick;
  * @Create at:2018/10/26 16:42
  */
 
-public class LandChatActivity extends BaseActivity implements View.OnClickListener {
-
-    /**
-     * 发送按钮
-     */
-    @BindView(R.id.send_message_btn_layout)
-    TextView mBtnSend;
+public class LandChatActivity extends BaseActivity {
 
     /**
      * 消息输入框
      */
     @BindView(R.id.sendmessage_layout)
-    EditText mEditTextContent;
+    EditText mEditContentLayout;
 
     /**
      * 历史消息布局
      */
     @BindView(R.id.message_listview_layout)
-    ListView mListView;
+    ListView disPlayChatHistoryView;
 
     /**
      * 显示当前的聊天对象布局
      */
     @BindView(R.id.current_fragment_name)
-    TextView current_fragment_name;
+    TextView disPlayCurrentChatNameLayout;
 
     /**
      * 电量信息
      */
     @BindView(R.id.icon_electritity_show)
-    ImageView batteryIcon;
+    ImageView disPlayBatteryIconLayout;
 
     /**
      * 信号强度
      */
     @BindView(R.id.icon_network)
-    ImageView rssiIcon;
+    ImageView disPlayRssiIconLayout;
 
     /**
      * 显示当前时间分秒
      */
     @BindView(R.id.sipinfor_title_time_layout)
-    TextView currentTimeLayout;
+    TextView disPlayCurrentTimeLayout;
 
     /**
      * 显示当前的年月日
      */
     @BindView(R.id.sipinfor_title_date_layout)
-    TextView currentYearLayout;
+    TextView disPlayCurrentYearLayout;
 
     /**
      * 消息图标
      */
     @BindView(R.id.icon_message_show)
-    ImageView messageIcon;
+    ImageView disPlayMessageIconLayout;
 
     /**
      * 连接状态
      */
     @BindView(R.id.icon_connection_show)
-    ImageView connetIcon;
+    ImageView disPlaySipConnetIconLayout;
 
     /**
      * 聊天对象
      */
-    String who = "";
+    String remoteChatNumber = "";
 
     /**
      * 聊天对象的设备名
      */
-    String deviceName = "";
+    String remoteChatName = "";
 
 
     /**
@@ -145,7 +144,7 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
     /**
      * 本机的号码
      */
-    String sipNum = "";
+    String nativeSipNumber = "";
 
     /**
      * 线程是否正在运行
@@ -153,7 +152,7 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
     boolean threadIsRun = true;
 
 
-    List<SipBean> receiveData = null;
+    List<SipBean> allSipSourceList = null;
 
 
     @Override
@@ -163,10 +162,9 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        mBtnSend.setOnClickListener(this);
 
         //显示时间
-        initTime();
+        initializeTime();
 
         //初始化参数
         initParamater();
@@ -180,13 +178,6 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
         //适配加载数据
         initAdapter();
 
-    }
-
-    private void initAdapter() {
-        //初始化适配器
-        mAdapter = new ChatMsgViewAdapter(this, mDataArrays);
-        mListView.setAdapter(mAdapter);
-        mListView.setSelection(mListView.getCount());
     }
 
     /**
@@ -216,21 +207,21 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
         SimpleDateFormat timeD = new SimpleDateFormat("HH:mm:ss");
         String currentTime = timeD.format(date).toString();
         if (!TextUtils.isEmpty(currentTime)) {
-            currentTimeLayout.setText(currentTime);
+            disPlayCurrentTimeLayout.setText(currentTime);
         }
     }
 
     /**
      * 初始化显示时间及日期
      */
-    private void initTime() {
+    private void initializeTime() {
         TimeThread timeThread = new TimeThread();
         new Thread(timeThread).start();
 
         SimpleDateFormat dateD = new SimpleDateFormat("yyyy年MM月dd日");
         long time = System.currentTimeMillis();
         Date date = new Date(time);
-        currentYearLayout.setText(dateD.format(date).toString());
+        disPlayCurrentYearLayout.setText(dateD.format(date).toString());
     }
 
 
@@ -242,7 +233,7 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
             LinphoneChatRoom[] rooms = SipManager.getLc().getChatRooms();
             if (rooms.length > 0) {
                 for (LinphoneChatRoom room : rooms) {
-                    if (room.getPeerAddress().getUserName().equals(who)) {
+                    if (room.getPeerAddress().getUserName().equals(remoteChatNumber)) {
                         room.markAsRead();
                     }
                 }
@@ -256,42 +247,51 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
     private void initParamater() {
 
         //获取本机的sip号码
-        sipNum = SysinfoUtils.getSysinfo().getSipUsername();
+        nativeSipNumber = SysinfoUtils.getSysinfo().getSipUsername();
 
         //获取当前对话列表点击 的用户名
         SipBean sipClient = (SipBean) getIntent().getExtras().getSerializable("sipclient");
 
+        //取出本地所有有Sip资源
+        try {
+            String videoSourceStr = FileUtil.readFile(AppConfig.SOURCES_SIP).toString();
+            allSipSourceList = GsonUtils.GsonToList(CryptoUtil.decodeBASE64(videoSourceStr), SipBean.class);
+        } catch (Exception e) {
+        }
 
-//
-//        if (sipClient != null) {
-//            String chatObject = sipClient.getUsrname();
-//            if (!TextUtils.isEmpty(chatObject)) {
-//                who = chatObject;
-//
-//                if (receiveData != null && receiveData.size() > 0) {
-//                    for (Device device : receiveData) {
-//                        if (device.getSipNum().equals(who)) {
-//                            deviceName = device.getName();
-//                            current_fragment_name.setText(device.getName());
-//                        }
-//                    }
-//                }
-//                String sipserver = AppConfig.SIP_SERVER;
-//                if (TextUtils.isEmpty(sipserver))
-//                    sipserver = DbConfig.getInstance().getData(9);
-//                if (!TextUtils.isEmpty(sipserver)) {
-//                    try {
-//                        linphoneAddress = LinphoneCoreFactory.instance().createLinphoneAddress("sip:" + who + "@" + sipserver);
-//                    } catch (LinphoneCoreException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            } else {
-//                Logutil.e("No Get Chat Object!!!");
-//                return;
-//            }
-//        }
+        if (sipClient != null) {
+            remoteChatNumber = sipClient.getNumber();
+
+            if (allSipSourceList != null && allSipSourceList.size() > 0) {
+                for (SipBean device : allSipSourceList) {
+                    if (device.getNumber().equals(remoteChatNumber)) {
+                        remoteChatName = device.getName();
+                        disPlayCurrentChatNameLayout.setText(device.getName());
+                    }
+                }
+                String sipserver = SysinfoUtils.getSysinfo().getSipServer();
+                if (!TextUtils.isEmpty(sipserver)) {
+                    try {
+                        linphoneAddress = LinphoneCoreFactory.instance().createLinphoneAddress("sip:" + remoteChatNumber + "@" + sipserver);
+                    } catch (LinphoneCoreException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                Logutil.e("No Get Chat Object!!!");
+                return;
+            }
+        }
     }
+
+
+    private void initAdapter() {
+        //初始化适配器
+        mAdapter = new ChatMsgViewAdapter(this, mDataArrays);
+        disPlayChatHistoryView.setAdapter(mAdapter);
+        disPlayChatHistoryView.setSelection(disPlayChatHistoryView.getCount());
+    }
+
 
     /**
      * 消息回调
@@ -304,9 +304,9 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
                     ChatMsgEntity chatMsgEntity = new ChatMsgEntity();
 
                     //显示聊天对象的设备名
-                    if (receiveData != null && receiveData.size() > 0) {
-                        for (SipBean device : receiveData) {
-                            if (device.getNumber().equals(who)) {
+                    if (allSipSourceList != null && allSipSourceList.size() > 0) {
+                        for (SipBean device : allSipSourceList) {
+                            if (device.getNumber().equals(remoteChatNumber)) {
                                 chatMsgEntity.setName(device.getName());
                             }
                         }
@@ -316,8 +316,8 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
                     chatMsgEntity.setText(linphoneChatMessage.getText());
                     mDataArrays.add(chatMsgEntity);
                     mAdapter.notifyDataSetChanged();
-                    mEditTextContent.setText("");
-                    mListView.setSelection(mListView.getCount() - 1);
+                    mEditContentLayout.setText("");
+                    disPlayChatHistoryView.setSelection(disPlayChatHistoryView.getCount() - 1);
                 }
             });
         }
@@ -328,18 +328,18 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
      */
     private void getAllHistory() {
         //根据条件查询聊天记录
-        Cursor cursor = db.query("chat", null, "fromuser =? or touser = ?", new String[]{who, who}, null, null, null);
+        Cursor cursor = db.query("chat", null, "fromuser =? or touser = ?", new String[]{remoteChatNumber, remoteChatNumber}, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 String time = cursor.getString(cursor.getColumnIndex("time"));
                 String fromuser = cursor.getString(cursor.getColumnIndex("fromuser"));
                 String message = cursor.getString(cursor.getColumnIndex("message"));
                 String toUser = cursor.getString(cursor.getColumnIndex("touser"));
-                if (toUser.equals(who)) {
+                if (toUser.equals(remoteChatNumber)) {
                     ChatMsgEntity mEntity = new ChatMsgEntity();
                     mEntity.setDate(TimeUtils.longTime2Short(time));
-                    if (receiveData != null && receiveData.size() > 0) {
-                        for (SipBean device : receiveData) {
+                    if (allSipSourceList != null && allSipSourceList.size() > 0) {
+                        for (SipBean device : allSipSourceList) {
                             if (device.getNumber().equals(fromuser)) {
                                 mEntity.setName(device.getName());
                             }
@@ -348,11 +348,11 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
                     mEntity.setMsgType(false);
                     mEntity.setText(message);
                     mDataArrays.add(mEntity);
-                } else if (fromuser.equals(who)) {
+                } else if (fromuser.equals(remoteChatNumber)) {
                     ChatMsgEntity tEntity = new ChatMsgEntity();
                     tEntity.setDate(TimeUtils.longTime2Short(time));
-                    if (receiveData != null && receiveData.size() > 0) {
-                        for (SipBean device : receiveData) {
+                    if (allSipSourceList != null && allSipSourceList.size() > 0) {
+                        for (SipBean device : allSipSourceList) {
                             if (device.getNumber().equals(fromuser)) {
                                 tEntity.setName(device.getName());
                             }
@@ -370,17 +370,19 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
     /**
      * 发消息
      */
-    private void sendMess() {
-        String chatMessage = mEditTextContent.getText().toString().trim();
+
+    @OnClick(R.id.send_message_btn_layout)
+    private void sendMess(View view) {
+        String chatMessage = mEditContentLayout.getText().toString().trim();
         if (!TextUtils.isEmpty(chatMessage) && chatMessage.length() > 0) {
             //送消息的展示界面
             ChatMsgEntity entity = new ChatMsgEntity();
             entity.setText(chatMessage);
             entity.setMsgType(false);
 
-            if (receiveData != null && receiveData.size() > 0) {
-                for (SipBean device : receiveData) {
-                    if (device.getNumber().equals(sipNum)) {
+            if (allSipSourceList != null && allSipSourceList.size() > 0) {
+                for (SipBean device : allSipSourceList) {
+                    if (device.getNumber().equals(nativeSipNumber)) {
                         entity.setName(device.getName());
                         break;
                     }
@@ -389,8 +391,8 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
             entity.setDate(getDate());
             mDataArrays.add(entity);
             mAdapter.notifyDataSetChanged();
-            mEditTextContent.setText("");
-            mListView.setSelection(mListView.getCount() - 1);
+            mEditContentLayout.setText("");
+            disPlayChatHistoryView.setSelection(disPlayChatHistoryView.getCount() - 1);
             //（发送sip短消息到对方）
             if (SipService.isReady())
                 Linphone.getLC().getChatRoom(linphoneAddress).sendMessage(chatMessage);
@@ -398,9 +400,9 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
 //            //把发的消息插入到数据库
             ContentValues contentValues = new ContentValues();
             contentValues.put("time", new Date().toString());
-            contentValues.put("fromuser", sipNum);
+            contentValues.put("fromuser", nativeSipNumber);
             contentValues.put("message", chatMessage);
-            contentValues.put("touser", who);
+            contentValues.put("touser", remoteChatNumber);
             db.insert("chat", null, contentValues);
         }
     }
@@ -438,28 +440,28 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
 
         int level = AppConfig.DEVICE_BATTERY;
         if (level >= 75 && level <= 100) {
-            updateUi(batteryIcon, R.mipmap.icon_electricity_a);
+            updateUi(disPlayBatteryIconLayout, R.mipmap.icon_electricity_a);
         }
         if (level >= 50 && level < 75) {
-            updateUi(batteryIcon, R.mipmap.icon_electricity_b);
+            updateUi(disPlayBatteryIconLayout, R.mipmap.icon_electricity_b);
         }
         if (level >= 25 && level < 50) {
-            updateUi(batteryIcon, R.mipmap.icon_electricity_c);
+            updateUi(disPlayBatteryIconLayout, R.mipmap.icon_electricity_c);
         }
         if (level >= 0 && level < 25) {
-            updateUi(batteryIcon, R.mipmap.icon_electricity_disable);
+            updateUi(disPlayBatteryIconLayout, R.mipmap.icon_electricity_disable);
         }
 
         int rssi = AppConfig.DEVICE_WIFI;
 
         if (rssi > -50 && rssi < 0) {
-            updateUi(rssiIcon, R.mipmap.icon_network);
+            updateUi(disPlayRssiIconLayout, R.mipmap.icon_network);
         } else if (rssi > -70 && rssi <= -50) {
-            updateUi(rssiIcon, R.mipmap.icon_network_a);
+            updateUi(disPlayRssiIconLayout, R.mipmap.icon_network_a);
         } else if (rssi < -70) {
-            updateUi(rssiIcon, R.mipmap.icon_network_b);
+            updateUi(disPlayRssiIconLayout, R.mipmap.icon_network_b);
         } else if (rssi == -200) {
-            updateUi(rssiIcon, R.mipmap.icon_network_disable);
+            updateUi(disPlayRssiIconLayout, R.mipmap.icon_network_disable);
         }
 
 
@@ -482,16 +484,6 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
         });
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.send_message_btn_layout:
-                sendMess();
-                break;
-        }
-    }
-
-
     @OnClick(R.id.finish_back_layou)
     public void finishPage(View view) {
         threadIsRun = false;
@@ -510,11 +502,11 @@ public class LandChatActivity extends BaseActivity implements View.OnClickListen
             switch (msg.what) {
                 case 3:
                     if (isVisible)
-                        connetIcon.setBackgroundResource(R.mipmap.icon_connection_normal);
+                        disPlaySipConnetIconLayout.setBackgroundResource(R.mipmap.icon_connection_normal);
                     break;
                 case 4:
                     if (isVisible)
-                        connetIcon.setBackgroundResource(R.mipmap.icon_connection_disable);
+                        disPlaySipConnetIconLayout.setBackgroundResource(R.mipmap.icon_connection_disable);
                     break;
                 case 8:
                     if (isVisible)

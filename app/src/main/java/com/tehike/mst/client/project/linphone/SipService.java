@@ -351,7 +351,7 @@ public class SipService extends Service implements LinphoneCoreListener {
 //        final String to = linphoneChatMessage.getTo().getUserName();
 //        String messTime = new Date().toString();
 //        //接收消息并存入数据库
-//        DatabaseHelper databaseHelper = new DatabaseHelper(App.getApplication());
+//        DbHelper databaseHelper = new DbHelper(App.getApplication());
 //        db = databaseHelper.getWritableDatabase();
 //        ContentValues contentValues = new ContentValues();
 //        contentValues.put("time", messTime);
