@@ -41,7 +41,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.portactivity.PortMainActivity"
+            android:name=".ui.portactivity.PortLoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,7 +51,7 @@
         </activity>
 
         <activity
-            android:name=".ui.portactivity.PortLoginActivity"
+            android:name=".ui.portactivity.PortMainActivity"
             android:screenOrientation="portrait" />
 
         <activity
