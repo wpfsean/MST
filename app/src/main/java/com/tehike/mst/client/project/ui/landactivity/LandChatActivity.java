@@ -15,7 +15,9 @@ import android.widget.TextView;
 
 import com.tehike.mst.client.project.R;
 import com.tehike.mst.client.project.adapters.ChatMsgViewAdapter;
+import com.tehike.mst.client.project.base.App;
 import com.tehike.mst.client.project.base.BaseActivity;
+import com.tehike.mst.client.project.db.DbHelper;
 import com.tehike.mst.client.project.entity.ChatMsgEntity;
 import com.tehike.mst.client.project.entity.SipBean;
 import com.tehike.mst.client.project.global.AppConfig;
@@ -327,6 +329,10 @@ public class LandChatActivity extends BaseActivity {
      * 取出所有的聊天记录
      */
     private void getAllHistory() {
+
+        DbHelper dbHelper = new DbHelper(App.getApplication());
+        db = dbHelper.getReadableDatabase();
+
         //根据条件查询聊天记录
         Cursor cursor = db.query("chat", null, "fromuser =? or touser = ?", new String[]{remoteChatNumber, remoteChatNumber}, null, null, null);
         if (cursor.moveToFirst()) {
@@ -397,12 +403,12 @@ public class LandChatActivity extends BaseActivity {
             if (SipService.isReady())
                 Linphone.getLC().getChatRoom(linphoneAddress).sendMessage(chatMessage);
 
-//            //把发的消息插入到数据库
+            //把发的消息插入到数据库
             ContentValues contentValues = new ContentValues();
             contentValues.put("time", new Date().toString());
-            contentValues.put("fromuser", nativeSipNumber);
-            contentValues.put("message", chatMessage);
-            contentValues.put("touser", remoteChatNumber);
+            contentValues.put("fromUser", nativeSipNumber);
+            contentValues.put("mess", chatMessage);
+            contentValues.put("toUser", remoteChatNumber);
             db.insert("chat", null, contentValues);
         }
     }
