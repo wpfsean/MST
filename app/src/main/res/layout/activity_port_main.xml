@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_port_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/port_homepage_bg"
+    android:orientation="vertical">
+
+
+    <!--最顶部布局-->
+    <RelativeLayout
+        android:id="@+id/icone_relativtelayout_title"
+        android:layout_width="match_parent"
+        android:layout_height="35dp">
+
+        <!--网络状态图标-->
+        <ImageView
+            android:id="@+id/icon_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:background="@mipmap/icon_network_disable" />
+        <!--电池状态图标-->
+        <ImageView
+            android:id="@+id/icon_electritity_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/icon_network"
+            android:background="@mipmap/icon_electricity_disable" />
+        <!--Sip状态图标-->
+        <ImageView
+            android:id="@+id/icon_connection_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/icon_electritity_show"
+            android:background="@mipmap/icon_connection_disable" />
+
+        <ImageView
+            android:id="@+id/icon_message_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/icon_connection_show"
+            android:background="@mipmap/message" />
+
+        <!--时间图标-->
+        <TextView
+            android:id="@+id/sipinfor_title_time_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@+id/sipinfor_title_date_layout"
+            android:text="00:00:00"
+            android:textColor="#42bfec"
+            android:textSize="16sp" />
+        <!--日期图标-->
+        <TextView
+            android:id="@+id/sipinfor_title_date_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:text="2018年03月02日"
+            android:textColor="#42bfec"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="198dp"
+        android:orientation="vertical">
+        <!--第一行布局-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <!--勤务通信-->
+            <ImageButton
+                android:id="@+id/btn_video_intercom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/port_btn_video_intercom_select" />
+            <!--视频监控-->
+            <ImageButton
+                android:id="@+id/btn_video"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/port_btn_video_select" />
+            <!--会议直播-->
+            <ImageButton
+                android:id="@+id/btn_living_meeting"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/port_btn_living_meeting_select" />
+        </LinearLayout>
+
+        <!--第二行布局-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <!--应急呼叫-->
+            <ImageButton
+                android:id="@+id/emergency_call_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/port_btn_emergency_call_select" />
+            <!--应急报警-->
+            <ImageButton
+                android:id="@+id/btn_alarm_call"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/port_btn_alarm_call_select" />
+
+            <!--集群对讲-->
+            <ImageButton
+                android:id="@+id/btn_cluster_intercom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/port_btn_cluster_intercom_select" />
+
+        </LinearLayout>
+
+        <!--第三行布局-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <!--申请供弹-->
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/btn_apply_for_play"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/port_btn_apply_for_play_call_select" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/open_box_loading_icon_land_layout"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_loading"
+                        android:layout_centerHorizontal="true"
+                        />
+
+                </RelativeLayout>
+            </FrameLayout>
+
+            <ImageButton
+                android:id="@+id/port_reserve_btn1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/port_btn_standby_select" />
+
+            <!--备用功能-->
+            <ImageButton
+                android:id="@+id/port_reserve_btn2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/port_btn_standby_select" />
+        </LinearLayout>
+
+        <!--第四行布局-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/port_reserve_btn3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/port_btn_standby_select" />
+
+            <ImageButton
+                android:id="@+id/port_reserve_btn4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/port_btn_standby_select" />
+
+            <!--系统设置-->
+            <ImageButton
+                android:id="@+id/btn_setup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/port_btn_setup_select" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

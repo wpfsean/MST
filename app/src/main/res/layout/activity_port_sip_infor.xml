@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/sipgroup_background">
+
+    <!--网络异常时显示 的而已-->
+    <RelativeLayout
+        android:id="@+id/no_network_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:background="#cccccc"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="网络异常,请检查网络是否连接正确"
+            android:textColor="#ff0000" />
+    </RelativeLayout>
+
+    <!--最顶部的头文件-->
+    <LinearLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <!--最顶部布局-->
+        <RelativeLayout
+            android:id="@+id/icone_relativtelayout_title"
+            android:layout_width="match_parent"
+            android:layout_height="22dp">
+            <!--网络状态图标-->
+            <ImageView
+                android:id="@+id/icon_network"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="6dp" />
+            <!--电池状态图标-->
+            <ImageView
+                android:id="@+id/icon_electritity_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="6dp"
+                android:layout_toLeftOf="@+id/icon_network" />
+            <!--Sip状态图标-->
+            <ImageView
+                android:id="@+id/icon_connection_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="6dp"
+                android:layout_toLeftOf="@+id/icon_electritity_show" />
+            <!--Sip消息图标-->
+            <ImageView
+                android:id="@+id/icon_message_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="6dp"
+                android:layout_toLeftOf="@+id/icon_connection_show" />
+            <!--时间图标-->
+            <TextView
+                android:id="@+id/sipinfor_title_time_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@+id/sipinfor_title_date_layout"
+                android:text="00:00:00"
+                android:textColor="#42bfec"
+                android:textSize="16sp" />
+            <!--日期图标-->
+            <TextView
+                android:id="@+id/sipinfor_title_date_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="6dp"
+                android:text="2018年03月02日"
+                android:textColor="#42bfec"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <!--标题 tilte-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+            <!--返回按键-->
+            <ImageButton
+                android:id="@+id/finish_back_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/port_monitoring_icon_return_selected"
+                android:visibility="visible" />
+            <!--页面名称显示-->
+            <TextView
+                android:id="@+id/current_fragment_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="140dp"
+                android:gravity="center"
+                android:text="sip分组"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+            <!--刷新按键-->
+            <ImageButton
+                android:id="@+id/loading_more_videosources_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="326dp"
+                android:background="@drawable/port_monitoring_icon_listcontrol_selected"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/sipgrou_intercom_refreshlayout"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/top_layout"
+        android:layout_height="416dp">
+        <GridView
+            android:id="@+id/gridview"
+            android:paddingRight="26dp"
+            android:paddingTop="21dp"
+            android:paddingLeft="26dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/sipgroup_main_layout"
+            android:gravity="center_horizontal"
+            android:horizontalSpacing="21dp"
+            android:numColumns="2"
+            android:scrollbars="none"
+            android:verticalSpacing="21dp"></GridView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <!--分割线-->
+    <View
+        android:id="@+id/view_split_line1_layout"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/sipgrou_intercom_refreshlayout"
+        android:background="#00b1ed"></View>
+
+    <!--六大控制按键-->
+    <LinearLayout
+        android:layout_below="@+id/view_split_line1_layout"
+        android:layout_width="match_parent"
+        android:layout_height="98dp"
+        android:background="@mipmap/sipgroup_button_bg"
+        android:orientation="vertical">
+
+        <!--第一行-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <ImageButton
+                android:id="@+id/port_sipgroup_voice_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/port_sipgroup_voice_btn_selected" />
+
+            <ImageButton
+                android:id="@+id/port_sipgroup_intercom_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/port_sipgroup_intercom_btn_selected" />
+
+            <ImageButton
+                android:id="@+id/port_sipgroup_remote_waring_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/port_sipgroup_remote_waring_btn_selected" />
+
+
+        </LinearLayout>
+
+        <!--第二行-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <ImageButton
+                android:id="@+id/port_sipgroup_video_intercom_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/port_sipgroup_video_intercom_btn_selected" />
+
+            <ImageButton
+                android:id="@+id/port_sipgroup_remote_shot_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/port_sipgroup_remote_shot_btn_selected" />
+
+            <ImageButton
+                android:id="@+id/port_sipgroup_remote_speaking_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/port_sipgroup_remote_speaking_btn_selected" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+    <!--分割线-->
+    <View
+        android:id="@+id/view_split_line_layout"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/port_buttom_sliding_view_layout"
+        android:background="#00b1ed">
+    </View>
+
+    <!--滑动列表-->
+    <HorizontalScrollView
+        android:id="@+id/port_buttom_sliding_view_layout"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="4dp"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:clipToPadding="true"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:id="@+id/port_buttom_radiogroup_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/port_bottom_intercom_radio_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginRight="15.3dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/port_bottom_intercom_selected"
+                        android:button="@null"
+                        android:checked="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="4dp"
+                        android:text="勤务通信"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/port_bottom_video_radio_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginRight="15.3dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/port_bottom_video_selected"
+                        android:button="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="4dp"
+                        android:text="视频监控"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/port_bottom_chat_radio_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginRight="15.3dp"
+                        android:layout_marginTop="4dp"
+                        android:button="@null"
+                        android:background="@drawable/port_bottom_the_standby_selected" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="4dp"
+                        android:text="即时通信"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/port_bottom_alarm_radio_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginRight="15.3dp"
+                        android:layout_marginTop="4dp"
+                        android:button="@null"
+                        android:background="@drawable/port_bottom_alarm_selected" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="4dp"
+                        android:text="应急报警"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/port_bottom_apply_for_play_radio_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginRight="15.3dp"
+                        android:layout_marginTop="4dp"
+                        android:button="@null"
+                        android:background="@drawable/port_bottom_apply_for_play_selected" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="4dp"
+                        android:text="申请供弹"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/port_bottom_setting_radio_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginRight="15.3dp"
+                        android:layout_marginTop="4dp"
+                        android:button="@null"
+                        android:background="@drawable/port_bottom_setting_selected" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="4dp"
+                        android:text="设置中心"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/port_bottom_cluster_intercom_radio_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginRight="15.3dp"
+                        android:layout_marginTop="4dp"
+                        android:button="@null"
+                        android:background="@drawable/port_bottom_cluster_intercom_selected" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="4dp"
+                        android:text="集群对讲"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/port_bottom_live_meeting_radio_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginRight="15.3dp"
+                        android:layout_marginTop="4dp"
+                        android:button="@null"
+                        android:background="@drawable/port_bottom_live_meeting_selected" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="4dp"
+                        android:text="会议直播"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+            </RadioGroup>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</RelativeLayout>

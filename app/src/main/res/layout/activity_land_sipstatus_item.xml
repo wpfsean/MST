@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sipstatus_main_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="2dp">
+
+
+    <!--帧布局-->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/item_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:background="@drawable/sip_call_select_bg"
+            android:orientation="vertical">
+
+            <!--设备名称-->
+            <TextView
+                android:id="@+id/device_type_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="移动终端"
+                android:textColor="@color/white" />
+
+
+            <RelativeLayout
+                android:layout_below="@+id/device_type_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp">
+                <!--哨位名称-->
+                <TextView
+                    android:id="@+id/item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="none"
+                    android:maxLines="2"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:singleLine="false"
+                    android:text="你是个大啊没得吃"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="46dp"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+        <ImageView
+            android:id="@+id/sip_item_newmessage_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp" />
+    </FrameLayout>
+
+</LinearLayout>

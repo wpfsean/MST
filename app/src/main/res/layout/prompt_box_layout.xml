@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--提示框布局-->
+
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:background="@drawable/prompt_box_bg"
+        android:padding="5dp"
+        android:orientation="vertical">
+
+        <!--提示tile-->
+        <TextView
+            android:id="@+id/propmt_title_laout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:textSize="24sp" />
+        <!--子布局-->
+        <TextView
+            android:id="@+id/propmt_child1_laout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:gravity="center" />
+        <!--子布局-->
+        <TextView
+            android:id="@+id/propmt_child2_laout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

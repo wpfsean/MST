@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@mipmap/port_setting_icon_sliding_no_normal" android:state_checked="true"/>
+    <item android:drawable="@mipmap/port_setting_icon_sliding_yes_sellect" android:state_checked="false"/>
+
+
+</selector>

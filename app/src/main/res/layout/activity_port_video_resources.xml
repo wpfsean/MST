@@ -1,0 +1,191 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/port_data_background">
+
+
+    <LinearLayout
+        android:id="@+id/parent_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--头-->
+        <LinearLayout
+            android:id="@+id/top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
+
+            <!--最顶部布局-->
+            <RelativeLayout
+                android:id="@+id/icone_relativtelayout_title"
+                android:layout_width="match_parent"
+                android:layout_height="22dp">
+                <!--网络状态图标-->
+                <ImageView
+                    android:id="@+id/icon_network"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="6dp" />
+                <!--电池状态图标-->
+                <ImageView
+                    android:id="@+id/icon_electritity_show"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="6dp"
+                    android:layout_toLeftOf="@+id/icon_network" />
+                <!--Sip状态图标-->
+                <ImageView
+                    android:id="@+id/icon_connection_show"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="6dp"
+                    android:layout_toLeftOf="@+id/icon_electritity_show" />
+                <!--Sip消息图标-->
+                <ImageView
+                    android:id="@+id/icon_message_show"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="6dp"
+                    android:layout_toLeftOf="@+id/icon_connection_show" />
+                <!--时间图标-->
+                <TextView
+                    android:id="@+id/sipinfor_title_time_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    android:layout_toRightOf="@+id/sipinfor_title_date_layout"
+                    android:text="00:00:00"
+                    android:textColor="#42bfec"
+                    android:textSize="16sp" />
+                <!--日期图标-->
+                <TextView
+                    android:id="@+id/sipinfor_title_date_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    android:text="2018年03月02日"
+                    android:textColor="#42bfec"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <!--标题 tilte-->
+            <RelativeLayout
+                android:id="@+id/chat_port_layout_header"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+                <!--返回按键-->
+                <ImageButton
+                    android:id="@+id/finish_back_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/port_monitoring_icon_return_selected"
+                    android:visibility="visible" />
+                <!--页面名称显示-->
+                <TextView
+                    android:id="@+id/current_fragment_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="140dp"
+                    android:gravity="center"
+                    android:text="数据选择"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+                <!--刷新按键-->
+                <ImageButton
+                    android:id="@+id/loading_more_videosources_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="326dp"
+                    android:background="@drawable/port_monitoring_icon_listcontrol_selected"
+                    android:visibility="visible" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <!--选项卡-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp">
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="列表列表"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="收藏视频"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="历史记录"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!--滑动游标-->
+        <ImageView
+            android:id="@+id/cursor"
+            android:layout_marginTop="8dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="matrix"
+            android:src="@mipmap/sliding_bar" />
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vPager"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1.0"
+            android:flipInterval="30"
+            android:persistentDrawingCache="animation" />
+
+    </LinearLayout>
+
+
+
+        <!--<TextView-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="45dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:text="开始预览"-->
+            <!--android:gravity="bottom|center"-->
+            <!--android:textColor="#00ffff"-->
+            <!--android:textSize="17sp" />-->
+
+</RelativeLayout>

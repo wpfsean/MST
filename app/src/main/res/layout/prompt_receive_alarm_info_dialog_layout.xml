@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <!--最外层 的布局-->
+    <RelativeLayout
+        android:id="@+id/alert_layout_bg"
+        android:layout_width="400dp"
+        android:layout_height="274dp"
+        android:background="@color/black">
+
+        <!--整体弹窗-->
+        <LinearLayout
+            android:id="@+id/aletr_paraent_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@mipmap/prompt_receive_alarm_dialog"
+            android:orientation="vertical">
+            <!--上空分的文字显示-->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+                <!--报警文字滚动提示-->
+                <TextView
+                    android:id="@+id/auto_scroll_text_layout"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textSize="20sp"
+                    android:text="aaaaaaaaaaaaaaaaaaaaaaa"
+                    android:textColor="@color/red" />
+            </LinearLayout>
+
+            <!--下部分的视频区域-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="184dp"
+                android:layout_marginTop="36dp">
+                <!--帧而已-->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp">
+
+                    <!--侦布局中嵌入一个相对而已-->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <!--提示未加载到视频资源 -->
+                        <TextView
+                            android:id="@+id/prompt_alarm_loading_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="未加载到报警视频"
+                            android:textSize="20sp"
+                            android:textColor="@color/red" />
+                    <!--播放器-->
+                    <cn.nodemedia.NodePlayerView
+                        android:id="@+id/prompt_alarm_video_view_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    </RelativeLayout>
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!--最下端的关闭按键所在的而已-->
+    <RelativeLayout
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alert_layout_bg">
+        <!--关闭按键-->
+        <ImageButton
+            android:id="@+id/prompt_alarm_close_btn_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="6dp"
+            android:background="@mipmap/close" />
+    </RelativeLayout>
+
+</RelativeLayout>

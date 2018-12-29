@@ -1,0 +1,751 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/play_video">
+
+    <!--最顶端的图标-->
+
+    <include
+        layout="@layout/activity_title_land_layout" />
+
+
+    <RelativeLayout
+        android:id="@+id/relativelayout_center"
+        android:layout_width="496dp"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/icone_relativtelayout_title"
+        android:background="@drawable/video_bg">
+        <!--titleBar-->
+        <TextView
+            android:id="@+id/show_title_information"
+            android:layout_width="fill_parent"
+            android:layout_height="27dp"
+            android:background="@drawable/video_bg"
+            android:gravity="center"
+            android:text="系统设置"
+            android:textColor="@color/sip_group_text_color"
+            android:textSize="16sp" />
+
+        <!--滑动列表-->
+        <com.tehike.client.mst.app.project.ui.widget.scrollview.OverScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/show_title_information">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:clipToPadding="true"
+                android:fitsSystemWindows="true"
+                android:orientation="vertical">
+
+                <!--登录信息-->
+                <LinearLayout
+                    android:id="@+id/login_group_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:background="#003353">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="19dp"
+                        android:src="@mipmap/setting_login" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:gravity="center"
+                        android:text="登录信息"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <!--登录信息子布局-->
+                <LinearLayout
+                    android:id="@+id/login_child_land_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/setting_item_bg"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:id="@+id/display_account_infor_land_layout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp"
+                        android:text="账号信息"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/line" />
+
+                    <TextView
+                        android:id="@+id/display_pwd_infor_land_layout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp"
+                        android:text="密码信息"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/line" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="42dp"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="10dp"
+                            android:paddingTop="5dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/setting_item_up_bg_selector"
+                                android:text="记住密码"
+                                android:textColor="@color/actionbar_color"
+                                android:textSize="15sp" />
+
+                            <Switch
+                                android:id="@+id/land_switch_remember_pwd_layout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_marginEnd="11dp"
+                                android:layout_marginRight="11dp" />
+
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="fill_parent"
+                            android:layout_height="0.1dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/line" />
+
+                        <RelativeLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="42dp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="10dp"
+                            android:paddingTop="5dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/setting_item_up_bg_selector"
+                                android:text="自动登录"
+                                android:textColor="@color/actionbar_color"
+                                android:textSize="15sp" />
+
+                            <Switch
+                                android:id="@+id/land_switch_autologin_layout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_marginEnd="11dp"
+                                android:layout_marginRight="11dp" />
+
+                        </RelativeLayout>
+
+                        <!--退出登录按钮-->
+                        <Button
+                            android:id="@+id/logout_port_layout"
+                            android:layout_width="fill_parent"
+                            android:layout_height="45dp"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/btn_bg_selector"
+                            android:textColor="#fff"
+                            android:textSize="15sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!--视频监控-->
+                <LinearLayout
+                    android:id="@+id/video_group_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:background="#003353">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="19dp"
+                        android:src="@mipmap/setting_video" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:gravity="center"
+                        android:text="视频监控"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <!--视频监控的子布局-->
+                <LinearLayout
+                    android:id="@+id/video_child_land_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/setting_item_bg"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/setting_item_up_bg_selector"
+                            android:text="主码流设置"
+                            android:textColor="@color/actionbar_color"
+                            android:textSize="15sp" />
+
+                        <Switch
+                            android:id="@+id/land_switch_ismain_stream_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="11dp"
+                            android:layout_marginRight="11dp" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/line" />
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/setting_item_up_bg_selector"
+                            android:text="声音设置"
+                            android:textColor="@color/actionbar_color"
+                            android:textSize="15sp" />
+
+                        <Switch
+                            android:id="@+id/land_switch_isopen_sound_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="11dp"
+                            android:layout_marginRight="11dp" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/line" />
+
+                </LinearLayout>
+
+                <!--报警设置-->
+                <LinearLayout
+                    android:id="@+id/alarm_group_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:background="#003353">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="19dp"
+                        android:src="@mipmap/setting_the_alarm" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:gravity="center"
+                        android:text="报警设置"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+                <!--报警设置的子布局-->
+                <LinearLayout
+                    android:id="@+id/alarm_child_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/setting_item_bg"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/setting_alarm_ip_land_layout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:padding="10dp"
+                        android:text="报警中心"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <!--弹箱设置-->
+                <LinearLayout
+                    android:id="@+id/box_group_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:background="#003353">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="19dp"
+                        android:src="@mipmap/setting_play_box" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:gravity="center"
+                        android:text="弹箱设置"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+                <!--弹箱设置的子布局-->
+                <LinearLayout
+                    android:id="@+id/box_child_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/setting_item_bg"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:padding="10dp"
+                        android:text="弹箱连接"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <!--系统设置-->
+                <LinearLayout
+                    android:id="@+id/system_setting_group_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:background="#003353">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="19dp"
+                        android:src="@mipmap/setting_setting_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:gravity="center"
+                        android:text="系统设置"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <!--系统设置的布局-->
+                <LinearLayout
+                    android:id="@+id/system_setting_child_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/setting_item_bg"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:padding="10dp"
+                        android:text="中心设置"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:background="#33000000" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:padding="10dp"
+                        android:text="专网1"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:background="#33000000" />
+
+                    <TextView
+                        android:id="@+id/port_wifi_setting_layout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:padding="10dp"
+                        android:text="专网2"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:background="#33000000" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:padding="10dp"
+                        android:text="定位信息"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:background="#33000000" />
+
+                    <TextView
+                        android:id="@+id/set_lightness_land_layout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:padding="10dp"
+                        android:text="亮度调节"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:background="#33000000" />
+
+
+                </LinearLayout>
+
+                <!--常用设置-->
+                <LinearLayout
+                    android:id="@+id/inuse_setting_group_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:background="#003353">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="19dp"
+                        android:src="@mipmap/setting_setting1_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:gravity="center"
+                        android:text="常用设置"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <!--常用设置的子布局-->
+                <LinearLayout
+                    android:id="@+id/inuse_setting_child_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/setting_item_bg"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/app_clear_cach_land_layout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:padding="10dp"
+                        android:text="清除缓存"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/line" />
+
+                    <TextView
+                        android:id="@+id/update_apk_land_layout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:padding="10dp"
+                        android:text="版本更新"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/line" />
+
+                    <TextView
+                        android:id="@+id/prompt_feedback_land_layout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:padding="10dp"
+                        android:text="意见反馈"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:background="#33000000" />
+                </LinearLayout>
+
+                <!--方向设置-->
+                <LinearLayout
+                    android:id="@+id/direction_setting_group_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:background="#003353">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="19dp"
+                        android:src="@mipmap/setting_direction_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:gravity="center"
+                        android:text="方向设置"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <!--方向设置的子布局-->
+                <LinearLayout
+                    android:id="@+id/direction_setting_child_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/setting_item_bg"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/setting_horizontal_direction"
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/setting_item_bottom_bg_selector"
+                        android:drawableRight="@drawable/arro_right"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp"
+                        android:text="设置竖屏"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+                <!--关于我们-->
+                <LinearLayout
+                    android:id="@+id/about_group_land_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:background="#003353">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="19dp"
+                        android:src="@mipmap/setting_about_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:gravity="center"
+                        android:text="关于我们"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.tehike.client.mst.app.project.ui.widget.scrollview.OverScrollView>
+
+    </RelativeLayout>
+
+    <!--右侧控制按键-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/icone_relativtelayout_title"
+        android:layout_toRightOf="@+id/relativelayout_center"
+        android:background="@drawable/video_bg">
+
+        <ImageButton
+            android:id="@+id/reset_setting_land_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="42dp"
+            android:background="@drawable/save_setting_btn_bg_select" />
+
+        <ImageButton
+            android:id="@+id/save_setting_land_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reset_setting_land_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/resave_setting_btn_bg_select" />
+
+        <ImageButton
+            android:id="@+id/refresh_setting_land_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/save_setting_land_layout"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="137dp"
+            android:background="@drawable/sip_group_refresh" />
+
+        <ImageButton
+            android:id="@+id/back_setting_land_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/save_setting_land_layout"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="137dp"
+            android:layout_toRightOf="@+id/refresh_setting_land_layout"
+            android:background="@drawable/sip_group_back" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/icone_relativtelayout_title"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <!--最顶端的图标-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <!--警徽图标-->
+            <ImageView
+                android:id="@+id/plicemen_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:src="@mipmap/picture_badges" />
+            <!--aPP名称-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@+id/plicemen_icon"
+                android:text="@string/app_name"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/sipinfor_title_time_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/sipinfor_title_date_layout"
+                android:text="00:00:00"
+                android:textColor="#42bfec"
+                android:textSize="16sp" />
+            <!--日期图标-->
+            <TextView
+                android:id="@+id/sipinfor_title_date_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="2018年03月02日"
+                android:textColor="#42bfec"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="496dp">
+
+            <ImageView
+                android:id="@+id/icon_message_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/icon_connection_show"
+                android:background="@mipmap/message" />
+
+
+            <ImageView
+                android:id="@+id/icon_connection_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/position_land_layout"
+                android:background="@mipmap/icon_connection_normal" />
+
+            <ImageView
+                android:id="@+id/position_land_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+
+            <FrameLayout
+                android:id="@+id/icon_electritity_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/icon_connection_show">
+
+                <ImageView
+                    android:id="@+id/icon_electritity_show"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:background="@mipmap/icon_electricity_disable" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/prompt_electrity_values_land_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="29"
+                        android:textColor="#00ff00"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+            </FrameLayout>
+
+
+            <ImageView
+                android:id="@+id/icon_network"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/icon_electritity_layout"
+                android:background="@mipmap/icon_network_a" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

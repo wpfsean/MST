@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <!--最 外层 的布局-->
+    <RelativeLayout
+        android:id="@+id/alert_layout_bg"
+        android:layout_width="276dp"
+        android:layout_height="274dp"
+        android:background="@color/black">
+
+        <!--弹窗-->
+        <LinearLayout
+            android:id="@+id/aletr_paraent_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@mipmap/tanchuang"
+            android:orientation="vertical">
+            <!--暴狱，越狱-->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="47dp"
+                android:layout_marginTop="90dp"
+                android:orientation="horizontal">
+
+
+                <ImageButton
+                    android:id="@+id/btn_prison"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/land_home_dialog_btn_baoyu_select" />
+
+                <ImageButton
+                    android:id="@+id/btn_takeoff"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/land_home_dialog_btn_tuotao_select" />
+
+
+            </LinearLayout>
+            <!--袭击，灾害-->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="47dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btn_attack"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/land_home_dialog_btn_xiji_select" />
+
+                <ImageButton
+                    android:id="@+id/btn_disaster"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/land_home_dialog_btn_zaihai_select" />
+
+            </LinearLayout>
+            <!--劫持，突发-->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="47dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btn_hold"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/land_home_dialog_btn_xiexhi_select" />
+
+                <ImageButton
+                    android:id="@+id/btn_burst"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/land_home_dialog_btn_tufa_select" />
+
+            </LinearLayout>
+            <!--应急报警-->
+            <LinearLayout
+                android:id="@+id/btn_emergency"
+                android:layout_width="fill_parent"
+                android:layout_height="47dp"
+                android:background="@drawable/land_home_dialog_btn_yingji_select"
+                android:orientation="horizontal"></LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!--底部关闭按键-->
+    <ImageButton
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alert_layout_bg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:background="@mipmap/close" />
+
+</RelativeLayout>

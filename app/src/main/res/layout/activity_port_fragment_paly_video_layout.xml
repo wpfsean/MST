@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--标题 tilte-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+        <!--返回按键-->
+        <ImageButton
+            android:id="@+id/finish_video_fragment_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/port_monitoring_icon_return_selected"
+            android:visibility="visible" />
+        <!--页面名称显示-->
+        <TextView
+            android:id="@+id/current_fragment_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="140dp"
+            android:gravity="center"
+            android:text="视频监控"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+        <!--刷新按键-->
+        <ImageButton
+            android:id="@+id/loading_more_videosources_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="326dp"
+            android:background="@drawable/activity_port_video_load_more_btn_bg"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+
+    <FrameLayout
+        android:id="@+id/video_main_framelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="584dp"
+                android:orientation="vertical">
+
+                <!--视频源名所在的布局-->
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp">
+                    <!--视频源名称-->
+                    <TextView
+                        android:id="@+id/display_video_information_text_layout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:text="四分屏监控"
+                        android:textColor="#00ffff"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <!--播放视频的区域-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="270dp"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/activity_port_video_bg">
+
+                    <!--单屏播放-->
+                    <RelativeLayout
+                        android:id="@+id/single_surfaceview_parent_relativelayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="1dp">
+
+                            <cn.nodemedia.NodePlayerView
+                                android:id="@+id/single_player_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"></cn.nodemedia.NodePlayerView>
+
+                            <ProgressBar
+                                android:id="@+id/single_player_progressbar_layout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center" />
+
+                            <TextView
+                                android:id="@+id/dispaly_video_loading_layout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="正在加载"
+                                android:textColor="@color/white" />
+                        </FrameLayout>
+
+                    </RelativeLayout>
+
+                    <!--四屏播放-->
+                    <RelativeLayout
+                        android:id="@+id/four_surfaceview_parent_relativelayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:visibility="visible">
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+                                <!--上半部分-->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1">
+                                    <!--第一个视频播放的区域-->
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1">
+
+                                        <RelativeLayout
+                                            android:id="@+id/first_surfaceview_relativelayout"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <FrameLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:padding="1dp"
+                                                android:visibility="visible">
+
+                                                <cn.nodemedia.NodePlayerView
+                                                    android:id="@+id/first_player_layout"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="match_parent"></cn.nodemedia.NodePlayerView>
+
+                                                <ProgressBar
+                                                    android:id="@+id/first_pr_layout"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="center"
+                                                    android:visibility="visible" />
+
+                                                <TextView
+                                                    android:id="@+id/first_dispaly_loading_layout"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="bottom|center"
+                                                    android:layout_marginBottom="20dp"
+                                                    android:text="正在加载"
+                                                    android:textColor="@color/white"
+                                                    android:visibility="visible" />
+                                            </FrameLayout>
+                                        </RelativeLayout>
+
+
+                                    </LinearLayout>
+                                    <!--第二个视频播放的区域-->
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1">
+
+                                        <RelativeLayout
+                                            android:id="@+id/second_surfaceview_relativelayout"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <FrameLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:padding="1dp"
+                                                android:visibility="visible">
+
+                                                <cn.nodemedia.NodePlayerView
+                                                    android:id="@+id/second_player_layout"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="match_parent"></cn.nodemedia.NodePlayerView>
+
+                                                <ProgressBar
+                                                    android:id="@+id/second_pr_layout"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="center"
+                                                    android:visibility="visible" />
+
+                                                <TextView
+                                                    android:id="@+id/seond_dispaly_loading_layout"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="bottom|center"
+                                                    android:layout_marginBottom="20dp"
+                                                    android:text="正在加载"
+                                                    android:textColor="@color/white"
+                                                    android:visibility="visible" />
+                                            </FrameLayout>
+                                        </RelativeLayout>
+
+                                    </LinearLayout>
+                                </LinearLayout>
+                                <!--下半部分-->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1">
+
+                                    <!--第三个视频播放区域-->
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1">
+
+                                        <RelativeLayout
+                                            android:id="@+id/third_surfaceview_relativelayout"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <FrameLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:padding="1dp"
+                                                android:visibility="visible">
+
+                                                <cn.nodemedia.NodePlayerView
+                                                    android:id="@+id/third_player_layout"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="match_parent"></cn.nodemedia.NodePlayerView>
+
+                                                <ProgressBar
+                                                    android:id="@+id/third_pr_layout"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="center"
+                                                    android:visibility="visible" />
+
+                                                <TextView
+                                                    android:id="@+id/third_dispaly_loading_layout"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="bottom|center"
+                                                    android:layout_marginBottom="20dp"
+                                                    android:text="正在加载"
+                                                    android:textColor="@color/white"
+                                                    android:visibility="visible" />
+                                            </FrameLayout>
+                                        </RelativeLayout>
+
+                                    </LinearLayout>
+                                    <!--每四个视频播放区域-->
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1">
+
+                                        <RelativeLayout
+                                            android:id="@+id/fourth_surfaceview_relativelayout"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <FrameLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:padding="1dp"
+                                                android:visibility="visible">
+
+                                                <cn.nodemedia.NodePlayerView
+                                                    android:id="@+id/fourth_player_layout"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="match_parent"></cn.nodemedia.NodePlayerView>
+
+                                                <ProgressBar
+                                                    android:id="@+id/fourth_pr_layout"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="center"
+                                                    android:visibility="visible" />
+
+                                                <TextView
+                                                    android:id="@+id/fourth_dispaly_loading_layout"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="bottom|center"
+                                                    android:layout_marginBottom="20dp"
+                                                    android:text="正在加载"
+                                                    android:textColor="@color/white"
+                                                    android:visibility="visible" />
+                                            </FrameLayout>
+                                        </RelativeLayout>
+
+                                    </LinearLayout>
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <!--视频区域的划线-->
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="1dp"
+                                android:background="@drawable/activity_port_video_bg">
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_alignParentTop="true"
+                                    android:background="@color/white" />
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_alignParentBottom="true"
+                                    android:background="@color/white" />
+
+
+                                <TextView
+                                    android:layout_width="0.5dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentLeft="true"
+                                    android:background="@color/white" />
+
+                                <TextView
+                                    android:layout_width="0.5dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentRight="true"
+                                    android:background="@color/white" />
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_centerVertical="true"
+                                    android:background="@color/white" />
+
+
+                                <TextView
+                                    android:layout_width="0.5dp"
+                                    android:layout_height="fill_parent"
+                                    android:layout_centerHorizontal="true"
+                                    android:background="@color/white" />
+
+                            </RelativeLayout>
+                        </FrameLayout>
+                    </RelativeLayout>
+
+
+                </RelativeLayout>
+                <!--5个功能按键-->
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="48dp">
+
+                    <ImageButton
+                        android:id="@+id/single_screen_button_selecte"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/port_btn_single_selected"
+                        android:focusable="true" />
+
+                    <ImageButton
+                        android:id="@+id/four_screen_button_select"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="40dp"
+                        android:layout_toRightOf="@+id/single_screen_button_selecte"
+                        android:background="@drawable/port_monitoring_btn_4splitscreen_selected" />
+
+                    <ImageButton
+                        android:id="@+id/paly_or_stop_button_select"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="40dp"
+                        android:layout_toRightOf="@+id/four_screen_button_select"
+                        android:background="@drawable/port_monitoring_icon_stopplay_selected" />
+
+                    <ImageButton
+                        android:id="@+id/send_alarmtoServer_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="40dp"
+                        android:layout_toRightOf="@+id/paly_or_stop_button_select"
+                        android:background="@drawable/port_monitoring_btn_9splitscreen_selected" />
+
+                    <ImageButton
+                        android:id="@+id/screenshots_button_select"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="40dp"
+                        android:layout_toRightOf="@+id/send_alarmtoServer_button"
+                        android:background="@drawable/port_btn_screenshots_selected" />
+
+
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/view_split_line_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#00b1ed"></View>
+
+
+                <!--功能 区按键-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!--云台放大按键-->
+                    <ImageButton
+                        android:id="@+id/video_zoombig_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="31dp"
+                        android:layout_marginTop="36.7dp"
+                        android:background="@drawable/port_btn_amplification_selected" />
+
+                    <!--视频上一页-->
+                    <ImageButton
+                        android:id="@+id/video_previous_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/video_zoombig_button"
+                        android:layout_marginLeft="31dp"
+                        android:layout_marginTop="28.3dp"
+                        android:background="@drawable/port_btn_left_selected" />
+
+                    <!--云台缩小按键-->
+                    <ImageButton
+                        android:id="@+id/video_zoomout_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="31dp"
+                        android:layout_marginTop="36.7dp"
+                        android:layout_toRightOf="@+id/video_zoombig_button"
+                        android:background="@drawable/port_btn_shrink_selected" />
+
+                    <!--视频下一页-->
+                    <ImageButton
+                        android:id="@+id/video_nextpage_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/video_zoomout_button"
+                        android:layout_alignStart="@+id/video_zoomout_button"
+                        android:layout_alignTop="@+id/video_previous_button"
+                        android:background="@drawable/port_btn_right_selected" />
+
+
+                    <ImageButton
+                        android:id="@+id/ptz_video_top_left_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="208dp"
+                        android:layout_marginTop="18dp"
+                        android:background="@drawable/ptz_btn_video_top_left_bg" />
+
+
+                    <ImageButton
+                        android:id="@+id/ptz_video_down"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_toRightOf="@+id/ptz_video_top_left_btn"
+                        android:background="@drawable/port_button_down_selected" />
+
+
+                    <ImageButton
+                        android:id="@+id/ptz_video_top_right_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_toRightOf="@+id/ptz_video_down"
+                        android:background="@drawable/ptz_btn_video_top_right_bg" />
+
+
+                    <ImageButton
+                        android:id="@+id/ptz_video_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ptz_video_top_left_btn"
+                        android:layout_marginLeft="208dp"
+                        android:layout_marginTop="18dp"
+                        android:background="@drawable/port_button_left_selected" />
+
+                    <ImageButton
+                        android:id="@+id/ptz_video_reset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ptz_video_down"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_toRightOf="@+id/ptz_video_left"
+                        android:background="@drawable/port_icon_refresh_selected" />
+
+
+                    <ImageButton
+                        android:id="@+id/ptz_video_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ptz_video_top_right_btn"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_toRightOf="@+id/ptz_video_reset"
+                        android:background="@drawable/port_button_right_selected" />
+
+
+                    <ImageButton
+                        android:id="@+id/ptz_video_bottom_left_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ptz_video_left"
+                        android:layout_marginLeft="208dp"
+                        android:layout_marginTop="18dp"
+                        android:background="@drawable/ptz_btn_video_bottom_left_bg" />
+
+
+                    <ImageButton
+                        android:id="@+id/ptz_video_up"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ptz_video_reset"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_toRightOf="@+id/ptz_video_bottom_left_btn"
+                        android:background="@drawable/port_button_up_selected" />
+
+
+                    <ImageButton
+                        android:id="@+id/ptz_video_bottom_right_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ptz_video_reset"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_toRightOf="@+id/ptz_video_up"
+                        android:background="@drawable/ptz_btn_video_bottom_right_bg" />
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <!--最底部的滑动部分-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/bottom_sliding_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"></android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+
+        <!--截图预览区布局-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <!--截图预览-->
+            <ImageView
+                android:id="@+id/preview_layout"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="80dp"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+    </FrameLayout>
+</LinearLayout>

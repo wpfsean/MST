@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Mst</string>
+
+    <string name="view_empty">没有数据~</string>
+    <string name="view_network_error">网络异常~</string>
+    <string name="view_no_network">无网络</string>
+    <string name="setting_factory">中科腾海</string>
+    <string name="setting_factory_web">\u3000\u3000中科腾海具有多年的武警,公安的服务经验,通过自研和代理相结合的方式,提供系列化的警用装备设备,并提供专业化的技术服务.</string>
+    <string name="setting_email">联系我们</string>
+    <string name="setting_email_username">\u3000\u3000邮箱 : gsong@zhketech.com</string>
+    <string name="login_account_information">登录信息</string>
+    <string name="video_setting">视频监控</string>
+    <string name="alarm_setting">报警设置</string>
+    <string name="unable_connect">无法连接!</string>
+    <string name="play_finish">已完成！</string>
+    <string name="refresh_success">刷新成功!</string>
+</resources>

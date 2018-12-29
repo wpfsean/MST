@@ -1,0 +1,811 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent_relativelayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/play_video"
+    android:orientation="vertical">
+
+    <!--最上端的状态栏-->
+    <!--最顶端的图标-->
+    <RelativeLayout
+        android:id="@+id/icone_relativtelayout_title"
+        android:layout_width="match_parent"
+        android:layout_height="35dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <!--警徽图标-->
+            <ImageView
+                android:id="@+id/plicemen_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:src="@mipmap/picture_badges" />
+            <!--aPP名称-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@+id/plicemen_icon"
+                android:text="@string/app_name"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/sipinfor_title_time_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/sipinfor_title_date_layout"
+                android:text="00:00:00"
+                android:textColor="#42bfec"
+                android:textSize="16sp" />
+            <!--日期图标-->
+            <TextView
+                android:id="@+id/sipinfor_title_date_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="2018年03月02日"
+                android:textColor="#42bfec"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="496dp">
+
+            <ImageView
+                android:id="@+id/icon_message_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/icon_connection_show"
+                android:background="@mipmap/message" />
+
+
+            <ImageView
+                android:id="@+id/icon_connection_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/position_land_layout"
+                android:background="@mipmap/icon_connection_normal" />
+
+            <ImageView
+                android:id="@+id/position_land_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+
+            <FrameLayout
+                android:id="@+id/icon_electritity_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/icon_connection_show">
+
+                <ImageView
+                    android:id="@+id/icon_electritity_show"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:background="@mipmap/icon_electricity_disable" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/prompt_electrity_values_land_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="29"
+                        android:textColor="#00ff00"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+            </FrameLayout>
+
+
+            <ImageView
+                android:id="@+id/icon_network"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/icon_electritity_layout"
+                android:background="@mipmap/icon_network_a" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <!--视频播放所在的布局-->
+    <RelativeLayout
+        android:id="@+id/video_view_parent_relativelayout"
+        android:layout_width="494dp"
+        android:layout_height="326dp"
+        android:layout_below="@+id/icone_relativtelayout_title">
+        <!--四屏所在的区域-->
+        <RelativeLayout
+            android:id="@+id/four_surfaceview_parent_relativelayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+            <!--第一个视频所在父布局-->
+            <RelativeLayout
+                android:id="@+id/foursurfaceview_first_parentrelativelayout"
+                android:layout_width="247dp"
+                android:layout_height="163dp">
+                <!--第一个视频域的布局-->
+                <RelativeLayout
+                    android:id="@+id/first_surfaceview_relativelayout"
+                    android:layout_width="274dp"
+                    android:layout_height="139dp"
+                    android:background="@drawable/video_relativelayout_bg_shape">
+
+                    <FrameLayout
+                        android:id="@+id/fr1"
+                        android:layout_width="274dp"
+                        android:layout_height="139dp"
+                        android:layout_margin="1dp">
+
+                        <cn.nodemedia.NodePlayerView
+                            android:id="@+id/first_player_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"></cn.nodemedia.NodePlayerView>
+
+                    </FrameLayout>
+
+                    <ProgressBar
+                        android:id="@+id/first_pr_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/first_dispaly_loading_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="Loading...."
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:visibility="visible" />
+
+                </RelativeLayout>
+                <!--视频1下面的提示及便捷操作-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/first_surfaceview_relativelayout">
+
+                    <TextView
+                        android:id="@+id/first_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="6dp"
+                        android:textColor="@color/white"
+                        android:textSize="11sp" />
+
+                    <ImageButton
+                        android:id="@+id/get_surfaceview_video_picture_first"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="200dp"
+                        android:background="@mipmap/btn_screenshots"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/first_window_zoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/get_surfaceview_video_picture_first"
+                        android:background="@mipmap/btn_amplification"
+                        android:visibility="gone" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:background="@color/video_color" />
+
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+            <!--第二个视频所在父布局-->
+            <RelativeLayout
+                android:id="@+id/foursurfaceview_second_parentrelativelayout"
+                android:layout_width="247dp"
+                android:layout_height="163dp"
+                android:layout_toRightOf="@+id/foursurfaceview_first_parentrelativelayout">
+                <!--第二个视频域的布局-->
+                <RelativeLayout
+                    android:id="@+id/second_surfaceview_relativelayout"
+                    android:layout_width="274dp"
+                    android:layout_height="139dp"
+                    android:background="@drawable/video_relativelayout_bg_shape">
+
+                    <FrameLayout
+                        android:id="@+id/fr2"
+                        android:layout_width="274dp"
+                        android:layout_height="139dp"
+                        android:layout_margin="1dp">
+
+                        <cn.nodemedia.NodePlayerView
+                            android:id="@+id/second_player_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"></cn.nodemedia.NodePlayerView>
+
+                    </FrameLayout>
+
+                    <ProgressBar
+                        android:id="@+id/second_pr_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+
+                    <TextView
+                        android:id="@+id/seond_dispaly_loading_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="Loading...."
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+                <!--视频2下面的提示及便捷操作-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/second_surfaceview_relativelayout">
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:background="@color/video_color" />
+
+                    <TextView
+                        android:id="@+id/second_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="6dp"
+                        android:textColor="@color/white"
+                        android:textSize="11sp" />
+
+                    <ImageButton
+                        android:id="@+id/get_surfaceview_video_picture_second"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="200dp"
+                        android:background="@mipmap/btn_screenshots"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/get_surfaceview_video_picture_second"
+                        android:background="@mipmap/btn_amplification"
+                        android:visibility="gone" />
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+            <!--第三个视频所在父布局-->
+            <RelativeLayout
+                android:id="@+id/foursurfaceview_third_parentrelativelayout"
+                android:layout_width="247dp"
+                android:layout_height="163dp"
+                android:layout_below="@+id/foursurfaceview_first_parentrelativelayout">
+
+                <!--第三个视频域的布局-->
+                <RelativeLayout
+                    android:id="@+id/third_surfaceview_relativelayout"
+                    android:layout_width="274dp"
+                    android:layout_height="139dp"
+                    android:background="@drawable/video_relativelayout_bg_shape">
+
+                    <FrameLayout
+                        android:id="@+id/fr3"
+                        android:layout_width="274dp"
+                        android:layout_height="139dp"
+                        android:layout_margin="1dp">
+
+                        <cn.nodemedia.NodePlayerView
+                            android:id="@+id/third_player_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"></cn.nodemedia.NodePlayerView>
+
+                    </FrameLayout>
+
+                    <ProgressBar
+                        android:id="@+id/third_pr_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+
+                    <TextView
+                        android:id="@+id/third_dispaly_loading_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="Loading...."
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+                <!--视频3下面的提示及便捷操作-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/third_surfaceview_relativelayout">
+
+                    <TextView
+                        android:id="@+id/third_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="6dp"
+                        android:textColor="@color/white"
+                        android:textSize="11sp" />
+
+                    <ImageButton
+                        android:id="@+id/get_surfaceview_video_picture_third"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="200dp"
+                        android:background="@mipmap/btn_screenshots"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/get_surfaceview_video_picture_third"
+                        android:background="@mipmap/btn_amplification"
+                        android:visibility="gone" />
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+            <!--第四个视频所在父布局-->
+            <RelativeLayout
+                android:id="@+id/foursurfaceview_fourth_parentrelativelayout"
+                android:layout_width="247dp"
+                android:layout_height="163dp"
+                android:layout_below="@+id/foursurfaceview_second_parentrelativelayout"
+                android:layout_toRightOf="@+id/foursurfaceview_third_parentrelativelayout">
+
+                <!--第二个视频域的布局-->
+                <RelativeLayout
+                    android:id="@+id/fourth_surfaceview_relativelayout"
+                    android:layout_width="274dp"
+                    android:layout_height="139dp"
+                    android:background="@drawable/video_relativelayout_bg_shape">
+
+                    <FrameLayout
+                        android:id="@+id/fr4"
+                        android:layout_width="274dp"
+                        android:layout_height="139dp"
+                        android:layout_margin="1dp">
+
+                        <cn.nodemedia.NodePlayerView
+                            android:id="@+id/fourth_player_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"></cn.nodemedia.NodePlayerView>
+
+                    </FrameLayout>
+
+                    <ProgressBar
+                        android:id="@+id/fourth_pr_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+
+                    <TextView
+                        android:id="@+id/fourth_dispaly_loading_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="Loading...."
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+                <!--视频4下面的提示及便捷操作-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/fourth_surfaceview_relativelayout">
+
+
+                    <TextView
+                        android:id="@+id/fourth_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="6dp"
+                        android:textColor="@color/white"
+                        android:textSize="11sp" />
+
+                    <ImageButton
+                        android:id="@+id/get_surfaceview_video_picture_fourth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="200dp"
+                        android:background="@mipmap/btn_screenshots"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/get_surfaceview_video_picture_fourth"
+                        android:background="@mipmap/btn_amplification"
+                        android:visibility="gone" />
+
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+        </RelativeLayout>
+        <!--单屏所在的区域-->
+        <RelativeLayout
+            android:id="@+id/single_surfaceview_parent_relativelayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:id="@+id/single_surfaceview_relativelayout"
+                android:layout_width="494dp"
+                android:layout_height="302dp"
+                android:background="@drawable/video_relativelayout_bg_shape">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+
+                    <cn.nodemedia.NodePlayerView
+                        android:id="@+id/single_player_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"></cn.nodemedia.NodePlayerView>
+
+                </FrameLayout>
+
+                <ProgressBar
+                    android:id="@+id/single_player_progressbar_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+
+                <TextView
+                    android:id="@+id/dispaly_video_loading_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="Loading...."
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+            <!--surfaceview下面所显示的数据-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/single_surfaceview_relativelayout">
+
+                <TextView
+                    android:id="@+id/display_video_information_text_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:text="哨位台一号监控"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/land_shot_priview_btn_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="407dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@mipmap/btn_screenshots" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/land_shot_priview_layout"
+            android:visibility="gone"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
+    <!--最右侧的功能 键的布局-->
+    <RelativeLayout
+        android:id="@+id/right_relativelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/icone_relativtelayout_title"
+        android:layout_marginLeft="1dp"
+        android:layout_toRightOf="@+id/video_view_parent_relativelayout"
+        android:background="@drawable/relativelayout_bg_shape">
+
+        <RelativeLayout
+            android:id="@+id/show_relativelayout_all_button"
+            android:layout_width="match_parent"
+            android:layout_height="135dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/icone_relativtelayout_horizontal_one"
+                android:layout_width="fill_parent"
+                android:layout_height="41dp"
+                android:layout_centerHorizontal="true">
+
+                <ImageButton
+                    android:id="@+id/four_screen_button_select"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="3dp"
+                    android:background="@drawable/btn_foursplitscreen_select" />
+
+                <ImageButton
+                    android:id="@+id/single_screen_button_selecte"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/four_screen_button_select"
+                    android:background="@drawable/btn_amplification_select" />
+
+                <ImageButton
+                    android:id="@+id/loading_more_videosources_layout"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/single_screen_button_selecte"
+                    android:background="@drawable/btn_list_select" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/icone_relativtelayout_horizontal_two"
+                android:layout_width="fill_parent"
+                android:layout_height="41dp"
+                android:layout_below="@+id/icone_relativtelayout_horizontal_one"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="6dp">
+
+                <ImageButton
+                    android:id="@+id/video_previous_button"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="3dp"
+                    android:background="@drawable/btn_left_select" />
+
+                <ImageButton
+                    android:id="@+id/icon_video_restart"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/video_previous_button"
+                    android:background="@drawable/btn_refresh_select" />
+
+                <ImageButton
+                    android:id="@+id/video_nextpage_button"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/icon_video_restart"
+                    android:background="@drawable/btn_right_select" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/icone_relativtelayout_horizontal_three"
+                android:layout_width="fill_parent"
+                android:layout_height="41dp"
+                android:layout_below="@+id/icone_relativtelayout_horizontal_two"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="6dp">
+
+                <ImageButton
+                    android:id="@+id/send_alarmtoServer_button"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="3dp"
+                    android:background="@drawable/btn_alarm_select" />
+
+                <ImageButton
+                    android:id="@+id/icon_video_stop"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/send_alarmtoServer_button"
+                    android:background="@drawable/btn_stopplay_select" />
+
+                <ImageButton
+                    android:id="@+id/finish_back_layout"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/icon_video_stop"
+                    android:background="@drawable/btn_return_select" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativelayout_control"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/show_relativelayout_all_button"
+            android:layout_marginTop="15dp"
+            android:visibility="visible">
+
+
+            <RelativeLayout
+                android:id="@+id/direction_show_relativelayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/show_button_home_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@mipmap/btn_bg" />
+
+                <ImageButton
+                    android:id="@+id/ptz_video_up"
+                    android:layout_width="33dp"
+                    android:layout_height="17dp"
+                    android:layout_alignLeft="@+id/ptz_video_down"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignStart="@+id/ptz_video_down"
+                    android:layout_marginTop="9dp"
+                    android:background="@drawable/btn_down_select" />
+
+
+                <ImageButton
+                    android:id="@+id/ptz_video_down"
+                    android:layout_width="33dp"
+                    android:layout_height="17dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="90dp"
+                    android:background="@drawable/btn_up_select" />
+
+                <ImageButton
+                    android:id="@+id/ptz_video_left"
+                    android:layout_width="17dp"
+                    android:layout_height="33dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/button_left_select" />
+
+                <ImageButton
+                    android:id="@+id/ptz_video_right"
+                    android:layout_width="17dp"
+                    android:layout_height="33dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="106dp"
+                    android:background="@drawable/button_right_select" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/direction_show_relativelayout"
+                android:layout_centerInParent="true">
+
+                <ImageButton
+                    android:id="@+id/video_zoombig_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_enlarge_select" />
+
+
+                <ImageButton
+                    android:id="@+id/video_zoomout_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toRightOf="@+id/video_zoombig_button"
+                    android:background="@drawable/btn_narrow_select" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativelayout_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <ListView
+                android:id="@+id/show_listresources"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true">
+
+            </ListView>
+
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

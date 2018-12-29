@@ -1,0 +1,89 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+
+	<!--标题 tilte-->
+	<RelativeLayout
+		android:id="@+id/chat_port_layout_header"
+		android:layout_width="match_parent"
+		android:layout_height="48dp">
+		<!--返回按键-->
+		<ImageButton
+			android:id="@+id/finish_back_layout"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:layout_marginLeft="10dp"
+			android:background="@drawable/port_monitoring_icon_return_selected"
+			android:visibility="visible" />
+		<!--页面名称显示-->
+		<TextView
+			android:id="@+id/current_fragment_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:layout_marginLeft="140dp"
+			android:gravity="center"
+			android:text="聊天"
+			android:textColor="@color/white"
+			android:textSize="20sp" />
+		<!--刷新按键-->
+		<ImageButton
+			android:id="@+id/loading_more_videosources_layout"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:layout_marginLeft="326dp"
+			android:background="@drawable/port_monitoring_icon_listcontrol_selected"
+			android:visibility="visible" />
+	</RelativeLayout>
+
+
+
+	<RelativeLayout
+		android:layout_below="@+id/chat_port_layout_header"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout
+			android:id="@+id/sipgroup_main_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<!--最顶部的头文件-->
+			<!--标题 tilte-->
+		</LinearLayout>
+
+
+		<android.support.v4.widget.SwipeRefreshLayout
+			android:id="@+id/swipeRefreshLayout"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_above="@+id/bottom_sliding_recyclerview"
+			android:layout_below="@+id/sipgroup_main_layout">
+
+			<FrameLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+
+				<android.support.v7.widget.RecyclerView
+					android:id="@+id/chat_contact_list_layout"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent">
+
+				</android.support.v7.widget.RecyclerView>
+
+
+
+			</FrameLayout>
+		</android.support.v4.widget.SwipeRefreshLayout>
+
+	</RelativeLayout>
+
+
+</RelativeLayout>

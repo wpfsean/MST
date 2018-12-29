@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sipstatus_main_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/item_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:background="@drawable/sip_call_select_bg"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/device_type_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:text="勤务综合管控终端"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/device_type_layout"
+                android:layout_marginLeft="44dp"
+                android:layout_marginTop="10dp"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:maxLines="2"
+                android:text="移动03"
+                android:textColor="@color/white" />
+
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/sip_item_newmessage_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp" />
+    </FrameLayout>
+
+
+</LinearLayout>

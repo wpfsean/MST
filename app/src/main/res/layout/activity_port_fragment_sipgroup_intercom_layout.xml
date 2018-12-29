@@ -1,0 +1,140 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--标题 tilte-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+        <!--返回按键-->
+        <ImageButton
+            android:id="@+id/finish_intercom_fragment_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/port_monitoring_icon_return_selected"
+            android:visibility="visible" />
+        <!--页面名称显示-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="140dp"
+            android:gravity="center"
+            android:text="Sip分组"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+        <!--刷新按键-->
+        <ImageButton
+            android:id="@+id/refresh_sipgroup_btn_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="326dp"
+            android:background="@drawable/port_monitoring_icon_listcontrol_selected"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+
+
+    <!--下拉刷新组件-->
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/sipgrou_intercom_refreshlayout"
+        android:layout_width="match_parent"
+        android:layout_height="416dp">
+        <!--RecyclerView组件-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/sip_group_recyclearview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/sipgroup_main_layout"
+            android:padding="15dp"
+            android:visibility="visible"></android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <!--分割线-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/control_layout_item"
+        android:background="#00b1ed"></View>
+
+    <!--六大控制按键-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="98dp"
+        android:background="@mipmap/sipgroup_button_bg"
+        android:orientation="vertical">
+
+        <!--第一行-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <ImageButton
+                android:id="@+id/port_sipgroup_voice_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/port_sipgroup_voice_btn_selected" />
+
+            <ImageButton
+                android:id="@+id/port_sipgroup_intercom_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/port_sipgroup_intercom_btn_selected" />
+
+            <ImageButton
+                android:id="@+id/port_sipgroup_remote_waring_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/port_sipgroup_remote_waring_btn_selected" />
+
+
+        </LinearLayout>
+
+        <!--第二行-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <ImageButton
+                android:id="@+id/port_sipgroup_video_intercom_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/port_sipgroup_video_intercom_btn_selected" />
+
+            <ImageButton
+                android:id="@+id/port_sipgroup_remote_shot_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/port_sipgroup_remote_shot_btn_selected" />
+
+            <ImageButton
+                android:id="@+id/port_sipgroup_remote_speaking_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/port_sipgroup_remote_speaking_btn_selected" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--分割线-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#00b1ed"></View>
+
+
+</LinearLayout>

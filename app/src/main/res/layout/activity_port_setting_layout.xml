@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/port_data_setting_background"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+    <!--最顶部状态布局-->
+    <RelativeLayout
+        android:id="@+id/icone_relativtelayout_title"
+        android:layout_width="match_parent"
+        android:layout_height="22dp">
+        <!--网络状态图标-->
+        <ImageView
+            android:id="@+id/icon_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp" />
+        <!--电池状态图标-->
+        <ImageView
+            android:id="@+id/icon_electritity_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/icon_network" />
+        <!--Sip状态图标-->
+        <ImageView
+            android:id="@+id/icon_connection_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/icon_electritity_show"
+            android:background="@mipmap/icon_connection_disable" />
+        <!--Sip消息图标-->
+        <ImageView
+            android:id="@+id/icon_message_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/icon_connection_show" />
+        <!--时间图标-->
+        <TextView
+            android:id="@+id/sipinfor_title_time_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@+id/sipinfor_title_date_layout"
+            android:text="00:00:00"
+            android:textColor="#42bfec"
+            android:textSize="16sp" />
+        <!--日期图标-->
+        <TextView
+            android:id="@+id/sipinfor_title_date_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:text="2018年03月02日"
+            android:textColor="#42bfec"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <!--标题 tilte-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+        <!--返回按键-->
+        <ImageButton
+            android:id="@+id/finish_back_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/port_monitoring_icon_return_selected"
+            android:visibility="visible" />
+        <!--页面名称显示-->
+        <TextView
+            android:id="@+id/current_fragment_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="140dp"
+            android:gravity="center"
+            android:text="系统设置"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+        <!--刷新按键-->
+        <ImageButton
+            android:id="@+id/loading_more_videosources_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="326dp"
+            android:background="@drawable/port_monitoring_icon_listcontrol_selected"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+
+    <!--下滑滚动 布局-->
+    <com.tehike.mst.client.project.ui.widget.scrollview.OverScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <!--滚动 布局包涵一个线性布局-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:clipToPadding="true"
+            android:fitsSystemWindows="true"
+            android:orientation="vertical"
+            android:paddingBottom="100dp">
+
+            <!--登录信息-->
+            <LinearLayout
+                android:id="@+id/login_group_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:background="#072d58">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/port_setting_userinfo_icon" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:text="@string/login_account_information"
+                    android:textColor="@color/actionbar_color"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+            <!--登录信息内的子布局-->
+            <LinearLayout
+                android:id="@+id/login_child_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/setting_child_item_bg"
+                android:orientation="vertical">
+
+                <!--帐号信息-->
+                <TextView
+                    android:id="@+id/display_account_infor_port_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="账号信息"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.1dp"
+                    android:background="#546b85" />
+
+                <!--显示密码-->
+                <TextView
+                    android:id="@+id/display_pwd_infor_port_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="密码信息"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.1dp"
+                    android:background="#546b85" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <!--记住密码-->
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:paddingLeft="26dp"
+                            android:text="记住密码"
+                            android:textColor="#6a7f98"
+                            android:textSize="13sp" />
+
+                        <com.tehike.mst.client.project.ui.widget.WiperSwitch
+                            android:id="@+id/switch_remember_pwd_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="260dp" />
+
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.1dp"
+                        android:background="#546b85" />
+                    <!--自动登录-->
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:paddingLeft="26dp"
+                            android:text="自动登录"
+                            android:textColor="#6a7f98"
+                            android:textSize="13sp" />
+
+                        <com.tehike.mst.client.project.ui.widget.WiperSwitch
+                            android:id="@+id/switch_autologin_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="260dp" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.1dp"
+                    android:background="#546b85" />
+                <!--退出登录按钮-->
+                <Button
+                    android:id="@+id/logout_port_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/btn_bg_selector"
+                    android:textColor="#fff"
+                    android:textSize="15sp" />
+
+
+            </LinearLayout>
+
+            <!--视频监控-->
+            <LinearLayout
+                android:id="@+id/video_group_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="#072d58">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/port_setting_video_icon" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:text="@string/video_setting"
+                    android:textColor="@color/actionbar_color"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+            <!--视频监控内的子布局-->
+            <LinearLayout
+                android:id="@+id/video_child_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/setting_child_item_bg"
+                android:orientation="vertical">
+
+                <!--码流选择-->
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/setting_item_up_bg_selector"
+                        android:paddingLeft="26dp"
+                        android:text="主码流设置"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="13sp" />
+
+                    <com.tehike.mst.client.project.ui.widget.WiperSwitch
+                        android:id="@+id/switch_ismain_stream_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="260dp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.1dp"
+                    android:background="#546b85" />
+
+                <!--是否播放声音-->
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/setting_item_up_bg_selector"
+                        android:paddingLeft="26dp"
+                        android:text="声音设置"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="13sp" />
+
+
+
+                    <com.tehike.mst.client.project.ui.widget.WiperSwitch
+                        android:id="@+id/switch_isopen_sound_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="260dp" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <!--报警设置-->
+            <LinearLayout
+                android:id="@+id/alarm_group_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="#072d58">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/port_setting_alarm_icon" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:text="@string/alarm_setting"
+                    android:textColor="@color/actionbar_color"
+                    android:textSize="16sp" />
+            </LinearLayout>
+            <!--报警设置内的子布局-->
+            <LinearLayout
+                android:id="@+id/alarm_child_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/setting_child_item_bg"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/setting_alarm_ip_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="报警中心"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!--弹箱设置-->
+            <LinearLayout
+                android:id="@+id/box_group_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="#072d58">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/port_setting_play_box_icon" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:text="弹箱设置"
+                    android:textColor="@color/actionbar_color"
+                    android:textSize="16sp" />
+            </LinearLayout>
+            <!--弹箱设置内的子布局-->
+            <LinearLayout
+                android:id="@+id/box_child_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/setting_child_item_bg"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="弹箱连接"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!--系统设置-->
+            <LinearLayout
+                android:id="@+id/system_setting_group_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="#072d58">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/port_setting_center_icon" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:text="系统设置"
+                    android:textColor="@color/actionbar_color"
+                    android:textSize="16sp" />
+            </LinearLayout>
+            <!--系统设置内的子布局-->
+            <LinearLayout
+                android:id="@+id/system_setting_child_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/setting_child_item_bg"
+                android:orientation="vertical">
+
+                <!--中心设置-->
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="中心设置"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.1dp"
+                    android:background="#546b85" />
+                <!--专网一-->
+                <TextView
+                    android:id="@+id/private_network1_setting_port_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="专网1"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.1dp"
+                    android:background="#546b85" />
+                <!--专网二-->
+                <TextView
+                    android:id="@+id/private_network2_setting_port_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="专网2"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.1dp"
+                    android:background="#546b85" />
+
+                <!--定位设置-->
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="定位信息"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.1dp"
+                    android:background="#546b85" />
+                <!--亮度调节-->
+                <TextView
+                    android:id="@+id/port_set_lumninance_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="亮度调节"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <!--常用设置-->
+            <LinearLayout
+                android:id="@+id/inuse_setting_group_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="#072d58">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/port_setting_inuse_icon" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:text="常用设置"
+                    android:textColor="@color/actionbar_color"
+                    android:textSize="16sp" />
+            </LinearLayout>
+            <!--常用设置内的子布局-->
+            <LinearLayout
+                android:id="@+id/inuse_setting_child_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/setting_child_item_bg"
+                android:orientation="vertical">
+                <!--清除缓存-->
+                <TextView
+                    android:id="@+id/app_clear_cach_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="清除缓存"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.1dp"
+                    android:background="#546b85" />
+                <!--版本更新-->
+                <TextView
+                    android:id="@+id/update_apk_port_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="版本更新"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.1dp"
+                    android:background="#546b85" />
+                <!--意见反馈-->
+                <TextView
+                    android:id="@+id/feedback_child_port_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="意见反馈"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!--方向设置-->
+            <LinearLayout
+                android:id="@+id/direction_setting_group_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="#072d58">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/port_setting_direction_icon" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:text="方向设置"
+                    android:textColor="@color/actionbar_color"
+                    android:textSize="16sp" />
+            </LinearLayout>
+            <!--方向设置内的子布局-->
+            <LinearLayout
+                android:id="@+id/direction_setting_child_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/setting_child_item_bg"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center|left"
+                    android:paddingLeft="26dp"
+                    android:text="设置横屏"
+                    android:textColor="#6a7f98"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!--关于我们-->
+            <LinearLayout
+                android:id="@+id/about_group_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="#072d58">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/port_setting_about_icon" />
+
+                <TextView
+                    android:id="@+id/port_setting_icon_about"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:text="关于我们"
+                    android:textColor="@color/actionbar_color"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/about_child_port_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/setting_item_bg"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_email"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_email_username"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.1dp"
+                    android:background="#33000000" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_factory"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_factory_web"
+                        android:textColor="@color/actionbar_color"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.tehike.mst.client.project.ui.widget.scrollview.OverScrollView>
+
+</LinearLayout>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--验证密码提示枉-->
+
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:background="@drawable/prompt_box_bg"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <!--提示tile-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:text="修改报警服务"
+            android:textSize="24sp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="地址:"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/update_alarm_ip_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="ip地址"
+                android:textCursorDrawable="@null" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/propmt_child1_laout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="端口:"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/update_alarm_port_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="端口信息"
+                android:textCursorDrawable="@null" />
+
+        </LinearLayout>
+
+        <TextView
+
+            android:id="@+id/update_sure_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/prompt_box_bg"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="确认修改"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

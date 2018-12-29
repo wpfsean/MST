@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#072d58">
+
+
+
+    <!--可见布局-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--上部 大图标-->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/port_login_banner" />
+
+
+        <!--用户名（行）-->
+        <ImageView
+            android:id="@+id/username_header_icon_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="58dp"
+            android:layout_marginTop="303dp"
+            android:background="@mipmap/port_login_user_icon" />
+
+        <TextView
+            android:id="@+id/username_text_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="303dp"
+            android:layout_toRightOf="@+id/username_header_icon_layout"
+            android:text="用户名:"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/edit_username_layout"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="300dp"
+            android:layout_toRightOf="@+id/username_text_layout"
+            android:background="@null"
+            android:gravity="left"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@null" />
+
+        <View
+            android:id="@+id/first_line_view_layout"
+            android:layout_width="247dp"
+            android:layout_height="0.7dp"
+            android:layout_below="@+id/username_text_layout"
+            android:layout_marginLeft="59dp"
+            android:layout_marginTop="8dp"
+            android:background="#cccccc" />
+
+        <!--密码（行）-->
+        <ImageView
+            android:id="@+id/userpwd_header_icon_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/first_line_view_layout"
+            android:layout_marginLeft="58dp"
+            android:layout_marginTop="29dp"
+            android:background="@mipmap/port_login_password_icon" />
+
+        <TextView
+            android:id="@+id/userpwd_text_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/first_line_view_layout"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="29dp"
+            android:layout_toRightOf="@+id/userpwd_header_icon_layout"
+            android:text="密     码:"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/edit_userpass_layout"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/username_text_layout"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_toRightOf="@+id/userpwd_text_layout"
+            android:background="@null"
+            android:gravity="left"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@null" />
+
+        <View
+            android:id="@+id/second_line_view_layout"
+            android:layout_width="247dp"
+            android:layout_height="0.7dp"
+            android:layout_below="@+id/userpwd_header_icon_layout"
+            android:layout_marginLeft="59dp"
+            android:layout_marginTop="8dp"
+            android:background="#cccccc" />
+
+        <!--服务器地址（行）-->
+        <ImageView
+            android:id="@+id/server_header_icon_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/second_line_view_layout"
+            android:layout_marginLeft="58dp"
+            android:layout_marginTop="29dp"
+            android:background="@mipmap/port_login_servers_icon" />
+
+        <TextView
+            android:id="@+id/server_text_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/second_line_view_layout"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="29dp"
+            android:layout_toRightOf="@+id/server_header_icon_layout"
+            android:text="服务器:"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/edit_serviceip_layout"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userpwd_text_layout"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_toRightOf="@+id/server_text_layout"
+            android:background="@null"
+            android:gravity="left"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@null" />
+
+        <View
+            android:id="@+id/third_line_view_layout"
+            android:layout_width="247dp"
+            android:layout_height="0.7dp"
+            android:layout_below="@+id/server_header_icon_layout"
+            android:layout_marginLeft="59dp"
+            android:layout_marginTop="8dp"
+            android:background="#cccccc" />
+
+        <!--自动登录-->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/third_line_view_layout"
+            android:layout_marginLeft="58dp"
+            android:layout_marginTop="13dp">
+
+            <CheckBox
+                android:id="@+id/auto_login_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:button="@drawable/check_bg" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="17dp"
+                android:layout_toRightOf="@+id/auto_login_layout"
+                android:gravity="center"
+                android:text="自动登录"
+                android:textColor="#cccccc"
+                android:textSize="10sp" />
+
+
+        </RelativeLayout>
+
+        <!--记住密码-->
+        <RelativeLayout
+            android:id="@+id/port_login_remember_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/third_line_view_layout"
+            android:layout_marginLeft="238dp"
+            android:layout_marginTop="13dp">
+
+            <CheckBox
+                android:id="@+id/remember_pass_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:button="@drawable/check_bg" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="17dp"
+                android:layout_toRightOf="@+id/remember_pass_layout"
+                android:gravity="center"
+                android:text="记住密码"
+                android:textColor="#cccccc"
+                android:textSize="10sp" />
+
+
+        </RelativeLayout>
+
+        <!--修改地址-->
+        <RelativeLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/port_login_remember_layout"
+            android:layout_marginLeft="238dp"
+            android:layout_marginTop="11dp">
+
+            <CheckBox
+                android:id="@+id/remembe_serverip_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:button="@drawable/check_bg" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="17dp"
+                android:layout_toRightOf="@+id/remembe_serverip_layout"
+                android:gravity="center"
+                android:text="修改地址"
+                android:textColor="#cccccc"
+                android:textSize="10sp" />
+
+
+        </RelativeLayout>
+
+        <!--登录按钮 -->
+        <Button
+            android:id="@+id/userlogin_button_layout"
+            android:layout_width="247dp"
+            android:layout_height="33dp"
+            android:layout_marginLeft="59dp"
+            android:layout_marginTop="520dp"
+            android:background="@drawable/port_login_btn_bag" />
+
+        <!--错误提示-->
+        <TextView
+            android:id="@+id/loin_error_infor_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="480dp"
+            android:text="Error"
+            android:textColor="#FF0000"
+            android:visibility="gone" />
+
+        <!--登录加载动画 -->
+        <ImageView
+            android:id="@+id/image_loading"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="480dp"
+            android:contentDescription="数据加载中。。。"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_loading"
+            android:visibility="gone" />
+
+        <!--选择横竖-->
+
+        <ImageButton
+            android:id="@+id/port_set_direction_btn_layout"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@mipmap/app_setting_icon" />
+    </RelativeLayout>
+
+    <!--无网络时的布局提示-->
+    <include
+        layout="@layout/no_network_layout"
+        android:visibility="gone"></include>
+
+    <!--最顶部布局-->
+    <RelativeLayout
+        android:id="@+id/icone_relativtelayout_title"
+        android:layout_width="match_parent"
+        android:layout_height="22dp">
+        <!--网络状态图标-->
+        <ImageView
+            android:id="@+id/icon_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@mipmap/icon_network"
+            android:layout_marginRight="6dp" />
+        <!--电池状态图标-->
+        <ImageView
+            android:id="@+id/icon_electritity_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:background="@mipmap/icon_electricity_disable"
+            android:layout_toLeftOf="@+id/icon_network" />
+        <!--Sip状态图标-->
+        <ImageView
+            android:id="@+id/icon_connection_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/icon_electritity_show"
+            android:background="@mipmap/icon_connection_disable" />
+        <!--Sip消息图标-->
+        <ImageView
+            android:id="@+id/icon_message_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/icon_connection_show" />
+        <!--时间图标-->
+        <TextView
+            android:id="@+id/sipinfor_title_time_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@+id/sipinfor_title_date_layout"
+            android:textColor="#42bfec"
+            android:textSize="16sp" />
+        <!--日期图标-->
+        <TextView
+            android:id="@+id/sipinfor_title_date_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:textColor="#42bfec"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+</FrameLayout>
+

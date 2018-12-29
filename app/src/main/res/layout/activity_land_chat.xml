@@ -1,0 +1,162 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/play_video">
+
+    <!--最顶端的图标-->
+    <RelativeLayout
+        android:id="@+id/icone_relativtelayout_title"
+        android:layout_width="match_parent"
+        android:layout_height="35dp">
+        <!--警徽图标-->
+        <ImageView
+            android:id="@+id/plicemen_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:src="@mipmap/picture_badges" />
+        <!--aPP名称-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/plicemen_icon"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+        <!--网络状态图标-->
+        <ImageView
+            android:id="@+id/icon_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp" />
+        <!--电池状态图标-->
+        <ImageView
+            android:id="@+id/icon_electritity_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/icon_network" />
+        <!--Sip状态图标-->
+        <ImageView
+            android:id="@+id/icon_connection_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/icon_electritity_show" />
+        <!--未读消息图标-->
+        <ImageView
+            android:id="@+id/icon_message_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/icon_connection_show"
+            android:background="@mipmap/message" />
+        <!--时间图标-->
+        <TextView
+            android:id="@+id/sipinfor_title_time_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/sipinfor_title_date_layout"
+            android:text="00:00:00"
+            android:textColor="#42bfec"
+            android:textSize="16sp" />
+        <!--日期图标-->
+        <TextView
+            android:id="@+id/sipinfor_title_date_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="310dp"
+            android:text="2018年03月02日"
+            android:textColor="#42bfec"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/chat_title"
+        android:layout_width="match_parent"
+        android:layout_height="27dp"
+        android:layout_below="@+id/icone_relativtelayout_title"
+        android:layout_marginTop="8dp"
+        android:background="@mipmap/chat_page_bg">
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="27dp">
+
+            <ImageButton
+                android:id="@+id/finish_back_icon"
+                android:layout_width="15dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="19dp"
+                android:background="@mipmap/setting_return" />
+
+            <TextView
+                android:id="@+id/current_fragment_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="21dp"
+                android:layout_toRightOf="@+id/finish_back_icon"
+                android:gravity="center"
+                android:text="Ip话机"
+                android:textColor="#31e1f8"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/finish_back_layou"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"></FrameLayout>
+
+    </FrameLayout>
+
+    <ListView
+        android:id="@+id/message_listview_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/et_relativelayout"
+        android:layout_below="@+id/chat_title"
+        android:divider="@null"></ListView>
+
+    <RelativeLayout
+        android:id="@+id/et_relativelayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <EditText
+            android:id="@+id/sendmessage_layout"
+            android:layout_width="580dp"
+            android:layout_height="wrap_content"
+            android:hint=""
+            android:textColor="@color/white" />
+
+
+        <TextView
+            android:id="@+id/send_message_btn_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/sendmessage_layout"
+            android:background="@drawable/send_textview_mess_bg"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="发送" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

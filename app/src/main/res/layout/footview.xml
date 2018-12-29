@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="35dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/refresh_relativelayout_data"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp">
+
+        <ImageView
+            android:id="@+id/refresh_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@mipmap/icon_listtherefresh" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/refresh_icon"
+            android:text="列表刷新 "
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

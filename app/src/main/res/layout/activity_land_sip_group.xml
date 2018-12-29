@@ -1,0 +1,126 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/play_video">
+
+    <!--最顶端的图标-->
+    <include layout="@layout/activity_title_land_layout" />
+
+    <!--Sip组列表-->
+    <RelativeLayout
+        android:id="@+id/relativelayout_center"
+        android:layout_width="496dp"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/icone_relativtelayout_title"
+        android:background="@drawable/video_bg">
+
+        <TextView
+            android:id="@+id/show_title_information"
+            android:layout_width="fill_parent"
+            android:layout_height="27dp"
+            android:background="@drawable/video_bg"
+            android:gravity="center"
+            android:text="当前哨位执勤组列表"
+            android:textColor="@color/sip_group_text_color"
+            android:textSize="16sp" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/sipgroup_refresh_layout_land"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/show_title_information"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="12dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/sip_group_recyclearview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </RelativeLayout>
+
+    <!--右侧控制按键-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/icone_relativtelayout_title"
+        android:layout_toRightOf="@+id/relativelayout_center"
+        android:background="@drawable/video_bg">
+
+        <!--语音对讲-->
+        <ImageButton
+            android:id="@+id/voice_intercom_icon_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/voice_intercom_icon" />
+        <!--视频对讲-->
+        <ImageButton
+            android:id="@+id/video_intercom_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/voice_intercom_icon_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/video_intercom_icon" />
+        <!--即时通信-->
+        <ImageButton
+            android:id="@+id/instant_message_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/video_intercom_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/instant_message_selected" />
+        <!--远程警告-->
+        <ImageButton
+            android:id="@+id/remote_warning_layou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/instant_message_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/remote_warning_bg" />
+        <!--远程鸣枪-->
+        <ImageButton
+            android:id="@+id/remote_gunshoot_layou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/remote_warning_layou"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/remote_gunshoot_bg" />
+        <!--远程喊话-->
+        <ImageButton
+            android:id="@+id/remote_speaking_layou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/remote_gunshoot_layou"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/remote_speaking_bg" />
+        <!--刷新列表-->
+        <ImageButton
+            android:id="@+id/sip_group_refresh_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/remote_speaking_layou"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/sip_group_refresh" />
+        <!--返回按键-->
+        <ImageButton
+            android:id="@+id/sip_group_finish_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/remote_speaking_layou"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="16dp"
+            android:layout_toRightOf="@+id/sip_group_refresh_layout"
+            android:background="@drawable/sip_group_back" />
+    </RelativeLayout>
+</RelativeLayout>
