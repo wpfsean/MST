@@ -268,7 +268,7 @@ public class PortChatActivity extends BaseActivity implements View.OnClickListen
         sipNum = SysinfoUtils.getSysinfo().getSipUsername();
 
         //获取当前对话列表点击 的用户名
-        SipClient sipClient = (SipClient) getIntent().getExtras().getSerializable("sipclient");
+        SipBean sipClient = (SipBean) getIntent().getExtras().getSerializable("sipclient");
 
 
         try {
@@ -279,7 +279,7 @@ public class PortChatActivity extends BaseActivity implements View.OnClickListen
 
 
         if (sipClient != null) {
-            String chatObject = sipClient.getUsrname();
+            String chatObject = sipClient.getNumber();
             if (!TextUtils.isEmpty(chatObject)) {
                 who = chatObject;
 

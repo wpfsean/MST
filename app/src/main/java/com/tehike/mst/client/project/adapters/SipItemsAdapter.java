@@ -23,14 +23,13 @@ import org.linphone.core.LinphoneChatRoom;
 import java.util.List;
 
 /**
- * Created by Root on 2018/7/23.
- * <p>
- * 显示当前sip列表的适配器
- *
- *
+ * 描述：所有的Sip列表界面的适配器
+ * ===============================
+ * @author wpfse wpfsean@126.com
+ * @Create at:2018/12/29 17:20
+ * @version V1.0
  */
-
-public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder> {
+public class SipItemsAdapter extends RecyclerView.Adapter<SipItemsAdapter.MyViewHolder> {
 
     /**
      * 上下文对象
@@ -68,7 +67,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
      * @param context
      * @param mList
      */
-    public ChatListAdapter(Context context, List<SipBean> mList) {
+    public SipItemsAdapter(Context context, List<SipBean> mList) {
         this.context = context;
         this.mList = mList;
         //获取当前对象与别的设备的聊天室

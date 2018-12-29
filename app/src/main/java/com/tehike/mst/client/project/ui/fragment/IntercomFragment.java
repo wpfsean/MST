@@ -109,7 +109,6 @@ public class IntercomFragment extends BaseFragment implements SwipeRefreshLayout
     private void disPlaySipGroupAdapter() {
         //判断父页面存在，并当前页面可见
         if (getActivity() != null)
-            if (currentFragmentVisiable) {
                 //判断adapter是否存在
                 if (sipGroupAdapter == null) {
                     sipGroupAdapter = new SipGroupAdapter(getActivity(), sipGroupListData);
@@ -132,7 +131,6 @@ public class IntercomFragment extends BaseFragment implements SwipeRefreshLayout
                     getActivity().finish();
                     }
                 });
-            }
     }
 
     /**

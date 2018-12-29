@@ -13,8 +13,6 @@ import java.io.Serializable;
  * @Create at:2018/11/12 15:56
  */
 
-
-
 public class SipBean implements Serializable {
     //设备类型
     private String deviceType;

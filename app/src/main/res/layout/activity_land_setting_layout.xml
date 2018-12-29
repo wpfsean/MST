@@ -27,7 +27,7 @@
             android:textSize="16sp" />
 
         <!--滑动列表-->
-        <com.tehike.client.mst.app.project.ui.widget.scrollview.OverScrollView
+        <com.tehike.mst.client.project.ui.widget.scrollview.OverScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@+id/show_title_information">
@@ -700,7 +700,7 @@
 
             </LinearLayout>
 
-        </com.tehike.client.mst.app.project.ui.widget.scrollview.OverScrollView>
+        </com.tehike.mst.client.project.ui.widget.scrollview.OverScrollView>
 
     </RelativeLayout>
 

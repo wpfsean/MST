@@ -11,7 +11,7 @@ import android.text.TextUtils;
 
 
 import com.tehike.mst.client.project.R;
-import com.tehike.mst.client.project.adapters.ChatListAdapter;
+import com.tehike.mst.client.project.adapters.SipItemsAdapter;
 import com.tehike.mst.client.project.base.BaseActivity;
 import com.tehike.mst.client.project.entity.SipBean;
 import com.tehike.mst.client.project.entity.VideoBean;
@@ -65,7 +65,7 @@ public class LandChatListActivity extends BaseActivity implements SwipeRefreshLa
     /**
      * 数据适配器
      */
-    ChatListAdapter chatListAdapter = null;
+    SipItemsAdapter chatListAdapter = null;
 
     /**
      * 当前页面是否可见
@@ -268,10 +268,10 @@ public class LandChatListActivity extends BaseActivity implements SwipeRefreshLa
     private void disPlayeListData() {
         dismissProgressDialog();
         if (isFront) {
-            chatListAdapter = new ChatListAdapter(LandChatListActivity.this, dataResources);
+            chatListAdapter = new SipItemsAdapter(LandChatListActivity.this, dataResources);
             if (chatListView != null) {
                 chatListView.setAdapter(chatListAdapter);
-                chatListAdapter.setOnItemClickListener(new ChatListAdapter.OnItemClickListener() {
+                chatListAdapter.setOnItemClickListener(new SipItemsAdapter.OnItemClickListener() {
                     @Override
                     public void onClick(SipBean sipClient) {
                         if (sipClient != null) {

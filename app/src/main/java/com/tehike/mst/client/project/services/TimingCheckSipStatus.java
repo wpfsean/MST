@@ -73,6 +73,7 @@ public class TimingCheckSipStatus extends Service {
                 Logutil.e("AAAA未获取到sip信息");
                 return;
             }
+            Logutil.i("SIP_STATUS"+AppConfig.SIP_STATUS);
             //当前sip是否在线
             if (AppConfig.SIP_STATUS) {
                  Logutil.d("当前Sip在线");

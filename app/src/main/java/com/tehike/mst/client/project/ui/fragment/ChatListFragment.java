@@ -8,10 +8,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.tehike.mst.client.project.R;
-import com.tehike.mst.client.project.adapters.ChatListAdapter;
+import com.tehike.mst.client.project.adapters.SipItemsAdapter;
 import com.tehike.mst.client.project.base.BaseFragment;
 import com.tehike.mst.client.project.entity.SipBean;
 import com.tehike.mst.client.project.entity.VideoBean;
@@ -36,40 +35,42 @@ import java.util.List;
 
 import butterknife.BindView;
 
-
 /**
- * @author Wpf
- * @version v1.0
- * @date：2016-5-4 下午5:14:58
+ * 描述：Sip列表页面
+ * ===============================
+ *
+ * @author wpfse wpfsean@126.com
+ * @version V1.0
+ * @Create at:2018/12/29 17:12
  */
-public class ChatListFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class ChatListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     /**
      * 显示联系人列表的recyclearview
      */
     @BindView(R.id.chat_contact_list_layout)
-    RecyclerView chatList;
+    RecyclerView disPlayAllSipItemsView;
 
     /**
      * 显示下拉刷新的SwipeRefreshLayout
      */
     @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout sw;
+    SwipeRefreshLayout disPlayRefreshSipItemsView;
+
+    /**
+     * 当前Fragment是否可见
+     */
+    boolean currentPageIsVisible = false;
 
     /**
      * 数据适配器
      */
-    ChatListAdapter ada = null;
+    SipItemsAdapter mSipItemsAdapter = null;
 
     /**
      * list展示数据
      */
-    List<SipBean> mList = new ArrayList<>();
-
-    /**
-     * 是否正在运行
-     */
-    boolean threadIsRun = true;
+    List<SipBean> allSipItemsList = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -85,82 +86,63 @@ public class ChatListFragment extends BaseFragment implements View.OnClickListen
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        initializeParamaters();
+        //联系人列表
+        initializeSipItemsData();
+    }
+
+    /**
+     * 初始化参数
+     */
+    private void initializeParamaters() {
         //设置下拉 颜色
-        sw.setColorSchemeResources(
+        disPlayRefreshSipItemsView.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
         //设置下拉 刷新
-        sw.setOnRefreshListener(this);
+        disPlayRefreshSipItemsView.setOnRefreshListener(this);
 
         //设置recyclerview的布局及item间隔
-        chatList.setLayoutManager(new WrapContentLinearLayoutManager(getActivity(), WrapContentLinearLayoutManager.VERTICAL, false));
-        chatList.addItemDecoration(new SpaceItemDecoration(0, 30));
-        chatList.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-
-        //联系人列表
-        presentationsList();
+        disPlayAllSipItemsView.setLayoutManager(new WrapContentLinearLayoutManager(getActivity(), WrapContentLinearLayoutManager.VERTICAL, false));
+        disPlayAllSipItemsView.addItemDecoration(new SpaceItemDecoration(0, 30));
+        disPlayAllSipItemsView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        if (isVisibleToUser) {
-
-
-            } else
-                Logutil.e("error");
-
-            super.setUserVisibleHint(isVisibleToUser);
-    }
-
-    private void presentationsList() {
-
-        //group分组的id
-        String groupID = "0";
-
+    /**
+     * 初始化获取Sip联系人列表
+     */
+    private void initializeSipItemsData() {
         if (NetworkUtils.isConnected()) {
-
-
             //获取某个组内数据
             String sipGroupItemUrl = AppConfig.WEB_HOST + SysinfoUtils.getServerIp() + AppConfig._USIPGROUPS_GROUP;
-
             //子线程根据组Id请求组数据
             HttpBasicRequest httpThread = new HttpBasicRequest(sipGroupItemUrl + "0", new HttpBasicRequest.GetHttpData() {
                 @Override
                 public void httpData(String result) {
                     //无数据
                     if (TextUtils.isEmpty(result)) {
-                        handler.sendEmptyMessage(1);
+                        handler.sendEmptyMessage(2);
                         return;
                     }
                     //数据异常
                     if (result.contains("Execption")) {
-                        handler.sendEmptyMessage(1);
+                        handler.sendEmptyMessage(2);
                         return;
                     }
-
-                    if (mList != null && mList.size() > 0) {
-                        mList.clear();
+                    //清空数据
+                    if (allSipItemsList != null && allSipItemsList.size() > 0) {
+                        allSipItemsList.clear();
                     }
-
-                    Logutil.d("组数据" + result);
-
                     //解析sip资源
                     try {
                         JSONObject jsonObject = new JSONObject(result);
-
                         if (!jsonObject.isNull("errorCode")) {
                             Logutil.w("请求不到数据信息");
                             return;
                         }
-
                         int count = jsonObject.getInt("count");
                         if (count > 0) {
                             JSONArray jsonArray = jsonObject.getJSONArray("resources");
@@ -173,7 +155,7 @@ public class ChatListFragment extends BaseFragment implements View.OnClickListen
                                 groupItemInfoBean.setIpAddress(jsonItem.getString("ipAddress"));
                                 groupItemInfoBean.setName(jsonItem.getString("name"));
                                 groupItemInfoBean.setNumber(jsonItem.getString("number"));
-                                groupItemInfoBean.setSentryId(jsonItem.getInt("sentryId")+"");
+                                groupItemInfoBean.setSentryId(jsonItem.getInt("sentryId") + "");
                                 //判断是否有面部视频
                                 if (!jsonItem.isNull("videosource")) {
                                     //解析面部视频
@@ -192,28 +174,29 @@ public class ChatListFragment extends BaseFragment implements View.OnClickListen
                                         groupItemInfoBean.setVideoBean(videoBean);
                                     }
                                 }
-                                mList.add(groupItemInfoBean);
+                                allSipItemsList.add(groupItemInfoBean);
                             }
                         }
-                        handler.sendEmptyMessage(6);
+                        handler.sendEmptyMessage(1);
                     } catch (JSONException e) {
+                        handler.sendEmptyMessage(2);
                         Logutil.e("Sip组内数据解析异常::" + e.getMessage());
                     }
                 }
             });
             new Thread(httpThread).start();
 
-
         } else {
             showNoNetworkView();
         }
     }
 
+
     @Override
     public void onNetworkViewRefresh() {
         super.onNetworkViewRefresh();
         showProgressDialogWithText("正在努力加载中...");
-        presentationsList();
+        initializeSipItemsData();
     }
 
     /**
@@ -224,9 +207,9 @@ public class ChatListFragment extends BaseFragment implements View.OnClickListen
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                presentationsList();
-                if (sw != null)
-                    sw.setRefreshing(false);
+                initializeSipItemsData();
+                if (disPlayRefreshSipItemsView != null)
+                    disPlayRefreshSipItemsView.setRefreshing(false);
             }
         }, 2 * 1000);
     }
@@ -241,16 +224,25 @@ public class ChatListFragment extends BaseFragment implements View.OnClickListen
             public void receiverMessage(LinphoneChatMessage linphoneChatMessage) {
                 String from = linphoneChatMessage.getFrom().getUserName();
                 int p = -1;
-                for (int i = 0; i < mList.size(); i++) {
-                    if (mList.get(i).getNumber().equals(from)) {
+                for (int i = 0; i < allSipItemsList.size(); i++) {
+                    if (allSipItemsList.get(i).getNumber().equals(from)) {
                         p = i;
                         break;
                     }
                 }
-                if (ada != null)
-                    ada.notifyItemChanged(p);
+                if (mSipItemsAdapter != null)
+                    mSipItemsAdapter.notifyItemChanged(p);
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+
+        if (handler != null)
+            handler.removeCallbacksAndMessages(null);
+
+        super.onDestroyView();
     }
 
     private Handler handler = new Handler() {
@@ -259,10 +251,10 @@ public class ChatListFragment extends BaseFragment implements View.OnClickListen
             switch (msg.what) {
                 case 1:
                     dismissProgressDialog();
-                    ada = new ChatListAdapter(getActivity(), mList);
-                    if (chatList != null) {
-                        chatList.setAdapter(ada);
-                        ada.setOnItemClickListener(new ChatListAdapter.OnItemClickListener() {
+                    mSipItemsAdapter = new SipItemsAdapter(getActivity(), allSipItemsList);
+                    if (getActivity() != null) {
+                        disPlayAllSipItemsView.setAdapter(mSipItemsAdapter);
+                        mSipItemsAdapter.setOnItemClickListener(new SipItemsAdapter.OnItemClickListener() {
                             @Override
                             public void onClick(SipBean sipClient) {
                                 if (sipClient != null) {
@@ -280,7 +272,9 @@ public class ChatListFragment extends BaseFragment implements View.OnClickListen
 
                     break;
                 case 2:
-                    showEmptyView();
+                    if (getActivity() != null && currentPageIsVisible){
+                        showProgressFail("未获取到Sip列表数据！");
+                    }
                     break;
             }
         }

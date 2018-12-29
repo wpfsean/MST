@@ -516,9 +516,9 @@ public class PortMainFragmentActivity extends BaseActivity {
         list.add(new ChatListFragment());
         final SlidingPagerAdapter adapter = new SlidingPagerAdapter(getSupportFragmentManager(), list);
         mViewPager.setAdapter(adapter);
-
         currentPager = getIntent().getIntExtra("current", 0);
         mViewPager.setCurrentItem(currentPager);
+        mViewPager.setOffscreenPageLimit(list.size());
         Logutil.i("current:" + currentPager);
         if (currentPager == 0) {
             port_bottom_intercom_radio_btn.setChecked(true);
