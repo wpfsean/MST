@@ -21,10 +21,6 @@ public class DbHelper extends SQLiteOpenHelper {
     // 数据库版本号
     public static final int DB_VERSION = 1;
 
-    public static final String NAME = "name";
-    public static final String AGE = "age";
-
-
     public DbHelper(Context context) {
         super(context, "tehike.db", null, DB_VERSION);
     }

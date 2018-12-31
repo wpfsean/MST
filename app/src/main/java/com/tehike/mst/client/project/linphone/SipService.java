@@ -18,10 +18,17 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+
 import com.tehike.mst.client.project.R;
+import com.tehike.mst.client.project.base.App;
+import com.tehike.mst.client.project.db.DbHelper;
+import com.tehike.mst.client.project.entity.SipClient;
 import com.tehike.mst.client.project.global.AppConfig;
+import com.tehike.mst.client.project.ui.landactivity.LandChatActivity;
 import com.tehike.mst.client.project.ui.landactivity.LandSingleCallActivity;
+import com.tehike.mst.client.project.ui.portactivity.PortChatActivity;
 import com.tehike.mst.client.project.ui.portactivity.PortSingleCallActivity;
+import com.tehike.mst.client.project.utils.ActivityUtils;
 import com.tehike.mst.client.project.utils.Logutil;
 
 import org.linphone.core.LinphoneAddress;
@@ -154,7 +161,7 @@ public class SipService extends Service implements LinphoneCoreListener {
         if (state == LinphoneCall.State.IncomingReceived && sPhoneCallback != null) {
             sPhoneCallback.incomingCall(linphoneCall);
             boolean isSupportVideo = linphoneCall.getRemoteParams().getVideoEnabled();
-            Logutil.i("当前来是否是可视电话:"+isSupportVideo);
+            Logutil.i("当前来是否是可视电话:" + isSupportVideo);
             String str = "有电话打进来了：" + linphoneCall.getRemoteAddress().getPort() + "--" + linphoneCall.getRemoteAddress().getDisplayName();
             Log.i("TAG", "callState = " + str);
             try {
@@ -345,30 +352,31 @@ public class SipService extends Service implements LinphoneCoreListener {
         }
 
 
-//        //当前消息的内容信息
-//        String mess = linphoneChatMessage.getText();
-//        final String from = linphoneChatMessage.getFrom().getUserName();
-//        final String to = linphoneChatMessage.getTo().getUserName();
-//        String messTime = new Date().toString();
-//        //接收消息并存入数据库
-//        DbHelper databaseHelper = new DbHelper(App.getApplication());
-//        db = databaseHelper.getWritableDatabase();
-//        ContentValues contentValues = new ContentValues();
-//        contentValues.put("time", messTime);
-//        contentValues.put("fromuser", from);
-//        contentValues.put("message", mess);
-//        contentValues.put("touser", to);
-//        db.insert("chat", null, contentValues);
-//
-//        //过滤要显示的Activity
-//        String activityName = ActivityUtils.getTopActivity().getClass().getName();
-//        if (!TextUtils.isEmpty(activityName)) {
-//            if (activityName.equals("com.tehike.client.mst.app.project.ui.portactivity.PortChatActivity") || activityName.equals("com.tehike.client.mst.app.project.ui.landactivity.LandChatActivity") || activityName.equals("com.tehike.client.mst.app.project.ui.landactivity.LandChatListActivity")) {
-//                return;
-//            }
-//        }
-//        promptBox(from, mess);
+        //当前消息的内容信息
+        String mess = linphoneChatMessage.getText();
+        final String from = linphoneChatMessage.getFrom().getUserName();
+        final String to = linphoneChatMessage.getTo().getUserName();
+        String messTime = new Date().toString();
+        //接收消息并存入数据库
+        DbHelper databaseHelper = new DbHelper(App.getApplication());
+        db = databaseHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("time", messTime);
+        contentValues.put("fromUser", from);
+        contentValues.put("mess", mess);
+        contentValues.put("toUser", to);
+        db.insert("chatHistory", null, contentValues);
 
+        //过滤要显示的Activity
+        String activityName = ActivityUtils.getTopActivity().getClass().getName();
+        if (!TextUtils.isEmpty(activityName)) {
+            if (activityName.equals("com.tehike.mst.client.project.ui.portactivity.PortChatActivity") || activityName.equals("com.tehike.mst.client.project.ui.landactivity.LandChatActivity") || activityName.equals("com.tehike.client.mst.app.project.ui.landactivity.LandChatListActivity")) {
+                return;
+            }
+        }
+        //判断是否有悬浮窗口权限
+        if (AppConfig.ARGEE_OVERLAY_PERMISSION)
+            disPlayShortMess(from, mess);
     }
 
 
@@ -387,61 +395,61 @@ public class SipService extends Service implements LinphoneCoreListener {
 
     }
 
-//    /**
-//     * 新消息提示
-//     *
-//     * @param from
-//     * @param mess
-//     */
-//    private void promptBox(final String from, String mess) {
-//        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(App.getApplication());
-////        builder.setTitle("新消息");
-//        View view = View.inflate(App.getApplication(), R.layout.view_receiveralarm_layout, null);
-//        TextView showInformation = view.findViewById(R.id.prompt_alarm_information_layout);
-//        showInformation.setText("\u3000\u3000类型:短消息\n" + "\u3000\u3000消息来源:" + from + "\n" + "\u3000\u3000内容:" + mess);
-//
-//        builder.setView(view);
-////        builder.setPositiveButton("关闭", new DialogInterface.OnClickListener() {
-////            @Override
-////            public void onClick(DialogInterface dialog, int which) {
-////                dialog.dismiss();
-////            }
-////        });
-//        final Dialog dialog = builder.create();
-//        dialog.getWindow().setLayout(300, 60);
-//        dialog.getWindow().setGravity(Gravity.TOP);
-//        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-//        dialog.show();
-//        view.setOnClickListener(new View.OnClickListener() {
+    /**
+     * 新消息提示
+     *
+     * @param from
+     * @param mess
+     */
+    private void disPlayShortMess(final String from, String mess) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(App.getApplication());
+//        builder.setTitle("新消息");
+        View view = View.inflate(App.getApplication(), R.layout.view_receiveralarm_layout, null);
+        TextView showInformation = view.findViewById(R.id.prompt_alarm_information_layout);
+        showInformation.setText("\u3000\u3000类型:短消息\n" + "\u3000\u3000消息来源:" + from + "\n" + "\u3000\u3000内容:" + mess);
+
+        builder.setView(view);
+//        builder.setPositiveButton("关闭", new DialogInterface.OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
-//
-//                Intent intent = new Intent();
-//                SipClient sipClient = new SipClient();
-//                sipClient.setUsrname(from);
-//                if (AppConfig.APP_DIRECTION == 2)
-//                    intent.setClass(App.getApplication(), LandChatActivity.class);
-//                else
-//                    intent.setClass(App.getApplication(), PortChatActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("sipclient", sipClient);
-//                intent.putExtras(bundle);
-//                App.getApplication().startActivity(intent);
-//                if (dialog.isShowing())
-//                    dialog.dismiss();
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
 //            }
 //        });
-//        Timer timer = new Timer();
-//        TimerTask timerTask = new TimerTask() {
-//            @Override
-//            public void run() {
-//                if (dialog.isShowing())
-//                    dialog.dismiss();
-//            }
-//        };
-//        timer.schedule(timerTask, 3000);
-//
-//    }
+        final Dialog dialog = builder.create();
+        dialog.getWindow().setLayout(300, 60);
+        dialog.getWindow().setGravity(Gravity.TOP);
+        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        dialog.show();
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent();
+                SipClient sipClient = new SipClient();
+                sipClient.setUsrname(from);
+                if (AppConfig.APP_DIRECTION == 2)
+                    intent.setClass(App.getApplication(), LandChatActivity.class);
+                else
+                    intent.setClass(App.getApplication(), PortChatActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("sipclient", sipClient);
+                intent.putExtras(bundle);
+                App.getApplication().startActivity(intent);
+                if (dialog.isShowing())
+                    dialog.dismiss();
+            }
+        });
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (dialog.isShowing())
+                    dialog.dismiss();
+            }
+        };
+        timer.schedule(timerTask, 3000);
+
+    }
 
 
 }

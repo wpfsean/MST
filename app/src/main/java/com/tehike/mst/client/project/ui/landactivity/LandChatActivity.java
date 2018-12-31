@@ -331,16 +331,16 @@ public class LandChatActivity extends BaseActivity {
     private void getAllHistory() {
 
         DbHelper dbHelper = new DbHelper(App.getApplication());
-        db = dbHelper.getReadableDatabase();
+        db = dbHelper.getWritableDatabase();
 
         //根据条件查询聊天记录
-        Cursor cursor = db.query("chat", null, "fromuser =? or touser = ?", new String[]{remoteChatNumber, remoteChatNumber}, null, null, null);
+        Cursor cursor = db.query("chatHistory", null, "fromuser =? or touser = ?", new String[]{remoteChatNumber, remoteChatNumber}, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 String time = cursor.getString(cursor.getColumnIndex("time"));
-                String fromuser = cursor.getString(cursor.getColumnIndex("fromuser"));
-                String message = cursor.getString(cursor.getColumnIndex("message"));
-                String toUser = cursor.getString(cursor.getColumnIndex("touser"));
+                String fromuser = cursor.getString(cursor.getColumnIndex("fromUser"));
+                String message = cursor.getString(cursor.getColumnIndex("mess"));
+                String toUser = cursor.getString(cursor.getColumnIndex("toUser"));
                 if (toUser.equals(remoteChatNumber)) {
                     ChatMsgEntity mEntity = new ChatMsgEntity();
                     mEntity.setDate(TimeUtils.longTime2Short(time));
@@ -378,7 +378,7 @@ public class LandChatActivity extends BaseActivity {
      */
 
     @OnClick(R.id.send_message_btn_layout)
-    private void sendMess(View view) {
+    public void sendMess(View view) {
         String chatMessage = mEditContentLayout.getText().toString().trim();
         if (!TextUtils.isEmpty(chatMessage) && chatMessage.length() > 0) {
             //送消息的展示界面
@@ -409,7 +409,7 @@ public class LandChatActivity extends BaseActivity {
             contentValues.put("fromUser", nativeSipNumber);
             contentValues.put("mess", chatMessage);
             contentValues.put("toUser", remoteChatNumber);
-            db.insert("chat", null, contentValues);
+            db.insert("chatHistory", null, contentValues);
         }
     }
 

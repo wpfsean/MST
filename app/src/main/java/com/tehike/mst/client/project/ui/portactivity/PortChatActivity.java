@@ -12,12 +12,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.tehike.mst.client.project.R;
 import com.tehike.mst.client.project.adapters.ChatMsgViewAdapter;
+import com.tehike.mst.client.project.base.App;
 import com.tehike.mst.client.project.base.BaseActivity;
+import com.tehike.mst.client.project.db.DbHelper;
 import com.tehike.mst.client.project.entity.ChatMsgEntity;
 import com.tehike.mst.client.project.entity.SipBean;
-import com.tehike.mst.client.project.entity.SipClient;
 import com.tehike.mst.client.project.global.AppConfig;
 import com.tehike.mst.client.project.linphone.Linphone;
 import com.tehike.mst.client.project.linphone.MessageCallback;
@@ -28,7 +30,6 @@ import com.tehike.mst.client.project.utils.ActivityUtils;
 import com.tehike.mst.client.project.utils.CryptoUtil;
 import com.tehike.mst.client.project.utils.FileUtil;
 import com.tehike.mst.client.project.utils.GsonUtils;
-import com.tehike.mst.client.project.utils.SharedPreferencesUtils;
 import com.tehike.mst.client.project.utils.TimeUtils;
 
 import org.linphone.core.LinphoneAddress;
@@ -114,7 +115,7 @@ public class PortChatActivity extends BaseActivity implements View.OnClickListen
     /**
      * 聊天对象
      */
-    String who = "";
+    String remoteSipNumber = "";
 
     /**
      * 聊天对象的设备名
@@ -178,7 +179,7 @@ public class PortChatActivity extends BaseActivity implements View.OnClickListen
         initMessRead();
 
         //加载历史记录
-   //     getAllHistory();
+        getAllHistory();
 
         //适配加载数据
         initAdapter();
@@ -251,7 +252,7 @@ public class PortChatActivity extends BaseActivity implements View.OnClickListen
             LinphoneChatRoom[] rooms = SipManager.getLc().getChatRooms();
             if (rooms.length > 0) {
                 for (LinphoneChatRoom room : rooms) {
-                    if (room.getPeerAddress().getUserName().equals(who)) {
+                    if (room.getPeerAddress().getUserName().equals(remoteSipNumber)) {
                         room.markAsRead();
                     }
                 }
@@ -268,7 +269,7 @@ public class PortChatActivity extends BaseActivity implements View.OnClickListen
         sipNum = SysinfoUtils.getSysinfo().getSipUsername();
 
         //获取当前对话列表点击 的用户名
-        SipBean sipClient = (SipBean) getIntent().getExtras().getSerializable("sipclient");
+        SipBean mSipBean = (SipBean) getIntent().getExtras().getSerializable("sipclient");
 
 
         try {
@@ -278,14 +279,14 @@ public class PortChatActivity extends BaseActivity implements View.OnClickListen
         }
 
 
-        if (sipClient != null) {
-            String chatObject = sipClient.getNumber();
+        if (mSipBean != null) {
+            String chatObject = mSipBean.getNumber();
             if (!TextUtils.isEmpty(chatObject)) {
-                who = chatObject;
+                remoteSipNumber = chatObject;
 
                 if (receiveData != null && receiveData.size() > 0) {
                     for (SipBean device : receiveData) {
-                        if (device.getNumber().equals(who)) {
+                        if (device.getNumber().equals(remoteSipNumber)) {
                             deviceName = device.getName();
                             current_fragment_name.setText(device.getName());
                         }
@@ -294,7 +295,7 @@ public class PortChatActivity extends BaseActivity implements View.OnClickListen
                 String sipserver = SysinfoUtils.getSysinfo().getSipServer();
                 if (!TextUtils.isEmpty(sipserver)) {
                     try {
-                        linphoneAddress = LinphoneCoreFactory.instance().createLinphoneAddress("sip:" + who + "@" + sipserver);
+                        linphoneAddress = LinphoneCoreFactory.instance().createLinphoneAddress("sip:" + remoteSipNumber + "@" + sipserver);
                     } catch (LinphoneCoreException e) {
                         e.printStackTrace();
                     }
@@ -318,7 +319,7 @@ public class PortChatActivity extends BaseActivity implements View.OnClickListen
                     //显示聊天对象的设备名
                     if (receiveData != null && receiveData.size() > 0) {
                         for (SipBean device : receiveData) {
-                            if (device.getNumber().equals(who)) {
+                            if (device.getNumber().equals(remoteSipNumber)) {
                                 chatMsgEntity.setName(device.getName());
                             }
                         }
@@ -339,15 +340,18 @@ public class PortChatActivity extends BaseActivity implements View.OnClickListen
      * 取出所有的聊天记录
      */
     private void getAllHistory() {
+        DbHelper dbHelper = new DbHelper(App.getApplication());
+        db = dbHelper.getWritableDatabase();
+
         //根据条件查询聊天记录
-        Cursor cursor = db.query("chat", null, "fromuser =? or touser = ?", new String[]{who, who}, null, null, null);
+        Cursor cursor = db.query("chatHistory", null, "fromuser =? or touser = ?", new String[]{remoteSipNumber, remoteSipNumber}, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 String time = cursor.getString(cursor.getColumnIndex("time"));
-                String fromuser = cursor.getString(cursor.getColumnIndex("fromuser"));
-                String message = cursor.getString(cursor.getColumnIndex("message"));
-                String toUser = cursor.getString(cursor.getColumnIndex("touser"));
-                if (toUser.equals(who)) {
+                String fromuser = cursor.getString(cursor.getColumnIndex("fromUser"));
+                String message = cursor.getString(cursor.getColumnIndex("mess"));
+                String toUser = cursor.getString(cursor.getColumnIndex("toUser"));
+                if (toUser.equals(remoteSipNumber)) {
                     ChatMsgEntity mEntity = new ChatMsgEntity();
                     mEntity.setDate(TimeUtils.longTime2Short(time));
                     if (receiveData != null && receiveData.size() > 0) {
@@ -360,7 +364,7 @@ public class PortChatActivity extends BaseActivity implements View.OnClickListen
                     mEntity.setMsgType(false);
                     mEntity.setText(message);
                     mDataArrays.add(mEntity);
-                } else if (fromuser.equals(who)) {
+                } else if (fromuser.equals(remoteSipNumber)) {
                     ChatMsgEntity tEntity = new ChatMsgEntity();
                     tEntity.setDate(TimeUtils.longTime2Short(time));
                     if (receiveData != null && receiveData.size() > 0) {
@@ -410,10 +414,10 @@ public class PortChatActivity extends BaseActivity implements View.OnClickListen
 //            //把发的消息插入到数据库
             ContentValues contentValues = new ContentValues();
             contentValues.put("time", new Date().toString());
-            contentValues.put("fromuser", sipNum);
-            contentValues.put("message", chatMessage);
-            contentValues.put("touser", who);
-            db.insert("chat", null, contentValues);
+            contentValues.put("fromUser", sipNum);
+            contentValues.put("mess", chatMessage);
+            contentValues.put("toUser", remoteSipNumber);
+            db.insert("chatHistory", null, contentValues);
         }
     }
 

@@ -20,10 +20,12 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.tehike.mst.client.project.R;
 import com.tehike.mst.client.project.adapters.SlidingPagerAdapter;
 import com.tehike.mst.client.project.base.BaseActivity;
 import com.tehike.mst.client.project.cms.SendEmergencyAlarmToServerThrad;
+import com.tehike.mst.client.project.entity.SipBean;
 import com.tehike.mst.client.project.entity.VideoBean;
 import com.tehike.mst.client.project.global.AppConfig;
 import com.tehike.mst.client.project.linphone.Linphone;
@@ -36,6 +38,8 @@ import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
 import com.tehike.mst.client.project.ui.fragment.ChatListFragment;
 import com.tehike.mst.client.project.ui.fragment.IntercomFragment;
 import com.tehike.mst.client.project.ui.fragment.VoideoFragment;
+import com.tehike.mst.client.project.utils.CryptoUtil;
+import com.tehike.mst.client.project.utils.FileUtil;
 import com.tehike.mst.client.project.utils.GsonUtils;
 import com.tehike.mst.client.project.utils.Logutil;
 import com.tehike.mst.client.project.utils.NetworkUtils;
@@ -336,6 +340,7 @@ public class PortMainFragmentActivity extends BaseActivity {
         });
     }
 
+    List<SipBean> allSipSourcesList;
     /**
      * 验证密码
      *
@@ -390,7 +395,7 @@ public class PortMainFragmentActivity extends BaseActivity {
                     if (popu.isShowing()) {
                         popu.dismiss();
                     }
-                   // intent.setClass(PortMainFragmentActivity.this, PortSettingActivity.class);
+                    // intent.setClass(PortMainFragmentActivity.this, PortSettingActivity.class);
                     PortMainFragmentActivity.this.startActivity(intent);
                 } else {
                     //不正确就提示
@@ -429,11 +434,36 @@ public class PortMainFragmentActivity extends BaseActivity {
             Logutil.e("Ip为空！");
             return;
         }
+        //报警时发送的视频源对象
+        VideoBean videoBean = null;
 
+        //取出本地所有的sip信息
+        try {
+            String videoSourceStr = FileUtil.readFile(AppConfig.SOURCES_SIP).toString();
+             allSipSourcesList = GsonUtils.GsonToList(CryptoUtil.decodeBASE64(videoSourceStr), SipBean.class);
+        } catch (Exception e) {
+        }
+        //获取本机的Sip号码
+        String nativeSipNumber = SysinfoUtils.getSysinfo().getSipUsername();
 
+        //遍历找到本机的视频源
+        for (int i = 0; i < allSipSourcesList.size(); i++) {
+            if (allSipSourcesList.get(i).getNumber().equals(nativeSipNumber)) {
+                videoBean = allSipSourcesList.get(i).getVideoBean();
+                break;
+            }
+        }
+        //若本机没有面部视频信息（模拟一个假的面部视频（不可用））
+        if (videoBean == null) {
+            Logutil.e("本机无视频源");
+            if (isVisible){
+                showProgressFail("本机未配置视频源信息!");
+            }
+            return;
+        }
 
         //子线程去发送应急报警
-        SendEmergencyAlarmToServerThrad sendEmergencyAlarmToServer = new SendEmergencyAlarmToServerThrad(null, "暴狱", new SendEmergencyAlarmToServerThrad.Callback() {
+        SendEmergencyAlarmToServerThrad sendEmergencyAlarmToServer = new SendEmergencyAlarmToServerThrad(videoBean, "暴狱", new SendEmergencyAlarmToServerThrad.Callback() {
             @Override
             public void getCallbackData(String result) {
                 if (TextUtils.isEmpty(result)) {
@@ -740,7 +770,6 @@ public class PortMainFragmentActivity extends BaseActivity {
         if (handler != null)
             handler.removeCallbacksAndMessages(null);
     }
-
 
 
     /**

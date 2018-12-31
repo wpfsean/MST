@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.tehike.mst.client.project.R;
 import com.tehike.mst.client.project.adapters.SipItemsAdapter;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * 描述：Sip列表页面
@@ -197,6 +199,15 @@ public class ChatListFragment extends BaseFragment implements SwipeRefreshLayout
         super.onNetworkViewRefresh();
         showProgressDialogWithText("正在努力加载中...");
         initializeSipItemsData();
+    }
+
+
+    /**
+     * 点击返回按键
+     */
+    @OnClick(R.id.finish_back_layout)
+    public void finishPage(View view) {
+        getActivity().finish();
     }
 
     /**

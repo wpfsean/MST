@@ -24,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.tehike.mst.client.project.R;
+import com.tehike.mst.client.project.base.App;
 import com.tehike.mst.client.project.global.AppConfig;
 
 import org.json.JSONArray;
@@ -39,234 +40,239 @@ import java.net.URL;
 /**
  * 描述：手动更新apk
  * ===============================
+ *
  * @author wpfse wpfsean@126.com
- * @Create at:2018/11/16 15:09
  * @version V1.0
+ * @Create at:2018/11/16 15:09
  */
 
 public class UpdateManager {
 
-	private ProgressBar mProgressBar;
-	private Dialog mDownloadDialog;
+    private ProgressBar mProgressBar;
+    private Dialog mDownloadDialog;
 
-	private String mSavePath;
-	private int mProgress;
+    private String mSavePath;
+    private int mProgress;
 
-	private boolean mIsCancel = false;
+    private boolean mIsCancel = false;
 
-	private static final int DOWNLOADING = 1;
-	private static final int DOWNLOAD_FINISH = 2;
+    private static final int DOWNLOADING = 1;
+    private static final int DOWNLOAD_FINISH = 2;
 
-	private String mVersion_code;
-	private String mVersion_name;
-	private String mVersion_desc;
-	private String mVersion_path;
+    private String mVersion_code;
+    private String mVersion_name;
+    private String mVersion_desc;
+    private String mVersion_path;
 
-	private Context mContext;
+    private Context mContext;
 
-	public UpdateManager(Context context) {
-		mContext = context;
-	}
+    public UpdateManager(Context context) {
+        mContext = context;
+    }
 
-	private Handler mGetVersionHandler = new Handler(){
-		public void handleMessage(Message msg) {
-			JSONObject jsonObject = (JSONObject) msg.obj;
-			System.out.println(jsonObject.toString());
-			try {
-				JSONArray js  =jsonObject.getJSONArray("data");
-				mVersion_code = js.getJSONObject(0).getString("version_code");
-				mVersion_name = js.getJSONObject(0).getString("version_name");
-				mVersion_desc = js.getJSONObject(0).getString("version_desc");
-				mVersion_path = js.getJSONObject(0).getString("version_path");
+    private Handler mGetVersionHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            JSONObject jsonObject = (JSONObject) msg.obj;
+            System.out.println(jsonObject.toString());
+            try {
+                JSONArray js = jsonObject.getJSONArray("data");
+                mVersion_code = js.getJSONObject(0).getString("version_code");
+                mVersion_name = js.getJSONObject(0).getString("version_name");
+                mVersion_desc = js.getJSONObject(0).getString("version_desc");
+                mVersion_path = js.getJSONObject(0).getString("version_path");
 
-				if (isUpdate()){
-					// 显示提示更新对话框
-					showNoticeDialog();
-				} else{
-					Toast.makeText(mContext, "已是最新版本", Toast.LENGTH_SHORT).show();
-				}
+                if (isUpdate()) {
+                    // 显示提示更新对话框
+                    showNoticeDialog();
+                } else {
+                    Toast.makeText(mContext, "已是最新版本", Toast.LENGTH_SHORT).show();
+                }
 
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-		};
-	};
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-	private Handler mUpdateProgressHandler = new Handler(){
-		public void handleMessage(Message msg) {
-			switch (msg.what){
-				case DOWNLOADING:
-					// 设置进度条
-					mProgressBar.setProgress(mProgress);
-					break;
-				case DOWNLOAD_FINISH:
-					// 隐藏当前下载对话框
-					mDownloadDialog.dismiss();
-					// 安装 APK 文件
-					installAPK();
-			}
-		};
-	};
+        ;
+    };
 
-	/*
-	 * 检测软件是否需要更新
-	 */
-	public void checkUpdate() {
-		RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-		JsonObjectRequest request = new JsonObjectRequest(AppConfig.UPDATE_APK_PATH, null, new Listener<JSONObject>() {
-			@Override
-			public void onResponse(JSONObject jsonObject) {
-				Message msg = Message.obtain();
-				msg.obj = jsonObject;
-				mGetVersionHandler.sendMessage(msg);
-			}
+    private Handler mUpdateProgressHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case DOWNLOADING:
+                    // 设置进度条
+                    mProgressBar.setProgress(mProgress);
+                    break;
+                case DOWNLOAD_FINISH:
+                    // 隐藏当前下载对话框
+                    mDownloadDialog.dismiss();
+                    // 安装 APK 文件
+                    installAPK();
+            }
+        }
 
-		}, new Response.ErrorListener() {
-			@Override
-			public void onErrorResponse(VolleyError arg0) {
-				System.out.println(arg0.toString());
-			}
-		});
-		requestQueue.add(request);
-	}
+        ;
+    };
 
-	/*
-	 * 与本地版本比较判断是否需要更新
-	 */
-	protected boolean isUpdate() {
-		int serverVersion = Integer.parseInt(mVersion_code);
-		int localVersion = 1;
+    /*
+     * 检测软件是否需要更新
+     */
+    public void checkUpdate() {
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        JsonObjectRequest request = new JsonObjectRequest(AppConfig.UPDATE_APK_PATH, null, new Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Message msg = Message.obtain();
+                msg.obj = jsonObject;
+                mGetVersionHandler.sendMessage(msg);
+            }
 
-		try {
-			localVersion = mContext.getPackageManager().getPackageInfo("com.tehike.client.mst.app.project", 0).versionCode;
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError arg0) {
+                System.out.println(arg0.toString());
+            }
+        });
+        requestQueue.add(request);
+    }
 
-		if (serverVersion > localVersion)
-			return true;
-		else
-			return false;
-	}
+    /*
+     * 与本地版本比较判断是否需要更新
+     */
+    protected boolean isUpdate() {
+        int serverVersion = Integer.parseInt(mVersion_code);
+        int localVersion = 1;
 
-	/*
-	 * 有更新时显示提示对话框
-	 */
-	protected void showNoticeDialog() {
-		Builder builder = new Builder(mContext);
-		builder.setTitle("提示");
-		String desc = "<font color=#ff00ff>"+mVersion_desc+"</font>";
+        try {
+            localVersion = mContext.getPackageManager().getPackageInfo(AppUtils.getPackageName(App.getApplication()), 0).versionCode;
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
-		String message = "软件有更新，要下载安装吗？\n" + Html.fromHtml(desc);
-		builder.setMessage(message);
+        if (serverVersion > localVersion)
+            return true;
+        else
+            return false;
+    }
 
-		builder.setPositiveButton("更新", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// 隐藏当前对话框
-				dialog.dismiss();
-				// 显示下载对话框
-				showDownloadDialog();
-			}
-		});
+    /*
+     * 有更新时显示提示对话框
+     */
+    protected void showNoticeDialog() {
+        Builder builder = new Builder(mContext);
+        builder.setTitle("提示");
+        String desc = "<font color=#ff00ff>" + mVersion_desc + "</font>";
 
-		builder.setNegativeButton("下次再说", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// 隐藏当前对话框
-				dialog.dismiss();
-			}
-		});
+        String message = "软件有更新，要下载安装吗？\n" + Html.fromHtml(desc);
+        builder.setMessage(message);
 
-		builder.create().show();
-	}
+        builder.setPositiveButton("更新", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 隐藏当前对话框
+                dialog.dismiss();
+                // 显示下载对话框
+                showDownloadDialog();
+            }
+        });
 
-	/*
-	 * 显示正在下载对话框
-	 */
-	protected void showDownloadDialog() {
-		Builder builder = new Builder(mContext);
-		builder.setTitle("下载中");
-		View view = LayoutInflater.from(mContext).inflate(R.layout.softupdate_progress, null);
-		mProgressBar = (ProgressBar) view.findViewById(R.id.update_progress);
-		builder.setView(view);
+        builder.setNegativeButton("下次再说", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 隐藏当前对话框
+                dialog.dismiss();
+            }
+        });
 
-		builder.setNegativeButton("取消", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// 隐藏当前对话框
-				dialog.dismiss();
-				// 设置下载状态为取消
-				mIsCancel = true;
-			}
-		});
+        builder.create().show();
+    }
 
-		mDownloadDialog = builder.create();
-		mDownloadDialog.show();
+    /*
+     * 显示正在下载对话框
+     */
+    protected void showDownloadDialog() {
+        Builder builder = new Builder(mContext);
+        builder.setTitle("下载中");
+        View view = LayoutInflater.from(mContext).inflate(R.layout.softupdate_progress, null);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.update_progress);
+        builder.setView(view);
 
-		// 下载文件
-		downloadAPK();
-	}
+        builder.setNegativeButton("取消", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 隐藏当前对话框
+                dialog.dismiss();
+                // 设置下载状态为取消
+                mIsCancel = true;
+            }
+        });
 
-	/*
-	 * 开启新线程下载文件
-	 */
-	private void downloadAPK() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-						String sdPath = Environment.getExternalStorageDirectory() + "/";
-						mSavePath = sdPath + "jikedownload";
+        mDownloadDialog = builder.create();
+        mDownloadDialog.show();
 
-						File dir = new File(mSavePath);
-						if (!dir.exists())
-							dir.mkdir();
+        // 下载文件
+        downloadAPK();
+    }
 
-						// 下载文件
-						HttpURLConnection conn = (HttpURLConnection) new URL(mVersion_path).openConnection();
-						conn.connect();
-						InputStream is = conn.getInputStream();
-						int length = conn.getContentLength();
+    /*
+     * 开启新线程下载文件
+     */
+    private void downloadAPK() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                        String sdPath = Environment.getExternalStorageDirectory() + "/";
+                        mSavePath = sdPath + "jikedownload";
 
-						File apkFile = new File(mSavePath, mVersion_name);
-						FileOutputStream fos = new FileOutputStream(apkFile);
+                        File dir = new File(mSavePath);
+                        if (!dir.exists())
+                            dir.mkdir();
 
-						int count = 0;
-						byte[] buffer = new byte[1024];
-						while (!mIsCancel){
-							int numread = is.read(buffer);
-							count += numread;
-							// 计算进度条的当前位置
-							mProgress = (int) (((float)count/length) * 100);
-							// 更新进度条
-							mUpdateProgressHandler.sendEmptyMessage(DOWNLOADING);
+                        // 下载文件
+                        HttpURLConnection conn = (HttpURLConnection) new URL(mVersion_path).openConnection();
+                        conn.connect();
+                        InputStream is = conn.getInputStream();
+                        int length = conn.getContentLength();
 
-							// 下载完成
-							if (numread < 0){
-								mUpdateProgressHandler.sendEmptyMessage(DOWNLOAD_FINISH);
-								break;
-							}
-							fos.write(buffer, 0, numread);
-						}
-						fos.close();
-						is.close();
-					}
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	}
+                        File apkFile = new File(mSavePath, mVersion_name);
+                        FileOutputStream fos = new FileOutputStream(apkFile);
 
-	/*
-	 * 下载到本地后执行安装
-	 */
-	protected void installAPK() {
-		final File apkFile = new File(mSavePath, mVersion_name);
-		if (!apkFile.exists())
-			return;
+                        int count = 0;
+                        byte[] buffer = new byte[1024];
+                        while (!mIsCancel) {
+                            int numread = is.read(buffer);
+                            count += numread;
+                            // 计算进度条的当前位置
+                            mProgress = (int) (((float) count / length) * 100);
+                            // 更新进度条
+                            mUpdateProgressHandler.sendEmptyMessage(DOWNLOADING);
+
+                            // 下载完成
+                            if (numread < 0) {
+                                mUpdateProgressHandler.sendEmptyMessage(DOWNLOAD_FINISH);
+                                break;
+                            }
+                            fos.write(buffer, 0, numread);
+                        }
+                        fos.close();
+                        is.close();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    /*
+     * 下载到本地后执行安装
+     */
+    protected void installAPK() {
+        final File apkFile = new File(mSavePath, mVersion_name);
+        if (!apkFile.exists())
+            return;
 //
 //		new Thread(new Runnable() {
 //			@Override
@@ -282,13 +288,13 @@ public class UpdateManager {
 //		intent.setDataAndType(uri, "application/vnd.android.package-archive");
 //		mContext.startActivity(intent);intent
 
-		Intent intent = new Intent();
-		intent.setAction("android.intent.action.VIEW");
-		intent.addCategory("android.intent.category.DEFAULT");
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.setDataAndType(Uri.fromFile(apkFile),"application/vnd.android.package-archive");
-		mContext.startActivity(intent);
-	}
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        intent.addCategory("android.intent.category.DEFAULT");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+        mContext.startActivity(intent);
+    }
 
 
 }

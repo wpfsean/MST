@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.tehike.mst.client.project.R;
 import com.tehike.mst.client.project.base.BaseActivity;
 import com.tehike.mst.client.project.global.AppConfig;
+import com.tehike.mst.client.project.linphone.SipManager;
 import com.tehike.mst.client.project.services.LocationService;
 import com.tehike.mst.client.project.services.ServiceUtils;
 import com.tehike.mst.client.project.sysinfo.SysInfoBean;
@@ -424,7 +425,7 @@ public class LandLoginActivity extends BaseActivity {
             if (jsonObject != null) {
                 SysInfoBean sysInfoBean = new SysInfoBean(jsonObject.getInt("alertPort"),
                         jsonObject.getString("alertServer"), jsonObject.getString("deviceGuid"),
-                        jsonObject.getString("remoteChatName"), jsonObject.getInt("fingerprintPort"),
+                        jsonObject.getString("deviceName"), jsonObject.getInt("fingerprintPort"),
                         jsonObject.getString("fingerprintServer"), jsonObject.getInt("heartbeatPort"),
                         jsonObject.getString("heartbeatServer"), jsonObject.getString("sipPassword"),
                         jsonObject.getString("sipServer"), jsonObject.getString("sipUsername"),
