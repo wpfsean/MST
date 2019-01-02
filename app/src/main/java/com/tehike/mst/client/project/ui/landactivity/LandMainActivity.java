@@ -38,6 +38,7 @@ import com.tehike.mst.client.project.linphone.SipService;
 import com.tehike.mst.client.project.services.ReceiverEmergencyAlarmService;
 import com.tehike.mst.client.project.services.RequestWebApiDataService;
 import com.tehike.mst.client.project.services.ServiceUtils;
+import com.tehike.mst.client.project.services.TimingAutoUpdateService;
 import com.tehike.mst.client.project.services.TimingCheckSipStatus;
 import com.tehike.mst.client.project.services.TimingSendHbService;
 import com.tehike.mst.client.project.sysinfo.SysInfoBean;
@@ -224,6 +225,10 @@ public class LandMainActivity extends BaseActivity {
         //启动Sip保活的服务
         if (!ServiceUtils.isServiceRunning(TimingCheckSipStatus.class))
             ServiceUtils.startService(TimingCheckSipStatus.class);
+
+        //启动Sip保活的服务
+        if (!ServiceUtils.isServiceRunning(TimingAutoUpdateService.class))
+            ServiceUtils.startService(TimingAutoUpdateService.class);
 
     }
 
@@ -595,6 +600,48 @@ public class LandMainActivity extends BaseActivity {
      */
     private void emergencyCallDutyRoom() {
 
+        //值班室号码
+        String duryNumber = "";
+
+        if (allSipSourcesList != null && allSipSourcesList.size()>0){
+            for (int i=0;i<allSipSourcesList.size();i++){
+                if (allSipSourcesList.get(i).getSentryId().equals("0")){
+                    duryNumber = allSipSourcesList.get(i).getNumber();
+                    break;
+                }
+            }
+            if (TextUtils.isEmpty(duryNumber)){
+                showProgressFail("未获取到值班室信息!");
+                return;
+            }
+
+            //sip服务是否已启动
+            if (!SipService.isReady() || !SipManager.isInstanceiated()) {
+                Linphone.startService(App.getApplication());
+            }
+            //网络是否正常
+            if (!NetworkUtils.isConnected()) {
+                showProgressFail("网络异常!");
+                return;
+            }
+            //当前sip是否在线
+            if (!AppConfig.SIP_STATUS) {
+                showProgressFail("无呼叫权限!");
+                return;
+            }
+
+            //打电话并跳转
+            Linphone.callTo(duryNumber, false);
+            Linphone.toggleSpeaker(true);
+            Intent intent = new Intent();
+            intent.putExtra("isMakingVideoCall", false);
+            intent.putExtra("callerNumber", duryNumber);
+            intent.putExtra("isMakingCall", true);
+            intent.setClass(LandMainActivity.this, LandSingleCallActivity.class);
+            startActivity(intent);
+        }else {
+            showProgressFail("未获取到值班室信息!");
+        }
     }
 
     /**

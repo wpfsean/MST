@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mst</string>
+    <string name="app_name">手持终端</string>
 
     <string name="view_empty">没有数据~</string>
     <string name="view_network_error">网络异常~</string>

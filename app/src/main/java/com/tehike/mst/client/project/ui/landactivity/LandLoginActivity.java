@@ -34,6 +34,7 @@ import com.tehike.mst.client.project.services.ServiceUtils;
 import com.tehike.mst.client.project.sysinfo.SysInfoBean;
 import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
 import com.tehike.mst.client.project.ui.portactivity.PortLoginActivity;
+import com.tehike.mst.client.project.update.UpdateManager;
 import com.tehike.mst.client.project.utils.ActivityUtils;
 import com.tehike.mst.client.project.utils.CryptoUtil;
 import com.tehike.mst.client.project.utils.FileUtil;
@@ -363,6 +364,12 @@ public class LandLoginActivity extends BaseActivity {
             //提示信息缺失
             handler.sendEmptyMessage(5);
         }
+    }
+
+    @OnClick(R.id.userlogin_button_cancel_layout)
+    public void test(View view){
+
+        new UpdateManager(LandLoginActivity.this).checkUpdate();
     }
 
     /**

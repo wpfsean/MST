@@ -12,11 +12,6 @@ public class AppConfig {
         throw new UnsupportedOperationException("不能被实例化");
     }
 
-    /**
-     * 更新apk包的路径
-     */
-    public static  String UPDATE_APK_PATH = "http://19.0.0.20/zkth/auto_update/auto_update_apk.php";
-
 
     /**
      * 当前的方向(androidManifest设置)
@@ -179,6 +174,17 @@ public class AppConfig {
 
 
     /**
+     * 更新apk包的路径
+     */
+    public static  String UPDATE_APK_PATH = "/mst/";
+
+
+    /**
+     * 更新文件
+     */
+    public static String UPDATE_APK_FILE = "update.xml";
+
+    /**
      * webApi接口的host
      */
     public static String WEB_HOST = "http://";
@@ -238,11 +244,6 @@ public class AppConfig {
      * 解析video资源完成时发送广播的Action
      */
     public  static String RESOLVE_VIDEO_DONE_ACTION = "resolveSVdieoSourceDoneAction";
-
-
-
-
-
 
 
 
