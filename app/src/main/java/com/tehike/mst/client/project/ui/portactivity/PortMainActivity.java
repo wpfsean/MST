@@ -135,15 +135,13 @@ public class PortMainActivity extends BaseActivity {
     boolean threadIsRun = true;
 
     /**
-     * 记录双击退出时间
-     */
-    private long recordingExitTime = 0;
-
-    /**
      * 本机Sip信息
      */
     String nativeSipNumber = "";
 
+    /**
+     * 报警弹窗
+     */
     PopupWindow popu;
 
     /**
@@ -151,7 +149,9 @@ public class PortMainActivity extends BaseActivity {
      */
     PopupWindow alarmPopuWindow = null;
 
-
+    /**
+     * 广播，用于接收videoSource缓存完成的广播
+     */
     RefreshVideoDataBroadcast broadcast;
 
     /**
@@ -171,6 +171,7 @@ public class PortMainActivity extends BaseActivity {
         AppConfig.APP_DIRECTION = 1;
 
         initializeParamater();
+
         startAllService();
 
         //显示当前的时间
@@ -242,7 +243,7 @@ public class PortMainActivity extends BaseActivity {
                 break;
             case R.id.emergency_call_btn:
                 //应急呼叫
-                  emergencyCallDutyRoom();
+                emergencyCallDutyRoom();
                 break;
             case R.id.btn_living_meeting:
                 showProgressSuccess("正在开发！");
@@ -270,14 +271,14 @@ public class PortMainActivity extends BaseActivity {
         //值班室号码
         String duryNumber = "";
 
-        if (allSipSourcesList != null && allSipSourcesList.size()>0){
-            for (int i=0;i<allSipSourcesList.size();i++){
-                if (allSipSourcesList.get(i).getSentryId().equals("0")){
+        if (allSipSourcesList != null && allSipSourcesList.size() > 0) {
+            for (int i = 0; i < allSipSourcesList.size(); i++) {
+                if (allSipSourcesList.get(i).getSentryId().equals("0")) {
                     duryNumber = allSipSourcesList.get(i).getNumber();
                     break;
                 }
             }
-            if (TextUtils.isEmpty(duryNumber)){
+            if (TextUtils.isEmpty(duryNumber)) {
                 showProgressFail("未获取到值班室信息!");
                 return;
             }
@@ -306,7 +307,7 @@ public class PortMainActivity extends BaseActivity {
             intent.putExtra("isMakingCall", true);
             intent.setClass(PortMainActivity.this, PortSingleCallActivity.class);
             startActivity(intent);
-        }else {
+        } else {
             showProgressFail("未获取到值班室信息!");
         }
     }
@@ -701,7 +702,7 @@ public class PortMainActivity extends BaseActivity {
         if (!ServiceUtils.isServiceRunning(TimingCheckSipStatus.class))
             ServiceUtils.startService(TimingCheckSipStatus.class);
 
-        //启动Sip保活的服务
+        //定时更新服务
         if (!ServiceUtils.isServiceRunning(TimingAutoUpdateService.class))
             ServiceUtils.startService(TimingAutoUpdateService.class);
 
@@ -711,6 +712,12 @@ public class PortMainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (AppConfig.SIP_STATUS) {
+            updateUi(connetIcon, R.mipmap.icon_connection_normal);
+        } else {
+            updateUi(connetIcon, R.mipmap.icon_connection_disable);
+        }
 
         //显示状态图标
         disPlayAppStatusIcon();
@@ -789,6 +796,11 @@ public class PortMainActivity extends BaseActivity {
      * 注册Sip信息
      */
     private void registerSipWithSipServer() {
+        if (AppConfig.SIP_STATUS) {
+            Logutil.d("SIp在线");
+            return;
+        }
+
         //获取sysinfo接口数据
         SysInfoBean mSysInfoBean = SysinfoUtils.getSysinfo();
         //判断sysinfo对象是否为空
@@ -835,11 +847,13 @@ public class PortMainActivity extends BaseActivity {
 
             @Override
             public void registrationOk() {
+                AppConfig.SIP_STATUS = true;
                 updateUi(connetIcon, R.mipmap.icon_connection_normal);
             }
 
             @Override
             public void registrationFailed() {
+                AppConfig.SIP_STATUS = false;
                 updateUi(connetIcon, R.mipmap.icon_connection_disable);
             }
         }, new PhoneCallback() {

@@ -11,7 +11,13 @@ import com.tehike.mst.client.project.execption.CrashLog;
 import com.tehike.mst.client.project.execption.ExceptionHandler;
 import com.tehike.mst.client.project.receiver.CpuAndRamUtils;
 import com.tehike.mst.client.project.services.BatteryAndWifiService;
+import com.tehike.mst.client.project.services.ReceiverEmergencyAlarmService;
+import com.tehike.mst.client.project.services.RequestWebApiDataService;
 import com.tehike.mst.client.project.services.ServiceUtils;
+import com.tehike.mst.client.project.services.TimingAutoUpdateService;
+import com.tehike.mst.client.project.services.TimingCheckSipStatus;
+import com.tehike.mst.client.project.services.TimingSendHbService;
+import com.tehike.mst.client.project.utils.ActivityUtils;
 import com.tehike.mst.client.project.utils.Logutil;
 import com.tehike.mst.client.project.utils.ToastUtils;
 
@@ -124,6 +130,36 @@ public class App extends Application {
     public static RequestQueue getQuest() {
         return mRequestQueue;
     }
+
+
+    public static void exit() {
+        //移除栈中所有的activiry
+        ActivityUtils.removeAllActivity();
+
+        //关闭电量监听服务
+        if (ServiceUtils.isServiceRunning(BatteryAndWifiService.class))
+            ServiceUtils.stopService(BatteryAndWifiService.class);
+
+        //关闭被动远程喊话的服务
+        if (ServiceUtils.isServiceRunning(ReceiverEmergencyAlarmService.class)){
+            ServiceUtils.stopService(ReceiverEmergencyAlarmService.class);
+        }
+
+        //关闭服务器接收报警的服务
+        if (ServiceUtils.isServiceRunning(RequestWebApiDataService.class))
+            ServiceUtils.stopService(RequestWebApiDataService.class);
+
+        //关闭发送心跳的服务
+        if (ServiceUtils.isServiceRunning(TimingSendHbService.class))
+            ServiceUtils.stopService(TimingSendHbService.class);
+
+        if (ServiceUtils.isServiceRunning(TimingCheckSipStatus.class))
+            ServiceUtils.stopService(TimingCheckSipStatus.class);
+
+        if (ServiceUtils.isServiceRunning(TimingAutoUpdateService.class))
+            ServiceUtils.stopService(TimingAutoUpdateService.class);
+    }
+
 
     @Override
     public void onTerminate() {

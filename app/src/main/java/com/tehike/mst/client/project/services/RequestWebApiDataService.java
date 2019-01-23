@@ -300,6 +300,7 @@ public class RequestWebApiDataService extends Service {
             }
             FileUtil.writeFile(CryptoUtil.encodeBASE64(str), AppConfig.SOURCES_VIDEO);
             Logutil.d("Video数据写入完成");
+            resolveWebapiVideoSouceList.clear();
             Intent intent = new Intent();
             intent.setAction(AppConfig.RESOLVE_VIDEO_DONE_ACTION);
             App.getApplication().sendBroadcast(intent);
@@ -505,6 +506,7 @@ public class RequestWebApiDataService extends Service {
             }
             FileUtil.writeFile(CryptoUtil.encodeBASE64(str), AppConfig.SOURCES_SIP);
             Logutil.d("Sip数据写入完成");
+            resolveWebapiSipSouceList.clear();
             Intent intent = new Intent();
             intent.setAction(AppConfig.RESOLVE_SIP_DONE_ACTION);
             App.getApplication().sendBroadcast(intent);

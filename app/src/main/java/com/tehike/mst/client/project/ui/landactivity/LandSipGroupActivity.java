@@ -22,6 +22,7 @@ import com.tehike.mst.client.project.linphone.SipManager;
 import com.tehike.mst.client.project.linphone.SipService;
 import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
 import com.tehike.mst.client.project.ui.fragment.SipGroupAdapter;
+import com.tehike.mst.client.project.ui.widget.SpaceItemDecoration;
 import com.tehike.mst.client.project.utils.BatteryUtils;
 import com.tehike.mst.client.project.utils.HttpBasicRequest;
 import com.tehike.mst.client.project.utils.Logutil;
@@ -256,13 +257,15 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
         if (!isVisible) {
             return;
         }
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(LandSipGroupActivity.this, 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(LandSipGroupActivity.this, 4);
         gridLayoutManager.setReverseLayout(false);
         gridLayoutManager.setOrientation(GridLayout.VERTICAL);
+        SpaceItemDecoration spaceItemDecoration = new SpaceItemDecoration(16,36);
+
         disPlaySipGroupItemViewLayout.setLayoutManager(gridLayoutManager);
         SipGroupAdapter adapter = new SipGroupAdapter(LandSipGroupActivity.this, sipGroupResources);
         disPlaySipGroupItemViewLayout.setAdapter(adapter);
-
+        disPlaySipGroupItemViewLayout.addItemDecoration(spaceItemDecoration);
         adapter.setItemClickListener(new SipGroupAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {

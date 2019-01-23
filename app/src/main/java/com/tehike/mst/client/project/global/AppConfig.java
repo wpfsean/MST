@@ -69,7 +69,6 @@ public class AppConfig {
      */
     public static String SYSINFO = "sysinfo.txt";
 
-
     /**
      * 报警类型颜色对象
      */
@@ -176,7 +175,7 @@ public class AppConfig {
     /**
      * 更新apk包的路径
      */
-    public static  String UPDATE_APK_PATH = "/mst/";
+    public static  String UPDATE_APK_PATH = ":8080/mst/";
 
 
     /**

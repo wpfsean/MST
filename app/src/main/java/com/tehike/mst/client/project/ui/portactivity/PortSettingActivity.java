@@ -26,6 +26,7 @@ import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.tehike.mst.client.project.R;
 import com.tehike.mst.client.project.base.App;
 import com.tehike.mst.client.project.base.BaseActivity;
@@ -36,6 +37,7 @@ import com.tehike.mst.client.project.linphone.RegistrationCallback;
 import com.tehike.mst.client.project.linphone.SipManager;
 import com.tehike.mst.client.project.linphone.SipService;
 import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
+import com.tehike.mst.client.project.ui.landactivity.LandLoginActivity;
 import com.tehike.mst.client.project.ui.widget.CustomDialog;
 import com.tehike.mst.client.project.ui.widget.WiperSwitch;
 import com.tehike.mst.client.project.update.UpdateManager;
@@ -263,7 +265,6 @@ public class PortSettingActivity extends BaseActivity {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-
 
 
         //验证权限并申请
@@ -655,10 +656,10 @@ public class PortSettingActivity extends BaseActivity {
      * finish本页面
      */
     private void setDirection() {
-//        ActivityUtils.removeAllActivity();
-//        this.finish();
-//        AppConfig.APP_DIRECTION = 1;
-//        startActivity(new Intent(PortSettingActivity.this, LandLoginActivity.class));
+        ActivityUtils.removeAllActivity();
+        this.finish();
+        AppConfig.APP_DIRECTION = 1;
+        startActivity(new Intent(PortSettingActivity.this, LandLoginActivity.class));
     }
 
     /**
@@ -673,8 +674,11 @@ public class PortSettingActivity extends BaseActivity {
      */
     private void logoutApp() {
         ActivityUtils.removeAllActivity();
-//        App.exit();
+        App.exit();
         finish();
+        if (SipManager.getLc() != null) {
+            SipManager.getLc().clearProxyConfigs();
+        }
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
     }
@@ -736,7 +740,7 @@ public class PortSettingActivity extends BaseActivity {
      * 显示当前的帐号密码
      */
     private void displayPwdDialog() {
-        String pwd =SysinfoUtils.getUserPwd();
+        String pwd = SysinfoUtils.getUserPwd();
         if (TextUtils.isEmpty(pwd))
             pwd = AppConfig.PWD;
 

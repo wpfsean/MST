@@ -17,6 +17,7 @@ import com.tehike.mst.client.project.entity.SipGroupInfoBean;
 import com.tehike.mst.client.project.global.AppConfig;
 import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
 import com.tehike.mst.client.project.ui.portactivity.PortSipInforActivity;
+import com.tehike.mst.client.project.ui.widget.SpaceItemDecoration;
 import com.tehike.mst.client.project.utils.HttpBasicRequest;
 import com.tehike.mst.client.project.utils.Logutil;
 import com.tehike.mst.client.project.utils.NetworkUtils;
@@ -119,6 +120,7 @@ public class IntercomFragment extends BaseFragment implements SwipeRefreshLayout
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
                 gridLayoutManager.setReverseLayout(false);
                 gridLayoutManager.setOrientation(GridLayout.VERTICAL);
+                sipGroupView.addItemDecoration(new SpaceItemDecoration(16,16));
                 sipGroupView.setLayoutManager(gridLayoutManager);
                 sipGroupAdapter.setItemClickListener(new SipGroupAdapter.MyItemClickListener() {
                     @Override

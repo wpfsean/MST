@@ -137,19 +137,6 @@ public class LandLoginActivity extends BaseActivity {
     List<String> noAgreePermissions = new ArrayList<>();
 
     /**
-     * 需要申请的权限
-     */
-    String[] allPermissionList = new String[]{
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-    };
-
-    /**
      * 是否点击过了登录按键
      */
     boolean isClickLoginBtnFlag = false;
@@ -179,14 +166,32 @@ public class LandLoginActivity extends BaseActivity {
      */
     boolean isAutoLoginFlag;
 
+    /**
+     * HttpURLConnection请求 对象
+     */
+    HttpURLConnection con;
+
+    /**
+     * 需要申请的权限
+     */
+    String[] allPermissionList = new String[]{
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
+
     @Override
     protected int intiLayout() {
         return R.layout.activity_land_login;
     }
 
+
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-
         //申请所需要的权限
         checkAllPermissions();
 
@@ -366,10 +371,15 @@ public class LandLoginActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 取消登录
+     */
     @OnClick(R.id.userlogin_button_cancel_layout)
-    public void test(View view){
-
-        new UpdateManager(LandLoginActivity.this).checkUpdate();
+    public void loginCancel(View view) {
+        if (con != null) {
+            con.disconnect();
+            handler.sendEmptyMessage(9);
+        }
     }
 
     /**
@@ -393,7 +403,7 @@ public class LandLoginActivity extends BaseActivity {
             synchronized (this) {
                 try {
                     String requestLoginUrl = AppConfig.WEB_HOST + serverIp + AppConfig._SYSINFO;
-                    HttpURLConnection con = (HttpURLConnection) new URL(requestLoginUrl).openConnection();
+                    con = (HttpURLConnection) new URL(requestLoginUrl).openConnection();
                     con.setRequestMethod("GET");
                     con.setConnectTimeout(3000);
                     String authString = name + ":" + pwd;
@@ -432,8 +442,8 @@ public class LandLoginActivity extends BaseActivity {
             if (jsonObject != null) {
                 SysInfoBean sysInfoBean = new SysInfoBean(jsonObject.getInt("alertPort"),
                         jsonObject.getString("alertServer"), jsonObject.getString("deviceGuid"),
-                        jsonObject.getString("deviceName"), jsonObject.getInt("fingerprintPort"),
-                        jsonObject.getString("fingerprintServer"), jsonObject.getInt("heartbeatPort"),
+                        jsonObject.getString("deviceName"), -1,
+                        "", jsonObject.getInt("heartbeatPort"),
                         jsonObject.getString("heartbeatServer"), jsonObject.getString("sipPassword"),
                         jsonObject.getString("sipServer"), jsonObject.getString("sipUsername"),
                         jsonObject.getInt("webresourcePort"), jsonObject.getString("webresourceServer"), jsonObject.getInt("neighborWatchPort"));

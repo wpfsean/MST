@@ -37,11 +37,10 @@
                 android:id="@+id/gridview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:gravity="center_horizontal"
-                android:horizontalSpacing="10dp"
+                android:horizontalSpacing="8dp"
                 android:numColumns="3"
-                android:verticalSpacing="15dp"></GridView>
+                android:verticalSpacing="8dp"></GridView>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 

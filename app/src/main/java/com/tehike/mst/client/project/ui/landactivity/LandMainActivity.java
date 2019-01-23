@@ -139,6 +139,7 @@ public class LandMainActivity extends BaseActivity {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
 
+        //方向标识
         AppConfig.APP_DIRECTION = 2;
 
         //初始化所有服务
@@ -155,7 +156,6 @@ public class LandMainActivity extends BaseActivity {
             //异常后，注册广播监听videoSource数据是否初始化成功
             registerRefreshSipDataBroadcast();
         }
-
         //向sip服务器注册信息
         registerSipWithSipServer();
     }
@@ -236,6 +236,12 @@ public class LandMainActivity extends BaseActivity {
      * 注册Sip信息
      */
     private void registerSipWithSipServer() {
+
+        if (AppConfig.SIP_STATUS){
+            Logutil.d("当前Sip在线");
+            return;
+        }
+
         //获取sysinfo接口数据
         SysInfoBean mSysInfoBean = SysinfoUtils.getSysinfo();
         //判断sysinfo对象是否为空
@@ -575,6 +581,7 @@ public class LandMainActivity extends BaseActivity {
         //若本机没有面部视频信息（模拟一个假的面部视频（不可用））
         if (videoBean == null) {
             Logutil.e("本机无视频源");
+            handler.sendEmptyMessage(23);
             return;
         }
         //启动子线程去发送报警信息
@@ -664,12 +671,14 @@ public class LandMainActivity extends BaseActivity {
             @Override
             public void registrationOk() {
                 handler.sendEmptyMessage(2);
+                AppConfig.SIP_STATUS = true;
                 Logutil.i("注册成功");
             }
 
             @Override
             public void registrationFailed() {
                 handler.sendEmptyMessage(3);
+                AppConfig.SIP_STATUS = false;
                 Logutil.i("注册失败");
             }
         }, new PhoneCallback() {
@@ -913,6 +922,9 @@ public class LandMainActivity extends BaseActivity {
                     break;
                 case 22://提示密码不正确
                     ToastUtils.showShort("密码不正确!");
+                    break;
+                case 23:
+                    showProgressFail("本机无视频源");
                     break;
 
             }

@@ -63,7 +63,7 @@ public class SipUtils {
                 proxyAddr.asStringUriOnly(), proxyAddr.asStringUriOnly(), true);
         prxCfg.enableAvpf(false);
         prxCfg.setAvpfRRInterval(0);
-        //prxCfg.setExpires(0);
+        prxCfg.setExpires(10);
         prxCfg.enableQualityReporting(false);
         prxCfg.setQualityReportingCollector(null);
         prxCfg.setQualityReportingInterval(0);

@@ -276,9 +276,6 @@ public class LandSettingActivity extends BaseActivity implements CompoundButton.
     boolean whetherdirectionChildVisiable = false;
 
 
-
-
-
     @Override
     protected int intiLayout() {
         return R.layout.activity_land_setting_layout;
@@ -543,12 +540,16 @@ public class LandSettingActivity extends BaseActivity implements CompoundButton.
      *
      * @param view
      */
-    @OnClick({R.id.logout_port_layout,R.id.prompt_feedback_land_layout, R.id.update_apk_land_layout, R.id.set_lightness_land_layout, R.id.reset_setting_land_layout, R.id.save_setting_land_layout, R.id.back_setting_land_layout, R.id.refresh_setting_land_layout, R.id.setting_horizontal_direction, R.id.app_clear_cach_land_layout, R.id.setting_alarm_ip_land_layout, R.id.display_account_infor_land_layout, R.id.display_pwd_infor_land_layout, R.id.login_group_land_layout, R.id.video_group_land_layout, R.id.alarm_group_land_layout, R.id.box_group_land_layout, R.id.system_setting_group_land_layout, R.id.inuse_setting_group_land_layout, R.id.direction_setting_group_land_layout})
+    @OnClick({R.id.logout_port_layout, R.id.prompt_feedback_land_layout, R.id.update_apk_land_layout, R.id.set_lightness_land_layout, R.id.reset_setting_land_layout, R.id.save_setting_land_layout, R.id.back_setting_land_layout, R.id.refresh_setting_land_layout, R.id.setting_horizontal_direction, R.id.app_clear_cach_land_layout, R.id.setting_alarm_ip_land_layout, R.id.display_account_infor_land_layout, R.id.display_pwd_infor_land_layout, R.id.login_group_land_layout, R.id.video_group_land_layout, R.id.alarm_group_land_layout, R.id.box_group_land_layout, R.id.system_setting_group_land_layout, R.id.inuse_setting_group_land_layout, R.id.direction_setting_group_land_layout})
     public void onclickEvent(View view) {
         switch (view.getId()) {
             case R.id.logout_port_layout://退出登录
                 ActivityUtils.removeAllActivity();
                 finish();
+                App.exit();
+                if (SipManager.getLc() != null) {
+                    SipManager.getLc().clearProxyConfigs();
+                }
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);
                 break;
@@ -950,7 +951,6 @@ public class LandSettingActivity extends BaseActivity implements CompoundButton.
         } else {
             connetIcon.setBackgroundResource(R.mipmap.icon_connection_disable);
         }
-
 
 
         /**
