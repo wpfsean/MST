@@ -49,13 +49,14 @@ public class App extends Application {
     public static RequestQueue mRequestQueue = null;
 
     /**
-     * 手机线程数（Returns the number of processors available to the Java virtual machine.）
+     * 线程数（Returns the number of processors available to the Java virtual machine.）
      */
     int maxThreadCount = -1;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
         mContext = this;
 
         //获取最大的可用线程数
@@ -82,6 +83,9 @@ public class App extends Application {
         install();
     }
 
+    /**
+     * 用于捕捉全局的异常
+     */
     private void install() {
         final Thread.UncaughtExceptionHandler sysExcepHandler = Thread.getDefaultUncaughtExceptionHandler();
         Cockroach.install(new ExceptionHandler() {
@@ -115,51 +119,55 @@ public class App extends Application {
         });
     }
 
-
-    //全局上下文
+    /**
+     * 全局上下文
+     */
     public static App getApplication() {
         return mContext;
     }
 
-    //线程池
+    /**
+     * 线程池
+     */
     public static ExecutorService getExecutorService() {
         return mThreadPoolService;
     }
 
-    //Volly队列
+    /**
+     * Volly队列
+     */
     public static RequestQueue getQuest() {
         return mRequestQueue;
     }
 
-
+    /**
+     * 退出应用
+     */
     public static void exit() {
+
         //移除栈中所有的activiry
         ActivityUtils.removeAllActivity();
 
         //关闭电量监听服务
         if (ServiceUtils.isServiceRunning(BatteryAndWifiService.class))
             ServiceUtils.stopService(BatteryAndWifiService.class);
-
         //关闭被动远程喊话的服务
         if (ServiceUtils.isServiceRunning(ReceiverEmergencyAlarmService.class)){
             ServiceUtils.stopService(ReceiverEmergencyAlarmService.class);
         }
-
         //关闭服务器接收报警的服务
         if (ServiceUtils.isServiceRunning(RequestWebApiDataService.class))
             ServiceUtils.stopService(RequestWebApiDataService.class);
-
         //关闭发送心跳的服务
         if (ServiceUtils.isServiceRunning(TimingSendHbService.class))
             ServiceUtils.stopService(TimingSendHbService.class);
-
+        //关闭定时的检测Sip服务
         if (ServiceUtils.isServiceRunning(TimingCheckSipStatus.class))
             ServiceUtils.stopService(TimingCheckSipStatus.class);
-
+        //定时更新服务
         if (ServiceUtils.isServiceRunning(TimingAutoUpdateService.class))
             ServiceUtils.stopService(TimingAutoUpdateService.class);
     }
-
 
     @Override
     public void onTerminate() {

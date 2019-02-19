@@ -43,7 +43,7 @@ public class TimingCheckSipStatus extends Service {
         //延迟10秒后每30秒执行一次
         if (mScheduledExecutorService == null) {
             mScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-            mScheduledExecutorService.scheduleWithFixedDelay(new CheckSipStatusThread(), 10, 15 * 1000, TimeUnit.MILLISECONDS);
+            mScheduledExecutorService.scheduleWithFixedDelay(new CheckSipStatusThread(), 0, 15 * 1000, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -82,6 +82,8 @@ public class TimingCheckSipStatus extends Service {
             //当前sip服务是否已启动
             if (!SipService.isReady() || !SipManager.isInstanceiated()) {
                 Linphone.startService(App.getApplication());
+                SipManager.getLc().clearProxyConfigs();
+                SipManager.getLc().clearAuthInfos();
             }
             Linphone.setAccount(sipNum, sipPwd, sipServer);
             Linphone.login();

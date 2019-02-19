@@ -379,6 +379,7 @@ public class LandLoginActivity extends BaseActivity {
         if (con != null) {
             con.disconnect();
             handler.sendEmptyMessage(9);
+            isClickLoginBtnFlag = false;
         }
     }
 
@@ -427,6 +428,9 @@ public class LandLoginActivity extends BaseActivity {
                     }
                     con.disconnect();
                 } catch (Exception e) {
+                    handler.sendEmptyMessage(8);
+                    isClickLoginBtnFlag = false;
+                    Logutil.e("登录异常--->>" + e.getMessage());
 
                 }
             }

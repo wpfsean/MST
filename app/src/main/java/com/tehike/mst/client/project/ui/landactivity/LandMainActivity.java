@@ -227,8 +227,8 @@ public class LandMainActivity extends BaseActivity {
             ServiceUtils.startService(TimingCheckSipStatus.class);
 
         //启动Sip保活的服务
-        if (!ServiceUtils.isServiceRunning(TimingAutoUpdateService.class))
-            ServiceUtils.startService(TimingAutoUpdateService.class);
+//        if (!ServiceUtils.isServiceRunning(TimingAutoUpdateService.class))
+//            ServiceUtils.startService(TimingAutoUpdateService.class);
 
     }
 
@@ -237,11 +237,10 @@ public class LandMainActivity extends BaseActivity {
      */
     private void registerSipWithSipServer() {
 
-        if (AppConfig.SIP_STATUS){
+        if (AppConfig.SIP_STATUS) {
             Logutil.d("当前Sip在线");
             return;
         }
-
         //获取sysinfo接口数据
         SysInfoBean mSysInfoBean = SysinfoUtils.getSysinfo();
         //判断sysinfo对象是否为空
@@ -262,11 +261,8 @@ public class LandMainActivity extends BaseActivity {
         }
         if (!SipService.isReady()) {
             Linphone.startService(this);
-
-            if (!AppConfig.SIP_STATUS) {
-                Linphone.setAccount(sipNumber, sipPwd, sipServer);
-                Linphone.login();
-            }
+            Linphone.setAccount(sipNumber, sipPwd, sipServer);
+            Linphone.login();
         }
     }
 
@@ -535,7 +531,11 @@ public class LandMainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (popu != null && popu.isShowing()) {
+                    WindowManager.LayoutParams lp = getWindow().getAttributes();
+                    lp.alpha = 1.0f;
+                    getWindow().setAttributes(lp);
                     popu.dismiss();
+
                 }
             }
         });
@@ -610,14 +610,14 @@ public class LandMainActivity extends BaseActivity {
         //值班室号码
         String duryNumber = "";
 
-        if (allSipSourcesList != null && allSipSourcesList.size()>0){
-            for (int i=0;i<allSipSourcesList.size();i++){
-                if (allSipSourcesList.get(i).getSentryId().equals("0")){
+        if (allSipSourcesList != null && allSipSourcesList.size() > 0) {
+            for (int i = 0; i < allSipSourcesList.size(); i++) {
+                if (allSipSourcesList.get(i).getSentryId().equals("0")) {
                     duryNumber = allSipSourcesList.get(i).getNumber();
                     break;
                 }
             }
-            if (TextUtils.isEmpty(duryNumber)){
+            if (TextUtils.isEmpty(duryNumber)) {
                 showProgressFail("未获取到值班室信息!");
                 return;
             }
@@ -646,7 +646,7 @@ public class LandMainActivity extends BaseActivity {
             intent.putExtra("isMakingCall", true);
             intent.setClass(LandMainActivity.this, LandSingleCallActivity.class);
             startActivity(intent);
-        }else {
+        } else {
             showProgressFail("未获取到值班室信息!");
         }
     }
@@ -664,22 +664,16 @@ public class LandMainActivity extends BaseActivity {
         Linphone.addCallback(new RegistrationCallback() {
             @Override
             public void registrationProgress() {
-
-                Logutil.i("注册中");
             }
 
             @Override
             public void registrationOk() {
                 handler.sendEmptyMessage(2);
-                AppConfig.SIP_STATUS = true;
-                Logutil.i("注册成功");
             }
 
             @Override
             public void registrationFailed() {
                 handler.sendEmptyMessage(3);
-                AppConfig.SIP_STATUS = false;
-                Logutil.i("注册失败");
             }
         }, new PhoneCallback() {
             @Override
@@ -785,11 +779,10 @@ public class LandMainActivity extends BaseActivity {
         if (disPlayAlarmPopuWindow != null) {
             disPlayAlarmPopuWindow.dismiss();
         }
-
+        //取消广播
         if (mRefreshVideoDataBroadcast != null) {
             this.unregisterReceiver(mRefreshVideoDataBroadcast);
         }
-
         //刷新时间的线程停止
         timeThreadIsRun = false;
         //handler移除监听

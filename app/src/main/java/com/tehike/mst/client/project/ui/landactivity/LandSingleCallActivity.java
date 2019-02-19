@@ -769,8 +769,10 @@ public class LandSingleCallActivity extends BaseActivity implements View.OnClick
         Linphone.hangUp();
         num = 0;
         threadStop();
-        if (mLiveCameraView != null)
+        if (mLiveCameraView != null) {
+            mLiveCameraView.stopStreaming();
             mLiveCameraView.destroy();
+        }
         LandSingleCallActivity.this.finish();
         ActivityUtils.removeActivity(this);
     }

@@ -3,6 +3,7 @@ package com.tehike.mst.client.project.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -48,9 +49,9 @@ public class TimeUtils {
                 return "0" + hour + ":0" + minute + ":" + num;
             }
             if (num < 10) {
-                return "0" + hour + minute + ":0" + num;
+                return "0" + hour + ":" + minute + ":0" + num;
             }
-            return "0" + hour + minute + ":" + num;
+            return "0" + hour + ":" + minute + ":" + num;
         }
         if (minute < 10) {
             if (num < 10) {
@@ -59,9 +60,9 @@ public class TimeUtils {
             return hour + ":0" + minute + ":" + num;
         }
         if (num < 10) {
-            return hour + minute + ":0" + num;
+            return hour + ":" + minute + ":0" + num;
         }
-        return hour + minute + ":" + num;
+        return hour + ":" + minute + ":" + num;
     }
 
 
@@ -106,4 +107,23 @@ public class TimeUtils {
         return time;
     }
 
+
+    /**
+     * 格式到毫秒
+     */
+    public static String getSMillon(long time) {
+        return new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS").format(time);
+    }
+
+
+    public static String getCurrentTime() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH)+1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+        return    year+"年"+month+"月"+day+"日"+hour+":"+minute+":"+second;
+    }
 }

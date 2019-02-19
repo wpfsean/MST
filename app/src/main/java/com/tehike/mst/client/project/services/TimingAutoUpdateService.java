@@ -117,7 +117,7 @@ public class TimingAutoUpdateService extends Service {
     }
 
     /**
-     * 比较更新
+     * 对比版本进行更新
      */
     private void updateApk(UpDateInfo mUpDateInfo) {
         int currentVersionCode = AppUtils.getVersionCode(App.getApplication());
@@ -169,7 +169,6 @@ public class TimingAutoUpdateService extends Service {
             }
         }).start();
     }
-
 
     /**
      * 安装此apk文件

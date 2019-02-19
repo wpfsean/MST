@@ -72,7 +72,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 描述：
+ * 描述：竖屏的登录界面
  * ===============================
  *
  * @author wpfse wpfsean@126.com
@@ -176,11 +176,6 @@ public class PortLoginActivity extends BaseActivity {
      * 加载时的动画
      */
     Animation mLoadingAnim;
-
-    /**
-     * 本机iP
-     */
-    String nativeIP = "";
 
     /**
      * 时分秒显示的格式
@@ -555,7 +550,9 @@ public class PortLoginActivity extends BaseActivity {
                     }
                     con.disconnect();
                 } catch (Exception e) {
-
+                    handler.sendEmptyMessage(8);
+                    isLoginingFlag = false;
+                    Logutil.e("登录异常--->>>" + e.getMessage());
                 }
             }
         }
@@ -590,7 +587,6 @@ public class PortLoginActivity extends BaseActivity {
 
     /**
      * 处理登录 接口的sysinfo数据
-     *
      */
     private void handlerSysinfoData(String result) {
         try {

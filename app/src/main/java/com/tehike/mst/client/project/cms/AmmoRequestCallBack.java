@@ -16,8 +16,6 @@ import java.net.Socket;
  * 開箱申請(测试用)
  * <p>
  * 向后台服务器发送开箱申请
- *
- *
  */
 
 public class AmmoRequestCallBack implements Runnable {

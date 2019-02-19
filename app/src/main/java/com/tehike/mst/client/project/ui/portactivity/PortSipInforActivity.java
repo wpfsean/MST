@@ -692,9 +692,9 @@ public class PortSipInforActivity extends BaseActivity implements SwipeRefreshLa
         intent.putExtra("isMakingCall", true);
         if (sipGroupItemSelected != -1) {
             //呼叫
-//            Linphone.callTo(sipGroupItemSelectDeviceNumber, true);
-//            //开启外放
-//            Linphone.toggleSpeaker(true);
+            Linphone.callTo(sipGroupItemSelectDeviceNumber, true);
+            //开启外放
+            Linphone.toggleSpeaker(true);
             intent.putExtra("isMakingVideoCall", isVideoSupport);
             intent.setClass(PortSipInforActivity.this, PortSingleCallActivity.class);
             intent.putExtra("callerNumber", sipGroupItemSelectDeviceNumber);

@@ -186,7 +186,7 @@ public class PortMainActivity extends BaseActivity {
             registerRefreshVideoDataBroadcast();
         }
 
-        registerSipWithSipServer();
+      //  registerSipWithSipServer();
     }
 
     /**
