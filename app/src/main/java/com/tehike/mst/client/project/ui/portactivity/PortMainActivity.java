@@ -186,7 +186,7 @@ public class PortMainActivity extends BaseActivity {
             registerRefreshVideoDataBroadcast();
         }
 
-      //  registerSipWithSipServer();
+        registerSipWithSipServer();
     }
 
     /**
@@ -699,14 +699,8 @@ public class PortMainActivity extends BaseActivity {
             ServiceUtils.startService(ReceiverEmergencyAlarmService.class);
 
         //启动Sip保活的服务
-        if (!ServiceUtils.isServiceRunning(TimingCheckSipStatus.class))
-            ServiceUtils.startService(TimingCheckSipStatus.class);
-
-        //定时更新服务
-        if (!ServiceUtils.isServiceRunning(TimingAutoUpdateService.class))
-            ServiceUtils.startService(TimingAutoUpdateService.class);
-
-
+//        if (!ServiceUtils.isServiceRunning(TimingCheckSipStatus.class))
+//            ServiceUtils.startService(TimingCheckSipStatus.class);
     }
 
     @Override
@@ -800,7 +794,6 @@ public class PortMainActivity extends BaseActivity {
             Logutil.d("SIp在线");
             return;
         }
-
         //获取sysinfo接口数据
         SysInfoBean mSysInfoBean = SysinfoUtils.getSysinfo();
         //判断sysinfo对象是否为空
@@ -821,11 +814,8 @@ public class PortMainActivity extends BaseActivity {
         }
         if (!SipService.isReady()) {
             Linphone.startService(this);
-
-            if (!AppConfig.SIP_STATUS) {
                 Linphone.setAccount(sipNumber, sipPwd, sipServer);
                 Linphone.login();
-            }
         }
     }
 

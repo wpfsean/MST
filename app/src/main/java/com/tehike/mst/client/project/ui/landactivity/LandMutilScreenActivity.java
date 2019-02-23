@@ -670,7 +670,7 @@ public class LandMutilScreenActivity extends BaseActivity implements NodePlayerD
         if (mDevice != null) {
             if (mDevice != null) {
 
-                SendEmergencyAlarmToServerThrad sendEmergencyAlarmToServer = new SendEmergencyAlarmToServerThrad(mDevice, "视频源报警", new SendEmergencyAlarmToServerThrad.Callback() {
+                SendEmergencyAlarmToServerThrad sendEmergencyAlarmToServer = new SendEmergencyAlarmToServerThrad(mDevice, "脱逃", new SendEmergencyAlarmToServerThrad.Callback() {
                     @Override
                     public void getCallbackData(String result) {
                         if (TextUtils.isEmpty(result)) {

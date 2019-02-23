@@ -223,12 +223,8 @@ public class LandMainActivity extends BaseActivity {
             ServiceUtils.startService(ReceiverEmergencyAlarmService.class);
 
         //启动Sip保活的服务
-        if (!ServiceUtils.isServiceRunning(TimingCheckSipStatus.class))
-            ServiceUtils.startService(TimingCheckSipStatus.class);
-
-        //启动Sip保活的服务
-//        if (!ServiceUtils.isServiceRunning(TimingAutoUpdateService.class))
-//            ServiceUtils.startService(TimingAutoUpdateService.class);
+//        if (!ServiceUtils.isServiceRunning(TimingCheckSipStatus.class))
+//            ServiceUtils.startService(TimingCheckSipStatus.class);
 
     }
 

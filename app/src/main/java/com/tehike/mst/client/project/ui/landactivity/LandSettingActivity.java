@@ -546,10 +546,10 @@ public class LandSettingActivity extends BaseActivity implements CompoundButton.
             case R.id.logout_port_layout://退出登录
                 ActivityUtils.removeAllActivity();
                 finish();
-                App.exit();
                 if (SipManager.getLc() != null) {
                     SipManager.getLc().clearProxyConfigs();
                 }
+                App.exit();
                 android.os.Process.killProcess(android.os.Process.myPid());
                 System.exit(0);
                 break;

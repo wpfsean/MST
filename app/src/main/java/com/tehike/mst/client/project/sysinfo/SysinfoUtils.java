@@ -13,7 +13,6 @@ import com.tehike.mst.client.project.utils.SharedPreferencesUtils;
 /**
  * 描述：获取本地的sysinfo数据
  * ===============================
- *
  * @author wpfse wpfsean@126.com
  * @version V1.0
  * @Create at:2018/12/13 9:35
@@ -23,8 +22,6 @@ public class SysinfoUtils {
 
     /**
      * 获取 Sysinfo数据
-     *
-     * @return
      */
     public static SysInfoBean getSysinfo() {
         try {
@@ -45,11 +42,8 @@ public class SysinfoUtils {
         return null;
     }
 
-
     /**
      * 获取中心服务器地址
-     *
-     * @return
      */
     public static String getServerIp() {
         String serverIp = "";
@@ -68,11 +62,8 @@ public class SysinfoUtils {
         return "";
     }
 
-
     /**
      * 获取当前用户名
-     *
-     * @return
      */
     public static String getUserName() {
         String userName = (String) SharedPreferencesUtils.getObject(App.getApplication(), "userName", "");
@@ -85,8 +76,6 @@ public class SysinfoUtils {
 
     /**
      * 获取当前密码
-     *
-     * @return
      */
     public static String getUserPwd() {
         String userPwd = (String) SharedPreferencesUtils.getObject(App.getApplication(), "userPwd", "");

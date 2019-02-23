@@ -160,6 +160,7 @@ public class IntercomFragment extends BaseFragment implements SwipeRefreshLayout
                         JSONObject jsonObject = new JSONObject(result);
                         if (!jsonObject.isNull("errorCode")) {
                             Logutil.w("请求不到数据信息");
+                            handler.sendEmptyMessage(3);
                             return;
                         }
                         int sipCount = jsonObject.getInt("count");

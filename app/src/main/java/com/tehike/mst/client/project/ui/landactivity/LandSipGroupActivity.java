@@ -216,8 +216,8 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
         HttpBasicRequest thread = new HttpBasicRequest(sipGroupUrl, new HttpBasicRequest.GetHttpData() {
             @Override
             public void httpData(String result) {
+                Logutil.d("Sip组数据" + result);
                 if (!TextUtils.isEmpty(result)) {
-                    Logutil.d("Sip组数据"+result);
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         if (!jsonObject.isNull("errorCode")) {
@@ -260,7 +260,7 @@ public class LandSipGroupActivity extends BaseActivity implements SwipeRefreshLa
         GridLayoutManager gridLayoutManager = new GridLayoutManager(LandSipGroupActivity.this, 4);
         gridLayoutManager.setReverseLayout(false);
         gridLayoutManager.setOrientation(GridLayout.VERTICAL);
-        SpaceItemDecoration spaceItemDecoration = new SpaceItemDecoration(16,36);
+        SpaceItemDecoration spaceItemDecoration = new SpaceItemDecoration(16, 36);
 
         disPlaySipGroupItemViewLayout.setLayoutManager(gridLayoutManager);
         SipGroupAdapter adapter = new SipGroupAdapter(LandSipGroupActivity.this, sipGroupResources);

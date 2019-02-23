@@ -349,7 +349,7 @@ public class LandSingleCallActivity extends BaseActivity implements View.OnClick
         //sips服务器地址
         String sipServerIp = SysinfoUtils.getSysinfo().getSipServer();
 
-        //拼接rtmp地址
+        //拼接rtmp地址76
         nativeRTMP = "rtmp://" + serverIp + "/oflaDemo/" + sipNum + "@" + sipServerIp;
     }
 
@@ -643,13 +643,15 @@ public class LandSingleCallActivity extends BaseActivity implements View.OnClick
         }
         for (SipBean mDevice : rtspSources) {
             if (mDevice.getNumber().equals(userName)) {
-                String rtsp = mDevice.getVideoBean().getRtsp();
-                if (!TextUtils.isEmpty(rtsp)) {
-                    remoteRtsp = rtsp;
-                }
-                String deviceType = mDevice.getName();
-                if (!TextUtils.isEmpty(deviceType)) {
-                    remoteDeviceName = deviceType;
+                if (mDevice.getVideoBean() != null) {
+                    String rtsp = mDevice.getVideoBean().getRtsp();
+                    if (!TextUtils.isEmpty(rtsp)) {
+                        remoteRtsp = rtsp;
+                    }
+                    String deviceType = mDevice.getName();
+                    if (!TextUtils.isEmpty(deviceType)) {
+                        remoteDeviceName = deviceType;
+                    }
                 }
             }
         }

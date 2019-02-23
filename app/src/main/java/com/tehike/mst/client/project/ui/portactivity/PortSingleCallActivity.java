@@ -26,6 +26,7 @@ import com.tehike.mst.client.project.entity.SipBean;
 import com.tehike.mst.client.project.global.AppConfig;
 import com.tehike.mst.client.project.linphone.Linphone;
 import com.tehike.mst.client.project.linphone.PhoneCallback;
+import com.tehike.mst.client.project.sysinfo.SysinfoUtils;
 import com.tehike.mst.client.project.utils.ActivityUtils;
 import com.tehike.mst.client.project.utils.CryptoUtil;
 import com.tehike.mst.client.project.utils.FileUtil;
@@ -263,8 +264,7 @@ public class PortSingleCallActivity extends BaseActivity implements View.OnClick
     /**
      * 推流地址(测试)
      */
-    private String nativeRTMP = "";
-    //"rtmp://" + "19.0.0.20" + "/oflaDemo/" + AppConfig.SIP_NUMBER + "@" + AppConfig.SIP_SERVER;
+    private String nativeRTMP ="";
 
     @Override
     protected int intiLayout() {
@@ -482,6 +482,19 @@ public class PortSingleCallActivity extends BaseActivity implements View.OnClick
      * 初始化抢注参数
      */
     private void initParamater() {
+
+        String serverIp = SysinfoUtils.getSysinfo().getWebresourceServer();
+        if (TextUtils.isEmpty(serverIp))
+            serverIp = AppConfig.SERVERIP;
+
+        //本机sip号码
+        String sipNum = SysinfoUtils.getSysinfo().getSipUsername();
+
+        //sips服务器地址
+        String sipServerIp = SysinfoUtils.getSysinfo().getSipServer();
+
+        nativeRTMP = "rtmp://" + serverIp + "/oflaDemo/" + sipNum + "@" + sipServerIp;
+
         streamAVOption = new StreamAVOption();
         streamAVOption.streamUrl = nativeRTMP;
         //参数配置 end
@@ -552,11 +565,11 @@ public class PortSingleCallActivity extends BaseActivity implements View.OnClick
             case R.id.btn_mute:
                 if (!isCallSilent) {
                     Linphone.toggleMicro(true);
-                    btn_mute.setBackgroundResource(R.drawable.port_btn_mute_selected);
+                    btn_mute.setBackgroundResource(R.mipmap.port_btn_mute_selected);
                     isCallSilent = true;
                 } else {
                     Linphone.toggleMicro(false);
-                    btn_mute.setBackgroundResource(R.mipmap.port_btn_mute_selected);
+                    btn_mute.setBackgroundResource(R.drawable.port_btn_mute_selected);
                     isCallSilent = false;
                 }
                 break;

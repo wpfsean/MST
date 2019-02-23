@@ -9,6 +9,8 @@ import com.android.volley.toolbox.Volley;
 import com.tehike.mst.client.project.execption.Cockroach;
 import com.tehike.mst.client.project.execption.CrashLog;
 import com.tehike.mst.client.project.execption.ExceptionHandler;
+import com.tehike.mst.client.project.linphone.SipManager;
+import com.tehike.mst.client.project.linphone.SipService;
 import com.tehike.mst.client.project.receiver.CpuAndRamUtils;
 import com.tehike.mst.client.project.services.BatteryAndWifiService;
 import com.tehike.mst.client.project.services.ReceiverEmergencyAlarmService;
@@ -27,9 +29,10 @@ import java.util.concurrent.Executors;
 /**
  * 描述：Application全局配置
  * ===============================
+ *
  * @author wpfse wpfsean@126.com
- * @Create at:2018/10/8 10:34
  * @version V1.0
+ * @Create at:2018/10/8 10:34
  */
 
 public class App extends Application {
@@ -62,7 +65,7 @@ public class App extends Application {
         //获取最大的可用线程数
         maxThreadCount = Runtime.getRuntime().availableProcessors();
 
-        Logutil.i("线程最大数量："+ maxThreadCount);
+        Logutil.i("线程最大数量：" + maxThreadCount);
 
         if (mThreadPoolService == null) {
             //线程池内运行程序可执行的最大线程数
@@ -72,10 +75,12 @@ public class App extends Application {
             //实例请求队列
             mRequestQueue = Volley.newRequestQueue(this);
         }
-
         //启动电量和信号监听
         if (!ServiceUtils.isServiceRunning(BatteryAndWifiService.class))
             ServiceUtils.startService(BatteryAndWifiService.class);
+
+        if (!ServiceUtils.isServiceRunning(TimingAutoUpdateService.class))
+            ServiceUtils.startService(TimingAutoUpdateService.class);
 
         CpuAndRamUtils.getInstance().init(getApplicationContext(), 5 * 1000L);
         CpuAndRamUtils.getInstance().start();
@@ -152,7 +157,7 @@ public class App extends Application {
         if (ServiceUtils.isServiceRunning(BatteryAndWifiService.class))
             ServiceUtils.stopService(BatteryAndWifiService.class);
         //关闭被动远程喊话的服务
-        if (ServiceUtils.isServiceRunning(ReceiverEmergencyAlarmService.class)){
+        if (ServiceUtils.isServiceRunning(ReceiverEmergencyAlarmService.class)) {
             ServiceUtils.stopService(ReceiverEmergencyAlarmService.class);
         }
         //关闭服务器接收报警的服务
@@ -167,11 +172,34 @@ public class App extends Application {
         //定时更新服务
         if (ServiceUtils.isServiceRunning(TimingAutoUpdateService.class))
             ServiceUtils.stopService(TimingAutoUpdateService.class);
+
+        if (ServiceUtils.isServiceRunning(SipService.class)) {
+            SipService.removeRegistrationCallback();
+            SipService.removeMessageCallback();
+            SipService.removePhoneCallback();
+            SipManager.destroy();
+            ServiceUtils.stopService(SipService.class);
+        }
+
+    }
+
+    @Override
+    public void onLowMemory() {
+        Logutil.d("onLowMemory");
+        if (ServiceUtils.isServiceRunning(SipService.class)) {
+            SipService.removeRegistrationCallback();
+            SipService.removeMessageCallback();
+            SipService.removePhoneCallback();
+        }
+        super.onLowMemory();
     }
 
     @Override
     public void onTerminate() {
-        super.onTerminate();
         Logutil.i("程序终止");
+        exit();
+        super.onTerminate();
     }
+
+
 }

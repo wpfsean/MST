@@ -22,9 +22,13 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.tehike.mst.client.project.R;
+import com.tehike.mst.client.project.linphone.Linphone;
+import com.tehike.mst.client.project.linphone.SipManager;
+import com.tehike.mst.client.project.linphone.SipService;
 import com.tehike.mst.client.project.receiver.NetChangedReceiver;
 import com.tehike.mst.client.project.ui.widget.NetworkStateView;
 import com.tehike.mst.client.project.utils.ActivityUtils;
+import com.tehike.mst.client.project.utils.Logutil;
 import com.tehike.mst.client.project.utils.ProgressDialogUtils;
 
 import java.lang.reflect.Method;
@@ -76,12 +80,12 @@ public abstract class BaseActivity extends AppCompatActivity implements NetworkS
     /**
      * 电量管理类
      */
-    PowerManager powerManager;
+//    PowerManager powerManager;
 
     /**
      * 控制屏幕亮度时间的锁
      */
-    PowerManager.WakeLock mWakeLock;
+//    PowerManager.WakeLock mWakeLock;
 
     /**
      * 当前页面是否可见
@@ -123,10 +127,10 @@ public abstract class BaseActivity extends AppCompatActivity implements NetworkS
         afterCreate(savedInstanceState);
 
         //电源锁屏
-        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        if (powerManager != null) {
-            mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "WakeLock");
-        }
+//        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+//        if (powerManager != null) {
+//            mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "WakeLock");
+//        }
     }
 
     /**
@@ -364,18 +368,20 @@ public abstract class BaseActivity extends AppCompatActivity implements NetworkS
     protected void onPause() {
         super.onPause();
         isVisible = false;
-        if (mWakeLock != null) {
-            mWakeLock.release();
-        }
+//        if (mWakeLock != null) {
+//            mWakeLock.release();
+//        }
+        Linphone.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         isVisible = true;
-        if (mWakeLock != null) {
-            mWakeLock.acquire();
-        }
+//        if (mWakeLock != null) {
+//            mWakeLock.acquire();
+//        }
+        Linphone.onResume();
     }
 
     @Override
@@ -390,6 +396,11 @@ public abstract class BaseActivity extends AppCompatActivity implements NetworkS
 
         //注释解绑
         unbinder.unbind();
+
+        SipService.removeRegistrationCallback();
+        Linphone.onDestroy();
+
+        Logutil.d("removeRegistrationCallback --->>>cancel");
 
         //移除此Acyivity
         ActivityUtils.removeActivity(this);

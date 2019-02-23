@@ -189,7 +189,6 @@ public class LandLoginActivity extends BaseActivity {
         return R.layout.activity_land_login;
     }
 
-
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         //申请所需要的权限
@@ -428,7 +427,7 @@ public class LandLoginActivity extends BaseActivity {
                     }
                     con.disconnect();
                 } catch (Exception e) {
-                    handler.sendEmptyMessage(8);
+                    handler.sendEmptyMessage(12);
                     isClickLoginBtnFlag = false;
                     Logutil.e("登录异常--->>" + e.getMessage());
 
@@ -667,7 +666,7 @@ public class LandLoginActivity extends BaseActivity {
                 case 8:
                     //登录失败
                     disPlayLoginErrorViewLayout.setVisibility(View.VISIBLE);
-                    disPlayLoginErrorViewLayout.setText("登录失败");
+                    disPlayLoginErrorViewLayout.setText("登录失败!!!");
                     loadingImageViewLayout.setVisibility(View.GONE);
                     loadingImageViewLayout.clearAnimation();
                     break;
@@ -686,6 +685,12 @@ public class LandLoginActivity extends BaseActivity {
                     //处理sysinfo数据
                     String result = (String) msg.obj;
                     handlerSysinfoData(result);
+                    break;
+                case 12:
+                    disPlayLoginErrorViewLayout.setVisibility(View.VISIBLE);
+                    disPlayLoginErrorViewLayout.setText("登录超时!!!");
+                    loadingImageViewLayout.setVisibility(View.GONE);
+                    loadingImageViewLayout.clearAnimation();
                     break;
             }
         }

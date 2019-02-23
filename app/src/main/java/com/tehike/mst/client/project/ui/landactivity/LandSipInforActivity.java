@@ -451,7 +451,7 @@ public class LandSipInforActivity extends BaseActivity implements SwipeRefreshLa
                             groupItemInfoBean.setIpAddress(jsonItem.getString("ipAddress"));
                             groupItemInfoBean.setName(jsonItem.getString("name"));
                             groupItemInfoBean.setNumber(jsonItem.getString("number"));
-                            groupItemInfoBean.setSentryId(jsonItem.getInt("sentryId")+"");
+                            groupItemInfoBean.setSentryId(jsonItem.getInt("sentryId") + "");
                             groupItemInfoBean.setState(-1);
                             //判断是否有面部视频
                             if (!jsonItem.isNull("videosource")) {
@@ -841,7 +841,8 @@ public class LandSipInforActivity extends BaseActivity implements SwipeRefreshLa
             }
         }
         mSipGroupItemAdapter = new SipGroupItemAdapter(mContext);
-        sipGroupItemGridView.setAdapter(mSipGroupItemAdapter);
+        if (sipGroupItemGridView != null)
+            sipGroupItemGridView.setAdapter(mSipGroupItemAdapter);
         mSipGroupItemAdapter.notifyDataSetChanged();
 
         //item点击事件
